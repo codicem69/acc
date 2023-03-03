@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<GenRoBag>
+	<db dbname="acc"/>
+	<packages>
+		<gnrcore_sys pkgcode="gnrcore:sys"/>
+		<gnrcore_adm pkgcode="gnrcore:adm"/>
+		<gnrcore_email pkgcode="gnrcore:email"/>
+        <unlocode pkgcode="unlocode:unlocode"/>
+		<acc/>
+		<agz pkgcode="agz:agz"/>
+	</packages>
+	<authentication pkg="gnrcore:sys">
+		<py_auth defaultTags="user" pkg="adm" method="authenticate"/>
+	</authentication>
+	<site>
+		<wsgi/>
+	</site>
+	<menu package="*"/>
+</GenRoBag>
