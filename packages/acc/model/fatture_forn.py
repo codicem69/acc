@@ -10,3 +10,6 @@ class Table(object):
         tbl.column('doc_n', name_short='!![en]Doc.no.')
         tbl.column('importo', dtype='money', name_short='!![en]Ammount')
         tbl.column('descrizione', name_short='!![en]Description')
+
+    def defaultValues(self):
+        return dict(agency_id=self.db.currentEnv.get('current_agency_id'))

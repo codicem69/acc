@@ -8,10 +8,10 @@ class View(BaseComponent):
 
     def th_struct(self,struct):
         r = struct.view().rows()
-        r.fieldcell('rag_sociale')
-        r.fieldcell('address')
+        r.fieldcell('rag_sociale', width='30em')
+        r.fieldcell('address', width='30em')
         r.fieldcell('cap')
-        r.fieldcell('city')
+        r.fieldcell('city', width='20em')
 
     def th_order(self):
         return 'rag_sociale'
@@ -25,11 +25,11 @@ class Form(BaseComponent):
 
     def th_form(self, form):
         pane = form.record
-        fb = pane.formbuilder(cols=2, border_spacing='4px')
-        fb.field('rag_sociale' , width='30em')
-        fb.field('address', width='30em')
+        fb = pane.formbuilder(cols=2, border_spacing='4px', fld_width='30em')
+        fb.field('rag_sociale')
+        fb.field('address')
         fb.field('cap' )
-        fb.field('city', width='15em' )
+        fb.field('city')
 
 
     def th_options(self):
