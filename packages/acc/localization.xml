@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+<GenRoBag>
+	<menu path="menu.py" ext="py">
+		<en_suppliers base="Suppliers" it="Fornitori"/>
+		<en_supplier_invoices base="Supplier invoices" it="Fatture fornitore"/>
+		<en_payment_invoices_supplier base="Payment invoices supplier" it="Pagamento fatture fornitore"/>
+		<en_supplier_bank base="Supplier bank" it="Banca Fornitore"/>
+		<en_invoices_issued base="Invoices issued" it="Fatture emesse"/>
+		<en_payment_invoices_issued base="Payment invoices issued" it="Pagamento fatture emesse"/>
+		<en_customers base="Customers" it="Clienti"/>
+	</menu>
+	<model>
+		<bank_forn path="model/bank_forn.py" ext="py">
+			<en_supplier_bank base="Supplier bank" it="Banca Fornitore"/>
+			<en_suppliers_bank base="Suppliers bank" it="Banca Fornitore"/>
+			<en_bank_name base="Bank name" it="Nome Banca"/>
+			<en_swift_code base="Swift code"/>
+		</bank_forn>
+		<cliente path="model/cliente.py" ext="py">
+			<en_customer base="Customer" it="Cliente"/>
+			<en_customers base="Customers" it="Clienti"/>
+			<en_company_name base="Company name" it="Rag. Sociale"/>
+			<en_address base="Address" it="Indirizzo"/>
+			<en_cap base="CAP"/>
+			<en_city_place base="City place" it="Città"/>
+			<en_vat_number base="Vat number" it="Partita IVA"/>
+			<en_fiscal_code base="Fiscal code" it="Codice Fiscale"/>
+			<en_unique_code base="Unique code" it="Codice univoco"/>
+		</cliente>
+		<fatt_emesse path="model/fatt_emesse.py" ext="py">
+			<en_invoice_issued base="Invoice issued" it="Fattura emessa"/>
+			<en_invoices_issued base="Invoices issued" it="Fatture emesse"/>
+			<en_date base="Date" de="Datum" en="Date" fr="Date" it="Data"/>
+			<en_doc_no_ base="Doc.no."/>
+			<en_ammount base="Ammount" it="Importo"/>
+			<en_description base="Description" en="Description" it="Descrizione"/>
+		</fatt_emesse>
+		<fatture_forn path="model/fatture_forn.py" ext="py">
+			<en_supplier_invoice base="Supplier invoice" it="Fattura fornitore"/>
+			<en_supplier_invoices base="Supplier invoices" it="Fatture fornitore"/>
+			<en_date base="Date" de="Datum" en="Date" fr="Date" it="Data"/>
+			<en_doc_no_ base="Doc.no."/>
+			<en_ammount base="Ammount" it="Importo"/>
+			<en_description base="Description" en="Description" it="Descrizione"/>
+			<en_total_payments base="Total payments" it="Totale pagamenti"/>
+			<en_balance base="Balance"/>
+		</fatture_forn>
+		<fornitore path="model/fornitore.py" ext="py">
+			<en_supplier base="Supplier" it="Fornitore"/>
+			<en_suppliers base="Suppliers" it="Fornitori"/>
+			<en_company_name base="Company name" it="Rag. Sociale"/>
+			<en_address base="Address" it="Indirizzo"/>
+			<en_cap base="CAP"/>
+			<en_city_place base="City place" it="Città"/>
+			<en_tel_ base="Tel."/>
+			<en_email fr="Email" de="E-Mail-" en="Email" it="Email" base="Email"/>
+		</fornitore>
+		<pag_fat_emesse path="model/pag_fat_emesse.py" ext="py">
+			<en_payment_invoice_issued base="Payment invoice issued" it="Pagamento fattura emessa"/>
+			<en_payment_invoices_issued base="Payment invoices issued" it="Pagamento fatture emesse"/>
+			<en_date base="Date" de="Datum" en="Date" fr="Date" it="Data"/>
+			<en_amount base="Amount" it="Importo"/>
+			<en_note fr="Note" de="Note" en="Note" it="Note" base="Note"/>
+		</pag_fat_emesse>
+		<pag_fat_forn path="model/pag_fat_forn.py" ext="py">
+			<en_payment_invoice_supplier base="Payment invoice supplier" it="Pagamento fattura fornitore"/>
+			<en_payment_invoices_suppliers base="Payment invoices suppliers" it="Pagamento fatture fornitori"/>
+			<en_date base="Date" de="Datum" en="Date" fr="Date" it="Data"/>
+			<en_amount base="Amount" it="Importo"/>
+			<en_note fr="Note" de="Note" en="Note" it="Note" base="Note"/>
+		</pag_fat_forn>
+	</model>
+	<resources>
+		<tables>
+			<fatt_emesse>
+				<th_fatt_emesse path="resources/tables/fatt_emesse/th_fatt_emesse.py" ext="py">
+					<en_customer base="Customer" it="Cliente"/>
+				</th_fatt_emesse>
+			</fatt_emesse>
+			<fatture_forn>
+				<th_fatture_forn path="resources/tables/fatture_forn/th_fatture_forn.py" ext="py">
+					<en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"/>
+					<en_to_be_paid base="To be paid" it="Da Saldare"/>
+					<en_paid base="Paid" it="Pagato"/>
+					<en_date_ base="Date &lt;="/>
+					<en_invoice_date base="Invoice date" it="Data fattura"/>
+					<en_description base="Description" en="Description" it="Descrizione"/>
+					<en_supplier_invoices base="Supplier invoices" it="Fatture fornitore"/>
+					<en_payments base="Payments" it="Pagamenti"/>
+					<en_supplier base="Supplier" it="Fornitore"/>
+				</th_fatture_forn>
+			</fatture_forn>
+			<fornitore>
+				<th_fornitore path="resources/tables/fornitore/th_fornitore.py" ext="py">
+					<en_supplier base="Supplier" it="Fornitore"/>
+					<en_invoices base="Invoices" it="Fatture"/>
+					<en_bank_details base="Bank details" it="Dettagli Bancari"/>
+				</th_fornitore>
+			</fornitore>
+		</tables>
+	</resources>
+</GenRoBag>
