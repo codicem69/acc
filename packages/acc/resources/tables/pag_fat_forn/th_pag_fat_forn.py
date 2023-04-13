@@ -30,7 +30,7 @@ class ViewFromPayments(BaseComponent):
         r.cell('progressivo',formula='+=importo',format='#,###.00',dtype='N')
         r.cell('rimanenza fattura',formula='impfatforn-progressivo',format='#,###.00',dtype='N',
                range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
-        r.fieldcell('note',edit=True, width='100%')
+        r.fieldcell('note',edit=True, width='100%',values='Bonifico,Contanti,Storno fat.',hasArrowDown=True)
 
     def th_order(self):
         return 'data:a'

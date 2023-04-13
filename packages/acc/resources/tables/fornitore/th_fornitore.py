@@ -45,8 +45,9 @@ class Form(BaseComponent):
         fb.field('balance',font_weight='bold',color ="^#FORM.record.balance?=#v>0?'red':'black'")
 
     def fat_forn(self,pane):
+        pane.onDbChanges("""if(dbChanges.some(change=>change.dbevent=='U' && change.pkey==pkey)){this.form.reload()}""",table='acc.pag_fat_forn',pkey='#FORM.parent.pkey')
         pane.dialogTableHandler(relation='@forn_fatt',
-                                viewResource='View',extendedQuery=True)
+                                viewResource='View',extendedQuery=True,pbl_classes=True)
     def bank_forn(self,pane):
         pane.dialogTableHandler(relation='@forn_bank',
                                 viewResource='View')

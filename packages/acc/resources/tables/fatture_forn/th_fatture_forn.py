@@ -35,16 +35,18 @@ class View(BaseComponent):
                 dict(code='saldati',caption='!![en]Paid',condition='$saldo=0')]
     
     def th_top_toolbarsuperiore(self,top):
-        top.slotToolbar('5,sections@fatforn,10,sections@volumeacquisti,5',
+        bar=top.slotToolbar('5,sections@fatforn,10,test,resourceActions,15',
                         childname='superiore',_position='<bar')
                         #,gradient_from='#999',gradient_to='#888')
+        bar.test.div('Actions')
 
     def th_queryBySample(self):
         return dict(fields=[dict(field='data', lbl='Date <=',width='10em', op='lesseq', val=''),
                             dict(field='data', lbl='Date >=',width='10em', op='greatereq', val=''),
                             dict(field='data', lbl='!![en]Invoice date',width='10em'),
                             dict(field='descrizione', lbl='!![en]Description',width='10em')],
-                            cols=4, isDefault=True)    
+                            cols=4, isDefault=True)   
+        
 class Form(BaseComponent):
 
     def th_form(self, form):
@@ -52,9 +54,11 @@ class Form(BaseComponent):
         self.fatforn(bc.roundedGroupFrame(title='!![en]Supplier invoices',region='top',datapath='.record',height='300px', splitter=True))
         tc = bc.tabContainer(margin='2px',region='center')
         self.paym_fatforn(tc.contentPane(title='!![en]Payments'))
+        
 
     def fatforn(self,pane):
         #pane = form.record
+        pane.onDbChanges("""if(dbChanges.some(change=>change.dbevent=='U' && change.pkey==pkey)){this.form.reload()}""",table='acc.pag_fat_forn',pkey='#FORM.parent.pkey')
         fb = pane.formbuilder(cols=3, border_spacing='4px')
         fb.field('fornitore_id', lbl='!![en]Supplier', hasDownArrow=True, colspan=3, width='100%' )
         fb.field('data' )

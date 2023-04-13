@@ -1,3 +1,5 @@
+
+
 class Table(object):
     def config_db(self,pkg):
         tbl=pkg.table('fornitore', pkey='id', name_long='!![en]Supplier', name_plural='!![en]Suppliers',caption_field='full_supplier')
@@ -12,3 +14,6 @@ class Table(object):
         tbl.formulaColumn('full_supplier',"""$rag_sociale || coalesce(' - '|| $address, '') || coalesce(' - '|| $cap,'') || coalesce(' - '|| $city,'') """ )
         tbl.aliasColumn('balance','@forn_fatt.saldo',dtype='N')
         tbl.formulaColumn('worktime', ':env_workdate')
+
+    
+        
