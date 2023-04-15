@@ -14,4 +14,4 @@ class Table(object):
         tbl.column('note', name_short='!![en]Note')
         tbl.aliasColumn('impfatforn','@fatture_forn_id.importo')
         tbl.formulaColumn('paymdet',"to_char($data, :df) || ': € ' || $importo || ' ' || $note", dtype='T',var_df='DD/MM/YYYY')
-        
+        tbl.formulaColumn('anno_doc',"date_part('year', $data)", dtype='D')

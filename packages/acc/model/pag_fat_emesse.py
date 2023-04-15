@@ -8,5 +8,6 @@ class Table(object):
         tbl.column('fatt_emesse_id',size='22', group='_', name_long='fatt_emesse_id'
                     ).relation('fatt_emesse.id', relation_name='paym_fat_emesse', mode='foreignkey', onDelete='cascade')
         tbl.column('data', dtype='D', name_short='!![en]Date')
-        tbl.column('importo', dtype='N', size='10,3', name_short='!![en]Amount',format='#,###.000')
+        tbl.column('importo', dtype='money', size='10,3', name_short='!![en]Amount')
         tbl.column('note', name_short='!![en]Note')
+        tbl.aliasColumn('impfatemessa','@fatt_emesse_id.importo')

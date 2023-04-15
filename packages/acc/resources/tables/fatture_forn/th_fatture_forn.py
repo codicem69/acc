@@ -57,8 +57,6 @@ class Form(BaseComponent):
         
 
     def fatforn(self,pane):
-        #pane = form.record
-        pane.onDbChanges("""if(dbChanges.some(change=>change.dbevent=='U' && change.pkey==pkey)){this.form.reload()}""",table='acc.pag_fat_forn',pkey='#FORM.parent.pkey')
         fb = pane.formbuilder(cols=3, border_spacing='4px')
         fb.field('fornitore_id', lbl='!![en]Supplier', hasDownArrow=True, colspan=3, width='100%' )
         fb.field('data' )

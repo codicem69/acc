@@ -11,10 +11,11 @@ class Table(object):
         tbl.column('importo', dtype='money', name_short='!![en]Ammount')
         tbl.column('descrizione', name_short='!![en]Description')
         tbl.formulaColumn('inv',"$doc_n || ' - ' || $data")
-        tbl.formulaColumn('tot_pag',select=dict(table='acc.pag_fat_forn',columns='SUM($importo)', where='$fatture_forn_id=#THIS.id'),dtype='N',format='#,###.00',
+        tbl.formulaColumn('tot_pag',select=dict(table='acc.pag_fat_forn',columns='coalesce(SUM($importo),0)', where='$fatture_forn_id=#THIS.id'),dtype='N',format='#,###.00',
                           name_long='!![en]Total payments')
         tbl.formulaColumn('saldo', '$importo-coalesce($tot_pag,0)',dtype='N',name_long='!![en]Balance',format='#,###.00')
         tbl.formulaColumn('semaforo',"""CASE WHEN $saldo = 0 THEN true ELSE false END""",dtype='B',name_long=' ')
+        tbl.formulaColumn('anno_doc',"date_part('year', $data)", dtype='D')
         tbl.aliasColumn('paym_details','@paym_fat_forn.paymdet', dtype='T')
         
 
