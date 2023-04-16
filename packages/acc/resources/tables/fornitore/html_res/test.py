@@ -2,16 +2,19 @@ from gnr.web.gnrbaseclasses import TableScriptToHtml
 from datetime import datetime
 
 class Main(TableScriptToHtml):
-    maintable = 'acc.fatture_forn'
-    row_table = 'acc.fatture_forn'
+    maintable = 'acc.fornitore'
+    row_table = 'acc.fornitore'
     page_width = 210
     page_height = 297
     page_margin_left = 5
     page_margin_right = 5
-    doc_header_height = 30
+    
     doc_footer_height = 15
+    doc_header_height = 16
+    grid_row_height = 5
     grid_header_height = 5
     totalize_footer='Totale'
+    cliente_height = 10
     #Fornendo a totalize_footer una stringa testuale, questa verrà usata come etichetta della riga di totalizzazione
     empty_row=dict()
     #Grazie a questo parametro in caso di mancanza di dati verrà stampata una griglia vuota invece di una pagina bianca
@@ -52,44 +55,87 @@ class Main(TableScriptToHtml):
     def gridStruct(self,struct):
         #Questo metodo definisce la struttura della griglia di stampa definendone colonne e layout
         r = struct.view().rows()
-        r.fieldcell('data', mm_width=15)
-        #r.fieldcell('mese_fattura', hidden=True, subtotal='Totale {breaker_value}', subtotal_order_by="$data")
-        #Questa formulaColumn verrà utilizzata per creare i subtotali per mese
-        r.fieldcell('doc_n', mm_width=15, name='Documento')
+        
+        r.cell('data', mm_width=15)
+         #r.fieldcell('mese_fattura', hidden=True, subtotal='Totale {breaker_value}', subtotal_order_by="$data")
+         #Questa formulaColumn verrà utilizzata per creare i subtotali per mese
+        r.cell('doc_n', mm_width=15, name='Documento')
+        r.cell('doc_n', hidden=True, subtotal='Totale {breaker_value}')
         #r.fieldcell('cliente_id', mm_width=0)
-        r.fieldcell('descrizione',mm_width=0)
-        r.cell('doc',hidden=True, subtotal='Totale {breaker_value}')
-        r.fieldcell('importo', mm_width=20, totalize=True)
-        r.fieldcell('tot_pag', mm_width=20, totalize=True)
-        r.fieldcell('saldo', mm_width=20, totalize=True)
+        r.cell('descrizione',mm_width=0)
+        r.cell('importo', mm_width=20, totalize=True,format='#,###.00')
+        r.cell('tot_pag', mm_width=20, totalize=True,format='#,###.00')
         
-    def gridData(self):
-        #condition=['$anno_doc=:anno']
-        #
-        #if self.field('id'):
-        #    condition.append('$id=:fat_id')
-        #where=' AND '.join(condition)
-        condition = ['$fornitore_id IN :pkeys AND $data <= :data_fine']
-        if self.parameter('dal'):
-            condition.append('$data >= :data_inizio')
+        r.cell('saldo',name='Balance', mm_width=20, totalize=True,format='#,###.00')
+        
+    def gridData(self): 
+        condition = ['$fornitore_id=:forn_id']
+        balance=0
+        if self.parameter('balance') == True:
+            condition.append('$saldo>:balance')
+        else:
+            condition.append('$saldo>=:balance')    
+        if self.parameter('anno'):
+            condition.append('$anno_doc=:anno')
+        if self.parameter('dal') and self.parameter('al'):
+            condition.append('$data BETWEEN :dal AND :al')
+         
         where = ' AND '.join(condition)
-
+                   # , condition_anno=self.parameter('anno'), 
+                   #condition_dal=self.parameter('dal'),condition_al=self.parameter('al'),
+                   #condition_balance=balance)
+        #condition = ['$fornitore_id IN :pkeys AND $data <= :data_fine']
+        #if self.parameter('dal'):
+        #    condition.append('$data >= :data_inizio')
+        #where = ' AND '.join(condition
         
-        fatture_forn_grouped = self.db.table('acc.fatture_forn').query(columns="""$fornitore_id,
+        fatforn = self.db.table('acc.fatture_forn').query(columns="""$fornitore_id,
                                             $data,$doc_n,$descrizione,$importo,$tot_pag,$saldo""",
                                             where=where,
-                                            pkeys=self.record['selectionPkeys'],
-                                            data_inizio = self.parameter('dal'),
-                                            data_fine = self.parameter('al'),
-                                            anno=self.parameter('anno')).fetchGrouped('fornitore_id')
+                                            balance=balance,
+                                            anno=self.parameter('anno'),
+                                            dal=self.parameter('dal'),
+                                            al=self.parameter('al'),
+                                            forn_id=self.record['selectionPkeys'],
+                                            order_by='$data'
+                                            ).fetch()
+        pagfatforn = self.db.table('acc.pag_fat_forn').query(columns="""$fatture_forn_id,
+                                            $data,$importo,$note""",
+                                            where='').fetch()
         
-
+        
+        righe=[]
+        for r in range(len(fatforn)):
+            fat_id=fatforn[r][7]
+            data=fatforn[r][1]
+            doc_n=fatforn[r][2]
+            descrizione=fatforn[r][3]
+            importo=fatforn[r][4]
+            tot_pag=fatforn[r][5]
+            saldo=fatforn[r][6]
+            righe.append(dict(data=data,doc_n=doc_n, descrizione=descrizione, importo=importo,
+                              tot_pag='',saldo=saldo))
+            for r in range(len(pagfatforn)):
+                
+                if pagfatforn[r][0] == fat_id:
+                    data=pagfatforn[r][1]
+                    tot_pag=pagfatforn[r][2]
+                    descrizione=pagfatforn[r][3]
+                    righe.append(dict(data=data,doc_n=doc_n, descrizione='Vs. versamento '+str(descrizione), importo='',
+                              tot_pag=tot_pag,saldo=''))
+        
+        return righe
+        ##Facciamo anche una query sulla row_table, per individuare dalle pkeys i "clienti" oggetto della stampa
+        #fornitori = self.db.table('acc.fornitore').query(columns='$id,$rag_sociale', where='$id IN :pkeys', 
+        #                                            pkeys=self.record['selectionPkeys']).fetch()
+        #
+        #return fornitori
         
         #for prodotto in fatture_forn_grouped:
         #    categoria_principale = prodotto['prodotto_gerarchia'].split('/')[0]
         #    prodotto['categoria_principale'] = categoria_principale
 
-        return fatture_forn_grouped
+        #return fatture_forn_grouped
     
     #def gridQueryParameters(self):
     #    
@@ -107,6 +153,7 @@ class Main(TableScriptToHtml):
     #    return dict(condition=' AND '.join(condition), condition_anno=self.parameter('anno'), 
     #                condition_dal=self.parameter('dal'),condition_al=self.parameter('al'),
     #                condition_balance=balance,relation='@forn_fatt')
+    
     
 
     def docFooter(self, footer, lastPage=None):
