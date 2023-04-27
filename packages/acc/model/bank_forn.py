@@ -8,3 +8,4 @@ class Table(object):
         tbl.column('banca', name_short='!![en]Bank name')
         tbl.column('iban', size='27', name_short='Iban', validate_notnull=True)
         tbl.column('swiftcode', name_short='!![en]Swift code')
+        tbl.formulaColumn('bank_details',"coalesce('Banca: '|| $banca,'') || '<br>' || coalesce('Iban: ' || $iban,'') || '<br>' || coalesce('Swift code: ' || $swiftcode, '')")

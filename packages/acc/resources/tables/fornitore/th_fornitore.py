@@ -31,6 +31,7 @@ class Form(BaseComponent):
         self.fornitore(bc.roundedGroupFrame(title='!![en]Supplier',region='top',datapath='.record',height='180px', splitter=True))
         tc = bc.tabContainer(margin='2px',region='center')
         self.fat_forn(tc.contentPane(title='!![en]Invoices'))
+        self.bonifici(tc.contentPane(title='!![en]Transfers'))
         self.bank_forn(tc.contentPane(title='!![en]Bank details'))
 
     def fornitore(self, pane):
@@ -47,6 +48,9 @@ class Form(BaseComponent):
     def fat_forn(self,pane):
         pane.dialogTableHandler(relation='@forn_fatt',
                                 viewResource='View',extendedQuery=True,pbl_classes=True)
+    def bonifici(self,pane):
+        pane.dialogTableHandler(relation='@bonifico_forn',
+                                viewResource='View',extendedQuery=True,pbl_classes=True)    
     def bank_forn(self,pane):
         pane.dialogTableHandler(relation='@forn_bank',
                                 viewResource='View')

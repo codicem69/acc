@@ -4,8 +4,8 @@ from datetime import datetime
 class Main(TableScriptToHtml):
     maintable = 'acc.fornitore'
     row_table = 'acc.fornitore'
-    page_width = 210
-    page_height = 297
+    page_width = 297
+    page_height = 210
     page_margin_left = 5
     page_margin_right = 5
     
@@ -22,20 +22,25 @@ class Main(TableScriptToHtml):
 
     def docHeader(self, header):
         #Questo metodo definisce il layout e il contenuto dell'header della stampa
+        
+        if len(self.fornid) > 1:
+            fornitore=''
+        else:
+            fornitore= self.rowField('fornitore')   
         head = header.layout(name='doc_header', margin='5mm', border_width=0)
         row = head.row()
         if self.parameter('anno'):
             row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
-                    <div style='font-size:10pt;'>{anno}</div></center>::HTML""".format(cliente=self.field('rag_sociale'),anno=self.parameter('anno')))
+                    <div style='font-size:10pt;'>{anno}</div></center>::HTML""".format(cliente=fornitore,anno=self.parameter('anno')))
         elif self.parameter('dal'):
             row.cell("""<center><div style='font-size:12pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
-                    <div style='font-size:10pt;'>from {dal} to {al}</div></center>::HTML""".format(cliente=self.field('rag_sociale'),
+                    <div style='font-size:10pt;'>from {dal} to {al}</div></center>::HTML""".format(cliente=fornitore,
                     dal=self.parameter('dal'),al=self.parameter('al')))            
         else:
             #row = head.row()
             row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement</strong></div>
                     <div style='font-size:12pt;'><strong>{cliente}</strong></div></center>::HTML""".format(
-                                cliente=self.field('rag_sociale')))
+                                cliente=fornitore))
 
     def defineCustomStyles(self):
         #Questo metodo definisce gli stili del body dell'html
@@ -56,20 +61,25 @@ class Main(TableScriptToHtml):
         #Questo metodo definisce la struttura della griglia di stampa definendone colonne e layout
         r = struct.view().rows()
         
-        r.cell('data', mm_width=15)
+        if len(self.fornid) > 1:
+            r.cell('fornitore',mm_width=30)
+        r.cell('data', mm_width=15, name='Data')
          #r.fieldcell('mese_fattura', hidden=True, subtotal='Totale {breaker_value}', subtotal_order_by="$data")
          #Questa formulaColumn verrà utilizzata per creare i subtotali per mese
         r.cell('doc_n', mm_width=15, name='Documento')
-        r.cell('doc_n', hidden=True, subtotal='Totale {breaker_value}')
+        r.cell('doc_n', hidden=True, subtotal='Totale documento {breaker_value}',subtotal_order_by='$fornitore')
         #r.fieldcell('cliente_id', mm_width=0)
-        r.cell('descrizione',mm_width=0)
-        r.cell('importo', mm_width=20, totalize=True,format='#,###.00')
-        r.cell('tot_pag', mm_width=20, totalize=True,format='#,###.00')
         
-        r.cell('saldo',name='Balance', mm_width=20, totalize=True,format='#,###.00')
+        r.cell('descrizione',mm_width=0,name='Descrizione')
+        r.cell('importo', mm_width=20, name='Importo', totalize=True,format='#,###.00')
+        r.cell('tot_pag', mm_width=20, name='Totale versamenti', totalize=True,format='#,###.00')
         
+        r.cell('saldo',name='Balance doc.', mm_width=20, totalize=True,format='#,###.00')
+        r.cell('balance_fornitore',name='Balance totale',mm_width=20,format='#,###.00', totalize=True)
+
     def gridData(self): 
         condition = ['$fornitore_id=:forn_id']
+        condition_pag = []
         balance=0
         if self.parameter('balance') == True:
             condition.append('$saldo>:balance')
@@ -77,10 +87,13 @@ class Main(TableScriptToHtml):
             condition.append('$saldo>=:balance')    
         if self.parameter('anno'):
             condition.append('$anno_doc=:anno')
+            condition_pag.append('$anno_doc=:anno')
         if self.parameter('dal') and self.parameter('al'):
             condition.append('$data BETWEEN :dal AND :al')
-         
+            condition_pag.append('$data BETWEEN :dal AND :al')
+
         where = ' AND '.join(condition)
+        where_pag = ' AND '.join(condition_pag)
                    # , condition_anno=self.parameter('anno'), 
                    #condition_dal=self.parameter('dal'),condition_al=self.parameter('al'),
                    #condition_balance=balance)
@@ -88,41 +101,84 @@ class Main(TableScriptToHtml):
         #if self.parameter('dal'):
         #    condition.append('$data >= :data_inizio')
         #where = ' AND '.join(condition
+        self.fornid=self.record('selectionPkeys')
         
-        fatforn = self.db.table('acc.fatture_forn').query(columns="""$fornitore_id,
+        righe_fat=[]
+        righe=[]
+        for r in range(len(self.record('selectionPkeys'))):
+            forn_id=self.record('selectionPkeys')[r]
+
+            fatforn = self.db.table('acc.fatture_forn').query(columns="""$fornitore_id,
                                             $data,$doc_n,$descrizione,$importo,$tot_pag,$saldo""",
                                             where=where,
                                             balance=balance,
                                             anno=self.parameter('anno'),
                                             dal=self.parameter('dal'),
                                             al=self.parameter('al'),
-                                            forn_id=self.record['selectionPkeys'],
+                                            forn_id=forn_id, 
                                             order_by='$data'
                                             ).fetch()
-        pagfatforn = self.db.table('acc.pag_fat_forn').query(columns="""$fatture_forn_id,
+           #pagfatforn = self.db.table('acc.pag_fat_forn').query(columns="""$fatture_forn_id,
+           #                                $data,$importo,$note""",
+           #                                where='').fetch()
+            pagfatforn = self.db.table('acc.pag_fat_forn').query(columns="""$fatture_forn_id,
                                             $data,$importo,$note""",
-                                            where='').fetch()
-        
-        
-        righe=[]
-        for r in range(len(fatforn)):
-            fat_id=fatforn[r][7]
-            data=fatforn[r][1]
-            doc_n=fatforn[r][2]
-            descrizione=fatforn[r][3]
-            importo=fatforn[r][4]
-            tot_pag=fatforn[r][5]
-            saldo=fatforn[r][6]
-            righe.append(dict(data=data,doc_n=doc_n, descrizione=descrizione, importo=importo,
-                              tot_pag='',saldo=saldo))
-            for r in range(len(pagfatforn)):
+                                            where=where_pag,
+                                            anno=self.parameter('anno'),
+                                            dal=self.parameter('dal'),
+                                            al=self.parameter('al')
+                                            ).fetch()
+            
+            fornitori = self.db.table('acc.fornitore').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id IN :pkeys',
+                                                             order_by='$rag_sociale',
+                                                             group_by='$id',
+                                                  pkeys=self.record['selectionPkeys']).fetch()
+            #print(x)
+            fornitore=fornitori[r][1]
+            #print(x)
+            balance_fornitore = fornitori[r][2]
+            bal_forn=0
+            righe_pag=[]
+            for r in range(len(fatforn)):
+                fat_id=fatforn[r][7]
+                data_fat=fatforn[r][1]
+                doc_n=fatforn[r][2]
+                descrizione_fat=fatforn[r][3]
+                importo_fat=fatforn[r][4]
+                tot_pag=fatforn[r][5]
+                saldo=fatforn[r][6]
+
+                pag_progressivo=0          
+                saldo_fat = importo_fat
+                    
+                for p in range(len(pagfatforn)):
+
+                    if pagfatforn[p][0] == fat_id:
+                        data=pagfatforn[p][1]
+                        tot_pag=pagfatforn[p][2]
+                        descrizione=pagfatforn[p][3]
+                        if descrizione is not None:
+                            descrizione='Versamento - ' + str(descrizione)
+                        else:
+                            descrizione='Versamento'    
+                        pag_progressivo += tot_pag
+                        saldo_fat = 0
+                        saldo_fat = importo_fat-pag_progressivo
+
+                        righe_pag.append(dict(data=data,doc_n=doc_n, descrizione=descrizione, importo='',
+                                  tot_pag=tot_pag,saldo=''))
+                bal_forn+=saldo_fat
+                if r == len(fatforn)-1:
+                    righe_pag.append(dict(data='',doc_n='Balance', descrizione='Totale ' + str(fornitore), importo='',
+                                  tot_pag='',saldo='',fornitore='',balance_fornitore=bal_forn))
+                righe_fat.append(dict(data=data_fat,doc_n=doc_n, descrizione=descrizione_fat, importo=importo_fat,
+                                  tot_pag='',saldo=saldo_fat,fornitore=fornitore)) 
                 
-                if pagfatforn[r][0] == fat_id:
-                    data=pagfatforn[r][1]
-                    tot_pag=pagfatforn[r][2]
-                    descrizione=pagfatforn[r][3]
-                    righe.append(dict(data=data,doc_n=doc_n, descrizione='Vs. versamento '+str(descrizione), importo='',
-                              tot_pag=tot_pag,saldo=''))
+                righe = []
+                righe_fat.extend(righe_pag)
+                for myDict in righe_fat:
+                    if myDict not in righe:
+                        righe.append(myDict)             
         
         return righe
         ##Facciamo anche una query sulla row_table, per individuare dalle pkeys i "clienti" oggetto della stampa

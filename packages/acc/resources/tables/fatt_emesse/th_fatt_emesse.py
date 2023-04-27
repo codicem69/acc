@@ -32,7 +32,8 @@ class View(BaseComponent):
         return [dict(code='tutti',caption='!![en]All'),
                 dict(code='da_saldare',caption='!![en]To be paid',
                         condition='$saldo>0'),
-                dict(code='saldati',caption='!![en]Paid',condition='$saldo=0')]
+                dict(code='saldati',caption='!![en]Paid',condition='$saldo=0'),
+                dict(code='insda',caption='!![en]InsDA',condition='$insda=true')]
     
     def th_top_toolbarsuperiore(self,top):
         bar=top.slotToolbar('5,sections@fatemesse,10,test,resourceActions,15',
@@ -63,7 +64,7 @@ class Form(BaseComponent):
         fb.field('doc_n' )
         fb.field('importo',font_weight='bold')
         fb.field('descrizione',width='100%', colspan=3, tag='textarea')
-        fb.field('insda' )
+        fb.field('insda')
 
     def paym_fatEmesse(self,pane):
         pane.inlineTableHandler(relation='@paym_fat_emesse',

@@ -13,6 +13,7 @@ class Table(object):
         tbl.column('email', name_short='!![en]Email')
         tbl.formulaColumn('full_supplier',"""$rag_sociale || coalesce(' - '|| $address, '') || coalesce(' - '|| $cap,'') || coalesce(' - '|| $city,'') """ )
         tbl.aliasColumn('balance','@forn_fatt.saldo',dtype='N')
+        tbl.aliasColumn('bank_details','@forn_bank.bank_details')
         tbl.formulaColumn('worktime', ':env_workdate')
 
     

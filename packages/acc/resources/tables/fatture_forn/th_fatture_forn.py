@@ -17,6 +17,7 @@ class View(BaseComponent):
         r.fieldcell('saldo', totalize=True,
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
         r.fieldcell('semaforo',semaphore=True)
+        r.fieldcell('bonificato',name='!![en]Bank transfer order', width='5em')
         
     def th_order(self):
         return 'data:d'
@@ -46,7 +47,19 @@ class View(BaseComponent):
                             dict(field='data', lbl='!![en]Invoice date',width='10em'),
                             dict(field='descrizione', lbl='!![en]Description',width='10em')],
                             cols=4, isDefault=True)   
+
+class ViewFormFatFornBonifici_picker(BaseComponent):
+
+    def th_struct(self,struct):
+        r = struct.view().rows()
+        r.fieldcell('data')
+        r.fieldcell('doc_n',width='5em')
+        r.fieldcell('descrizione',width='10em')
+        r.fieldcell('importo', totalize=True)
         
+    def th_order(self):
+        return 'data'
+    
 class Form(BaseComponent):
 
     def th_form(self, form):

@@ -1,13 +1,13 @@
 from datetime import datetime
 from gnr.web.batch.btcprint import BaseResourcePrint
 
-caption = 'Test'
+caption = 'Estratto fornitore dettaglio pag.'
 
 class Main(BaseResourcePrint):
-    batch_title = 'Test'
+    batch_title = 'Estratto fornitore dettaglio pag.'
     batch_immediate='print'
     #Con batch_immediate='print' viene immediatamente aperta la stampa alla conclusione
-    html_res = 'html_res/test'
+    html_res = 'html_res/estratto_dettaglio_forn'
     #Questo parametro indica la risorsa di stampa da utilizzare
 
     def table_script_parameters_pane(self, pane,**kwargs):

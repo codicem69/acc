@@ -10,4 +10,5 @@ class Table(object):
         tbl.column('data', dtype='D', name_short='!![en]Date')
         tbl.column('importo', dtype='money', size='10,3', name_short='!![en]Amount')
         tbl.column('note', name_short='!![en]Note')
+        tbl.formulaColumn('anno_doc',"date_part('year', $data)", dtype='D')
         tbl.aliasColumn('impfatemessa','@fatt_emesse_id.importo')
