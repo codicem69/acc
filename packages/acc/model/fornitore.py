@@ -11,6 +11,7 @@ class Table(object):
         tbl.column('city', name_short='!![en]City place')
         tbl.column('tel', name_short='!![en]Tel.')
         tbl.column('email', name_short='!![en]Email')
+        tbl.column('note', name_short='Note')
         tbl.formulaColumn('full_supplier',"""$rag_sociale || coalesce(' - '|| $address, '') || coalesce(' - '|| $cap,'') || coalesce(' - '|| $city,'') """ )
         tbl.aliasColumn('balance','@forn_fatt.saldo',dtype='N')
         tbl.aliasColumn('bank_details','@forn_bank.bank_details')

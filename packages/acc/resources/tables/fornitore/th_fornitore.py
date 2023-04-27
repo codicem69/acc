@@ -28,9 +28,10 @@ class Form(BaseComponent):
     def th_form(self, form):
         #pane = form.record
         bc = form.center.borderContainer()
-        self.fornitore(bc.roundedGroupFrame(title='!![en]Supplier',region='top',datapath='.record',height='180px', splitter=True))
+        self.fornitore(bc.roundedGroupFrame(title='!![en]Supplier',region='top',datapath='.record',height='220px', splitter=True))
         tc = bc.tabContainer(margin='2px',region='center')
         self.fat_forn(tc.contentPane(title='!![en]Invoices'))
+        #self.note_forn(tc.contentPane(title='!!Note',datapath='.record'))
         self.bonifici(tc.contentPane(title='!![en]Transfers'))
         self.bank_forn(tc.contentPane(title='!![en]Bank details'))
 
@@ -43,11 +44,15 @@ class Form(BaseComponent):
         fb.field('city')
         fb.field('tel')
         fb.field('email')
+        fb.field('note', tag='simpleTextArea', height='100px', colspan=2)
         #fb.field('balance',font_weight='bold',color ="^#FORM.record.balance?=#v>0?'red':'black'")
 
     def fat_forn(self,pane):
         pane.dialogTableHandler(relation='@forn_fatt',
                                 viewResource='View',extendedQuery=True,pbl_classes=True)
+    #def note_forn(self,frame):
+    #    frame.simpleTextArea(title='Note',value='^.note',editor=True)
+
     def bonifici(self,pane):
         pane.dialogTableHandler(relation='@bonifico_forn',
                                 viewResource='View',extendedQuery=True,pbl_classes=True)    

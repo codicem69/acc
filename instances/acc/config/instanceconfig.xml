@@ -6,14 +6,13 @@
 		<gnrcore_adm pkgcode="gnrcore:adm"/>
 		<gnrcore_email pkgcode="gnrcore:email"/>
         <unlocode pkgcode="unlocode:unlocode"/>
-		<acc/>
 		<agz pkgcode="agz:agz"/>
+		<acc pkgcode="acc:acc"/>
 	</packages>
+	<!-- <menu package="*"/> -->
 	<authentication pkg="gnrcore:sys">
 		<py_auth defaultTags="user" pkg="adm" method="authenticate"/>
 	</authentication>
-	<site>
-		<wsgi/>
-	</site>
-	<menu package="*"/>
+
+
 </GenRoBag>

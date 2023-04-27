@@ -28,9 +28,11 @@ class View(BaseComponent):
 class Form(BaseComponent):
     def th_form(self, form):
         bc = form.center.borderContainer()
-        self.cliente(bc.roundedGroupFrame(title='!![en]Customer',region='top',datapath='.record',height='180px', splitter=True))
+        self.cliente(bc.roundedGroupFrame(title='!![en]Customer',region='top',datapath='.record',height='210px', splitter=True))
         tc = bc.tabContainer(margin='2px',region='center')
         self.fat_emesse(tc.contentPane(title='!![en]Invoices'))
+        self.bonifici(tc.contentPane(title='!![en]Transfers'))
+        self.banca_cliente(tc.contentPane(title='!![en]Bank details'))
         #self.bank_forn(tc.contentPane(title='!![en]Bank details'))
     
     def cliente(self, pane):
@@ -44,10 +46,19 @@ class Form(BaseComponent):
         fb.field('cf' )
         fb.field('cod_univoco' )
         fb.field('pec' )
+        fb.field('note', tag='simpleTextArea', height='70px', colspan=2)
 
     def fat_emesse(self,pane):
         pane.dialogTableHandler(relation='@fatt_cliente',
                                 viewResource='View',extendedQuery=True,pbl_classes=True)
+    
+    def bonifici(self,pane):
+        pane.dialogTableHandler(relation='@bonifico_cliente',
+                                viewResource='View',extendedQuery=True,pbl_classes=True)  
+        
+    def banca_cliente(self,pane):
+        pane.dialogTableHandler(relation='@customer_bank',
+                                viewResource='View',extendedQuery=True,pbl_classes=True)    
 
     def th_options(self):
         return dict(dialog_height='400px', dialog_width='600px' )

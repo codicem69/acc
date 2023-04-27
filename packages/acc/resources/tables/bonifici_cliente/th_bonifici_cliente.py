@@ -11,7 +11,7 @@ class View(BaseComponent):
     def th_struct(self,struct):
         r = struct.view().rows()
         r.fieldcell('data')
-        r.fieldcell('fornitore_id')
+        r.fieldcell('cliente_id')
         r.fieldcell('causale', width='70em')
         r.fieldcell('importo', totalize=True)
 
@@ -19,42 +19,32 @@ class View(BaseComponent):
         return 'data:d'
 
     def th_query(self):
-        return dict(column='id', op='contains', val='')
+        return dict(column='causale', op='contains', val='')
 
 
 
 class Form(BaseComponent):
 
     def th_form(self, form):
-        #pane = form.record
         bc = form.center.borderContainer()
-        self.bonifici_forn(bc.roundedGroup(title='!![en]Transfers supplier',region='top',datapath='.record',height='200px'))
-        self.fatture_fornitore(bc.contentPane(title='!![en]Invoices supplier',region='center',margin='2px'))
-    
-    def bonifici_forn(self,pane): 
+        self.bonifici_clienti(bc.roundedGroup(title='!![en]Transfers customer',region='top',datapath='.record',height='200px'))
+
+    def bonifici_clienti(self,pane):    
         fb = pane.formbuilder(cols=1, border_spacing='4px')
         fb.field('data')
-        fb.field('fornitore_id', hasDownArrow=True, width='30em' )
+        fb.field('cliente_id', hasDownArrow=True, width='30em' )
         fb.field('causale',tag='simpleTextArea', width='50em' )
         fb.field('importo' )
 
-    def fatture_fornitore(self,pane):
-        pane.inlineTableHandler(relation='@bonifici_forn',viewResource='ViewFromFatFornBonifici',
-                                picker='fatture_forn_id',
-                                picker_condition='fornitore_id=:fid and $saldo>0 and $bonificato IS NULL',
-                                picker_condition_fid='^#FORM.record.fornitore_id',
-                                picker_viewResource='ViewFormFatFornBonifici_picker')#'ViewFromCargoLU_picker')
-                           #,pbl_classes=True,margin='2px',addrow=True,picker='doc_n',
-                           #picker_condition='$saldo>0',
-                           #picker_viewResource=True)
-    
+
+    def th_options(self):
+        return dict(dialog_windowRatio = 1, annotations= True )
+        #return dict(dialog_height='400px', dialog_width='600px' )
+
     def th_bottom_custom(self, bottom):
         bar = bottom.slotBar('10,stampa_bonifico,*,10')
         btn_bonifico_print=bar.stampa_bonifico.button('!![en]Print transfer')
-        btn_bonifico_print.dataRpc('nome_temp', self.print_bonifico,record='=#FORM.record',nome_template = 'acc.bonifici_fornitore:bonifico_forn',format_page='A4')
-    
-    def th_options(self):
-        return dict(dialog_windowRatio = 1, annotations= True )
+        btn_bonifico_print.dataRpc('nome_temp', self.print_bonifico,record='=#FORM.record',nome_template = 'acc.bonifici_cliente:bonifico_cliente',format_page='A4')
 
     @public_method
     def print_bonifico(self, record, resultAttr=None, nome_template=None, format_page=None, **kwargs):
@@ -65,10 +55,10 @@ class Form(BaseComponent):
        #    msg_special = 'yes'
        #    return msg_special
 
-        tbl_bonifici_forn = self.db.table('acc.bonifici_fornitore')
+        tbl_bonifici_forn = self.db.table('acc.bonifici_cliente')
         builder = TableTemplateToHtml(table=tbl_bonifici_forn)
 
-        nome_temp = nome_template.replace('acc.bonifico_forn:','')
+        nome_temp = nome_template.replace('acc.bonifico_cliente:','')
         nome_file = '{cl_id}.pdf'.format(
                     cl_id=nome_temp)
 
@@ -90,4 +80,4 @@ class Form(BaseComponent):
         result = builder.writePdf(pdfpath=pdfpath)
 
         self.setInClientData(path='gnr.clientprint',
-                              value=result.url(timestamp=datetime.now()), fired=True)
+                              value=result.url(timestamp=datetime.now()), fired=True)    

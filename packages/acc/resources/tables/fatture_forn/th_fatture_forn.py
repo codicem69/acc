@@ -64,7 +64,7 @@ class Form(BaseComponent):
 
     def th_form(self, form):
         bc = form.center.borderContainer()
-        self.fatforn(bc.roundedGroupFrame(title='!![en]Supplier invoices',region='top',datapath='.record',height='300px', splitter=True))
+        self.fatforn(bc.roundedGroupFrame(title='!![en]Supplier invoices',region='top',datapath='.record',height='200px', splitter=True))
         tc = bc.tabContainer(margin='2px',region='center')
         self.paym_fatforn(tc.contentPane(title='!![en]Payments'))
         

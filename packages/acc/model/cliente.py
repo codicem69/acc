@@ -11,6 +11,8 @@ class Table(object):
         tbl.column('cf', name_short='!![en]Fiscal code')
         tbl.column('cod_univoco',size='7', name_short='!![en]Unique code')
         tbl.column('pec', name_short='Email pec')
+        tbl.column('note', name_short='Note')
         tbl.aliasColumn('balance','@fatt_cliente.saldo',dtype='N')
+        tbl.aliasColumn('bank_details_cliente','@customer_bank.bank_details_cliente')
         tbl.formulaColumn('full_cliente',"""$rag_sociale || coalesce(' - '|| $address, '') || coalesce(' - '|| $cap,'') || coalesce(' - '|| $city,'') || coalesce(' Vat: ' || $vat,'') || 
                                      coalesce(' - unique code: ' || $cod_univoco,'') || coalesce(' - pec: ' || $pec,'') """ )
