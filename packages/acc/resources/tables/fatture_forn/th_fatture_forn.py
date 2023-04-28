@@ -8,7 +8,7 @@ class View(BaseComponent):
 
     def th_struct(self,struct):
         r = struct.view().rows()
-        r.fieldcell('fornitore_id')
+        r.fieldcell('fornitore_id', width='30em', name='!![en]Supplier')
         r.fieldcell('data')
         r.fieldcell('doc_n')
         r.fieldcell('descrizione',width='50em')

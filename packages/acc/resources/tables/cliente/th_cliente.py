@@ -16,7 +16,18 @@ class View(BaseComponent):
         r.fieldcell('cf')
         r.fieldcell('cod_univoco')
         r.fieldcell('pec')
+        r.fieldcell('balance', width='20em',totalize=True,
+                          range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='font-weight:bold;color:black;')
 
+    def th_sections_fatemesse(self):
+        return [dict(code='tutti',caption='!![en]All'),
+                dict(code='da_saldare',caption='!![en]To be paid',
+                        condition='$balance>0')]
+
+    def th_top_toolbarsuperiore(self,top):
+        bar=top.slotToolbar('5,sections@fatemesse,15',
+                        childname='superiore',_position='<bar')
+            
     def th_order(self):
         return 'rag_sociale'
 
