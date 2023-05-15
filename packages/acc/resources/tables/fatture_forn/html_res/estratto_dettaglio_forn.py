@@ -123,7 +123,7 @@ class Main(TableScriptToHtml):
         #if self.parameter('dal'):
         #    condition.append('$data >= :data_inizio')
         #where = ' AND '.join(condition
-        fornitori_pkeys = self.db.table('acc.fornitore').query(columns="$id", where='').selection().output('pkeylist')
+        fornitori_pkeys = self.db.table('acc.fornitore').query(columns="$id", where='$balance >=0').selection().output('pkeylist')
         self.fornid=fornitori_pkeys
         if self.parameter('fornitore_id'):
             len_forn=1
@@ -136,12 +136,12 @@ class Main(TableScriptToHtml):
             #altrimenti saranno selezionati tutti i fornitori e sarà passata la query per tutti
             if self.parameter('fornitore_id'):
                 forn_id=self.parameter('fornitore_id')
-                fornitori = self.db.table('acc.fornitore').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id=:pkeys',
+                fornitori = self.db.table('acc.fornitore').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id=:pkeys and $balance >=0',
                                                              order_by='$rag_sociale',
                                                              group_by='$id',
                                                   pkeys=forn_id).fetch()
             else:
-                fornitori = self.db.table('acc.fornitore').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id IN :pkeys',
+                fornitori = self.db.table('acc.fornitore').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id IN :pkeys and $balance >=0',
                                                              order_by='$rag_sociale',
                                                              group_by='$id',
                                                   pkeys=fornitori_pkeys).fetch()
