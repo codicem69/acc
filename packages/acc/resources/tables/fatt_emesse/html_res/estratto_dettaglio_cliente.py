@@ -2,8 +2,8 @@ from gnr.web.gnrbaseclasses import TableScriptToHtml
 from datetime import datetime
 
 class Main(TableScriptToHtml):
-    maintable = 'acc.cliente'
-    row_table = 'acc.cliente'
+    maintable = 'acc.fatt_emesse'
+    row_table = 'acc.fatt_emesse'
     css_requires='grid'
     page_width = 297
     page_height = 210
@@ -24,14 +24,10 @@ class Main(TableScriptToHtml):
     def docHeader(self, header):
         #Questo metodo definisce il layout e il contenuto dell'header della stampa
         
-        #if len(self.cliente_id) > 1:
-        #    cliente=''
-        #else:
-        #    cliente= self.rowField('cliente')   
         if self.parameter('cliente_id'):
             cliente=self.rowField('cliente')
         else:
-            cliente= ''
+            cliente= ''  
         head = header.layout(name='doc_header', margin='5mm', border_width=0)
         row = head.row()
         if self.parameter('anno'):
@@ -65,11 +61,10 @@ class Main(TableScriptToHtml):
     def gridStruct(self,struct):
         #Questo metodo definisce la struttura della griglia di stampa definendone colonne e layout
         r = struct.view().rows()
-        #if len(self.cliente_id) > 1:
-        #    r.cell('cliente',mm_width=30)
         if not self.parameter('cliente_id'):
+        #if len(self.cliente_id) > 1:
             r.cell('cliente',mm_width=30, content_class="breakword")
-            r.cell('cliente', hidden=True, subtotal='Totali {breaker_value}',subtotal_order_by='$cliente',subtotal_content_class='cell_pers')    
+            r.cell('cliente', hidden=True, subtotal='Totali {breaker_value}',subtotal_order_by='$cliente',subtotal_content_class='cell_pers')
         r.cell('data', mm_width=15, name='Data')
          #r.fieldcell('mese_fattura', hidden=True, subtotal='Totale {breaker_value}', subtotal_order_by="$data")
          #Questa formulaColumn verrà utilizzata per creare i subtotali per mese
@@ -77,13 +72,13 @@ class Main(TableScriptToHtml):
         #r.cell('doc_n', hidden=True, subtotal='Totale documento {breaker_value}',subtotal_order_by='$cliente')
         #r.fieldcell('cliente_id', mm_width=0)
         
-        r.cell('descrizione',mm_width=0,name='Descrizione')
+        r.cell('descrizione',mm_width=0,name='Descrizione', content_class="breakword")
         r.cell('importo', mm_width=20, name='Importo', totalize=True,format='#,###.00')
         r.cell('insda',mm_width=5, dtype='B')
         r.cell('tot_pag', mm_width=20, name='Totale versamenti', totalize=True,format='#,###.00')
         
         r.cell('saldo',name='Balance doc.', mm_width=20, totalize=True,format='#,###.00')
-        #r.cell('balance_cliente',name='Balance totale',mm_width=20,format='#,###.00', totalize=True)
+       # r.cell('balance_cliente',name='Balance totale',mm_width=20,format='#,###.00', totalize=True)
 
     def calcRowHeight(self):
         #Determina l'altezza di ogni singola riga con approssimazione partendo dal valore di riferimento grid_row_height
@@ -130,18 +125,16 @@ class Main(TableScriptToHtml):
         #if self.parameter('dal'):
         #    condition.append('$data >= :data_inizio')
         #where = ' AND '.join(condition
-        #self.cliente_id=self.record('selectionPkeys')
         clienti_pkeys = self.db.table('acc.cliente').query(columns="$id", where='').selection().output('pkeylist')
         self.cliente_id=clienti_pkeys
         if self.parameter('cliente_id'):
             len_cliente=1
         else:
-            len_cliente=len(clienti_pkeys)
-        #print(x)
+            len_cliente=len(clienti_pkeys)   
+
         righe_fat=[]
         righe=[]
         for r in range(len_cliente):
-            #cliente_id=self.record('selectionPkeys')[r]
             #verifichiamo se alla stampa abbiamo scelto il singolo fornitore così passiamo la query giusta per la ricerca del singolo
             #altrimenti saranno selezionati tutti i fornitori e sarà passata la query per tutti
             if self.parameter('cliente_id'):
@@ -158,6 +151,7 @@ class Main(TableScriptToHtml):
 
                 #cliente_id=clienti_pkeys[r]
                 cliente_id=clienti[r][0]
+
             fat_emesse = self.db.table('acc.fatt_emesse').query(columns="""$cliente_id,
                                             $data,$doc_n,$descrizione,$importo,$tot_pag,$saldo,$insda""",
                                             where=where,
@@ -183,23 +177,22 @@ class Main(TableScriptToHtml):
             bal_cliente=0
             righe_pag=[]
             for r in range(len(fat_emesse)):
-                if fat_emesse[r][0] == cliente_id:
-                    fat_id=fat_emesse[r][8]
-                    data_fat=fat_emesse[r][1]
-                    doc_n=fat_emesse[r][2]
-                    descrizione_fat=fat_emesse[r][3]
-                    importo_fat=fat_emesse[r][4]
-                    tot_pag=fat_emesse[r][5]
-                    saldo=fat_emesse[r][6]
-                    insda=fat_emesse[r][7]
-                    if insda == True:
-                        insda = 'x'
-                        saldo_fat = 0
-                    else:
-                        insda = ''
-                        saldo_fat=importo_fat
+                fat_id=fat_emesse[r][8]
+                data_fat=fat_emesse[r][1]
+                doc_n=fat_emesse[r][2]
+                descrizione_fat=fat_emesse[r][3]
+                importo_fat=fat_emesse[r][4]
+                tot_pag=fat_emesse[r][5]
+                saldo=fat_emesse[r][6]
+                insda=fat_emesse[r][7]
+                if insda == True:
+                    insda = 'x'
+                    saldo_fat = 0
+                else:
+                    insda = ''
+                    saldo_fat=importo_fat
 
-                    pag_progressivo=0
+                pag_progressivo=0
 
                 for p in range(len(pagfatEmesse)):
 
@@ -248,7 +241,6 @@ class Main(TableScriptToHtml):
         
     def outputDocName(self, ext=''):
         #Questo metodo definisce il nome del file di output
-        #print(x)
         if len(self.gridData())>0:
             cliente=self.gridData()[0]['cliente'].replace('.','').replace(' ','_')
         else:

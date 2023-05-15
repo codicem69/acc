@@ -2,8 +2,8 @@ from gnr.web.gnrbaseclasses import TableScriptToHtml
 from datetime import datetime
 
 class Main(TableScriptToHtml):
-    maintable = 'acc.fornitore'
-    row_table = 'acc.fornitore'
+    maintable = 'acc.fatture_forn'
+    row_table = 'acc.fatture_forn'
     css_requires='grid'
     page_width = 297
     page_height = 210
@@ -24,15 +24,11 @@ class Main(TableScriptToHtml):
     def docHeader(self, header):
         #Questo metodo definisce il layout e il contenuto dell'header della stampa
         
-        #if len(self.fornid) > 1:
-        #    fornitore=''
-        #else:
-        #    fornitore= self.rowField('fornitore')
         if self.parameter('fornitore_id'):
             fornitore=self.rowField('fornitore')
             self.fornitore=fornitore
         else:
-            fornitore= ''   
+            fornitore= ''  
         head = header.layout(name='doc_header', margin='5mm', border_width=0)
         row = head.row()
         if self.parameter('anno'):
@@ -53,7 +49,6 @@ class Main(TableScriptToHtml):
         self.body.style(""".cell_label{
                             font-size:8pt;
                             text-align:left;
-                            color:grey;
                             text-indent:1mm;}
 
                             .footer_content{
@@ -66,25 +61,24 @@ class Main(TableScriptToHtml):
     def gridStruct(self,struct):
         #Questo metodo definisce la struttura della griglia di stampa definendone colonne e layout
         r = struct.view().rows()
-        
+        if not self.parameter('fornitore_id'):
         #if len(self.fornid) > 1:
-        if not self.parameter('fornitore_id'):    
             r.cell('fornitore',mm_width=30, content_class="breakword")
             r.cell('fornitore', hidden=True, subtotal='Totali {breaker_value}',subtotal_order_by='$fornitore',subtotal_content_class='cell_pers')
         r.cell('data', mm_width=15, name='Data')
          #r.fieldcell('mese_fattura', hidden=True, subtotal='Totale {breaker_value}', subtotal_order_by="$data")
          #Questa formulaColumn verrà utilizzata per creare i subtotali per mese
         r.cell('doc_n', mm_width=15, name='Documento')
-        #r.cell('doc_n', hidden=True, subtotal='Totale documento {breaker_value}',subtotal_order_by='$fornitore')
+        #r.cell('doc_n', hidden=True, subtotal='{breaker_value}',subtotal_order_by='$fornitore')
         #r.fieldcell('cliente_id', mm_width=0)
-        
-        r.cell('descrizione',mm_width=0,name='Descrizione')
-        r.cell('importo', mm_width=20, name='Importo', totalize=True,format='#,###.00')
+        #r.cell('bal',mm_width=15)
+        r.cell('descrizione',mm_width=0,name='Descrizione', content_class="breakword")
+        r.cell('importo', mm_width=20, name='Importo doc.', totalize=True,format='#,###.00')
         r.cell('tot_pag', mm_width=20, name='Totale versamenti', totalize=True,format='#,###.00')
         
-        r.cell('saldo',name='Balance doc.', mm_width=20, totalize=True,format='#,###.00')
-        #r.cell('balance_fornitore',name='Balance totale',mm_width=20,format='#,###.00', totalize=True)
-
+        r.cell('saldo',name='Balance doc.', mm_width=20, totalize=True,format='#,###.00',content_class='cell_pers')
+        #r.cell('balance_fornitore',name='Balance totale',content_class='cell_pers',mm_width=20,format='#,###.00', totalize=True)
+        #r.cell('balance_fornitore',  subtotal='Balance totale {breaker_value}', mm_width=20,format='#,###.00')
     def calcRowHeight(self):
         #Determina l'altezza di ogni singola riga con approssimazione partendo dal valore di riferimento grid_row_height
         fornitore_offset = 20
@@ -129,19 +123,16 @@ class Main(TableScriptToHtml):
         #if self.parameter('dal'):
         #    condition.append('$data >= :data_inizio')
         #where = ' AND '.join(condition
-        #self.fornid=self.record('selectionPkeys')
         fornitori_pkeys = self.db.table('acc.fornitore').query(columns="$id", where='').selection().output('pkeylist')
         self.fornid=fornitori_pkeys
         if self.parameter('fornitore_id'):
             len_forn=1
         else:
-            len_forn=len(fornitori_pkeys)
+            len_forn=len(fornitori_pkeys)    
         righe_fat=[]
         righe=[]
         for r in range(len_forn):
-        #    forn_id=self.record('selectionPkeys')[r]
-
-        #verifichiamo se alla stampa abbiamo scelto il singolo fornitore così passiamo la query giusta per la ricerca del singolo
+            #verifichiamo se alla stampa abbiamo scelto il singolo fornitore così passiamo la query giusta per la ricerca del singolo
             #altrimenti saranno selezionati tutti i fornitori e sarà passata la query per tutti
             if self.parameter('fornitore_id'):
                 forn_id=self.parameter('fornitore_id')
@@ -155,9 +146,9 @@ class Main(TableScriptToHtml):
                                                              group_by='$id',
                                                   pkeys=fornitori_pkeys).fetch()
                 
-                #forn_id=fornitori_pkeys[r]  
+                #forn_id=fornitori_pkeys[r]    
                 forn_id=fornitori[r][0]
-
+                
             fatforn = self.db.table('acc.fatture_forn').query(columns="""$fornitore_id,
                                             $data,$doc_n,$descrizione,$importo,$tot_pag,$saldo""",
                                             where=where,
@@ -179,13 +170,7 @@ class Main(TableScriptToHtml):
                                             al=self.parameter('al')
                                             ).fetch()
             
-            #fornitori = self.db.table('acc.fornitore').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id IN :pkeys',
-            #                                                 order_by='$rag_sociale',
-            #                                                 group_by='$id',
-            #                                      pkeys=self.record['selectionPkeys']).fetch()
-            #print(x)
             fornitore=fornitori[r][1]
-            #print(x)
             balance_fornitore = fornitori[r][2]
             bal_forn=0
             righe_pag=[]
@@ -219,12 +204,10 @@ class Main(TableScriptToHtml):
                                   tot_pag=tot_pag,saldo='',fornitore=fornitore))
                 bal_forn+=saldo_fat
                 #if r == len(fatforn)-1:
-                #    righe_pag.append(dict(data='',doc_n='Balance', descrizione='Totale ' + str(fornitore), importo='',
-                #                  tot_pag='',saldo='',fornitore='',balance_fornitore=bal_forn))
+                #    righe_pag.append(dict(data='',doc_n='', descrizione='Balance '+ str(fornitore), importo='',
+                #                  tot_pag='',saldo='',fornitore=fornitore,balance_fornitore=bal_forn))
                 righe_fat.append(dict(data=data_fat,doc_n=doc_n, descrizione=descrizione_fat, importo=importo_fat,
-                                  tot_pag='',saldo=saldo_fat,fornitore=fornitore))
-                #righe_fat.append(dict(data=data_fat,doc_n=doc_n, descrizione=descrizione_fat, importo=importo_fat,
-                #                  tot_pag='',saldo=saldo_fat,fornitore=fornitore)) 
+                                  tot_pag='',saldo=saldo_fat,fornitore=fornitore)) 
                 
                 righe = []
                 righe_fat.extend(righe_pag)

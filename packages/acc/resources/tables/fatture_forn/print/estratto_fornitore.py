@@ -1,13 +1,13 @@
 from datetime import datetime
 from gnr.web.batch.btcprint import BaseResourcePrint
 
-caption = 'Estratto Cliente dettaglio pag.'
+caption = 'Estratto Fornitore'
 
 class Main(BaseResourcePrint):
-    batch_title = 'Estratto Cliebte dettaglio pag.'
+    batch_title = 'Estratto Fornitore'
     batch_immediate='print'
     #Con batch_immediate='print' viene immediatamente aperta la stampa alla conclusione
-    html_res = 'html_res/estratto_dettaglio_cliente'
+    html_res = 'html_res/estratto_fornitore'
     #Questo parametro indica la risorsa di stampa da utilizzare
 
     def table_script_parameters_pane(self, pane,**kwargs):
@@ -25,4 +25,4 @@ class Main(BaseResourcePrint):
        fb.filteringSelect(value='^.anno', values=years, lbl='!![en]Year')
        fb.dateTextBox(value='^.dal',lbl='!![en]Date from',period_to='.al')
        fb.dateTextBox(value='^.al',lbl='!![en]Date to')
-       fb.dbselect(value='^.cliente_id', table='acc.cliente', lbl='Cliente', selected_rag_sociale='.rag_sociale',hasDownArrow=True)
+   #    fb.dbselect(value='^.cliente_id', table='fatt.cliente', lbl='Cliente', selected_ragione_sociale='.ragione_sociale')

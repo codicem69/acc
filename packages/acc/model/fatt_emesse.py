@@ -11,6 +11,11 @@ class Table(object):
         tbl.column('importo', dtype='money', name_short='!![en]Ammount')
         tbl.column('descrizione', name_short='!![en]Description')
         tbl.column('insda', dtype='B', name_short='InsDA')
+        tbl.column('scadenza', dtype='D', name_short='!![en]Due Date')
+        tbl.formulaColumn('giorni_scadenza',"""CASE WHEN ($scadenza - CURRENT_DATE)>0 AND $saldo>0 THEN 'Scadenza tra giorni ' || cast(($scadenza - CURRENT_DATE) as varchar)
+                                        WHEN ($scadenza - CURRENT_DATE)>0 AND $saldo=0 THEN '!![en]PAYED' 
+                                        WHEN ($scadenza - CURRENT_DATE)<0 AND $saldo=0 THEN '!![en]PAYED' ELSE 'Scaduta da giorni ' || cast((CURRENT_DATE-$scadenza) as varchar) END """,
+                                        name_long='!![en]Expire days')
         tbl.formulaColumn('tot_pag',select=dict(table='acc.pag_fat_emesse',columns='coalesce(SUM($importo),0)', where="$fatt_emesse_id=#THIS.id"),dtype='N',format='#,###.00',
                           name_long='!![en]Total payments')
         tbl.formulaColumn('saldo', "CASE WHEN ($insda is not null) AND ($insda=true) THEN 0 ELSE $importo-coalesce($tot_pag,0) END",dtype='N',name_long='!![en]Balance',format='#,###.00')

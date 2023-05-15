@@ -61,7 +61,7 @@ class Form(BaseComponent):
 
     def fat_emesse(self,pane):
         pane.dialogTableHandler(relation='@fatt_cliente',
-                                viewResource='View',extendedQuery=True,pbl_classes=True)
+                                viewResource='ViewFromFatture',extendedQuery=True,pbl_classes=True)
     
     def bonifici(self,pane):
         pane.dialogTableHandler(relation='@bonifico_cliente',

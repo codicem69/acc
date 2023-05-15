@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <GenRoBag><menu path="menu.py" ext="py"><en_suppliers base="Suppliers" it="Fornitori"></en_suppliers>
+<en_supplier_invoices base="Supplier invoices" it="Fatture fornitore"></en_supplier_invoices>
 <en_customers base="Customers" it="Clienti"></en_customers>
+<en_invoices_issued base="Invoices issued" it="Fatture emesse"></en_invoices_issued>
 <en_email fr="Email" de="E-Mail-" en="Email" it="Email" base="Email"></en_email>
 <en_messages fr="Messages" de="Nachrichten" en="Messages" it="Messaggi" base="Messages"></en_messages>
-<en_supplier_invoices base="Supplier invoices" it="Fatture fornitore"></en_supplier_invoices>
 <en_payment_invoices_supplier base="Payment invoices supplier" it="Pagamento fatture fornitore"></en_payment_invoices_supplier>
 <en_transfers_supplier base="Transfers supplier" it="Bonifici fornitore"></en_transfers_supplier>
 <en_invoices_supplier_on_transfers base="Invoices supplier on transfers"></en_invoices_supplier_on_transfers>
 <en_supplier_bank base="Supplier bank" it="Banca Fornitore"></en_supplier_bank>
-<en_invoices_issued base="Invoices issued" it="Fatture emesse"></en_invoices_issued>
 <en_payment_invoices_issued base="Payment invoices issued" it="Pagamento fatture emesse"></en_payment_invoices_issued>
 <en_customer_bank base="Customer bank" it="Banca cliente"></en_customer_bank>
 <en_transfers_customer base="Transfers customer" it="Bonifici cliente"></en_transfers_customer></menu>
@@ -49,6 +49,7 @@
 <en_doc_no_ base="Doc.no."></en_doc_no_>
 <en_ammount base="Ammount" it="Importo"></en_ammount>
 <en_description base="Description" en="Description" it="Descrizione"></en_description>
+<en_due_date base="Due Date" it="Scadenza"></en_due_date>
 <en_total_payments base="Total payments" it="Totale pagamenti"></en_total_payments>
 <en_balance base="Balance"></en_balance></fatt_emesse>
 <fatture_forn path="model/fatture_forn.py" ext="py"><en_supplier_invoice base="Supplier invoice" it="Fattura fornitore"></en_supplier_invoice>
@@ -57,6 +58,9 @@
 <en_doc_no_ base="Doc.no."></en_doc_no_>
 <en_ammount base="Ammount" it="Importo"></en_ammount>
 <en_description base="Description" en="Description" it="Descrizione"></en_description>
+<en_due_date base="Due Date" it="Scadenza"></en_due_date>
+<en_payed base="PAYED" it="PAGATO"></en_payed>
+<en_expire_days base="Expire days" it="Scadenza giorni"></en_expire_days>
 <en_total_payments base="Total payments" it="Totale pagamenti"></en_total_payments>
 <en_balance base="Balance"></en_balance></fatture_forn>
 <fornitore path="model/fornitore.py" ext="py"><en_supplier base="Supplier" it="Fornitore"></en_supplier>
@@ -90,13 +94,16 @@
 <en_year base="Year"></en_year>
 <en_date_from base="Date from"></en_date_from>
 <en_date_to base="Date to"></en_date_to></estratto_cliente_dett></print>
-<th_cliente path="resources/tables/cliente/th_cliente.py" ext="py"><en_customer base="Customer" it="Cliente"></en_customer>
+<th_cliente path="resources/tables/cliente/th_cliente.py" ext="py"><en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>
+<en_to_be_paid base="To be paid" it="Da Saldare"></en_to_be_paid>
+<en_customer base="Customer" it="Cliente"></en_customer>
 <en_invoices base="Invoices" it="Fatture"></en_invoices>
 <en_transfers base="Transfers" it="Bonifici"></en_transfers>
 <en_bank_details base="Bank details" it="Dettagli Bancari"></en_bank_details></th_cliente></cliente>
 <fatt_emesse><action><pagfat_emesse path="resources/tables/fatt_emesse/action/pagfat_emesse.py" ext="py"><en_payment_date base="Payment date"></en_payment_date>
 <en_note fr="Note" de="Note" en="Note" it="Note" base="Note"></en_note></pagfat_emesse></action>
-<th_fatt_emesse path="resources/tables/fatt_emesse/th_fatt_emesse.py" ext="py"><en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>
+<th_fatt_emesse path="resources/tables/fatt_emesse/th_fatt_emesse.py" ext="py"><en_customer base="Customer" it="Cliente"></en_customer>
+<en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>
 <en_to_be_paid base="To be paid" it="Da Saldare"></en_to_be_paid>
 <en_paid base="Paid" it="Pagato"></en_paid>
 <en_insda base="InsDA"></en_insda>
@@ -107,15 +114,15 @@
 <en_supplier base="Supplier" it="Fornitore"></en_supplier></th_fatt_emesse></fatt_emesse>
 <fatture_forn><action><pagforn path="resources/tables/fatture_forn/action/pagforn.py" ext="py"><en_payment_date base="Payment date"></en_payment_date>
 <en_note fr="Note" de="Note" en="Note" it="Note" base="Note"></en_note></pagforn></action>
-<th_fatture_forn path="resources/tables/fatture_forn/th_fatture_forn.py" ext="py"><en_bank_transfer_order base="Bank transfer order" it="Ordine di bonifico"></en_bank_transfer_order>
+<th_fatture_forn path="resources/tables/fatture_forn/th_fatture_forn.py" ext="py"><en_supplier base="Supplier" it="Fornitore"></en_supplier>
+<en_bank_transfer_order base="Bank transfer order" it="Ordine di bonifico"></en_bank_transfer_order>
 <en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>
 <en_to_be_paid base="To be paid" it="Da Saldare"></en_to_be_paid>
 <en_paid base="Paid" it="Pagato"></en_paid>
 <en_invoice_date base="Invoice date" it="Data fattura"></en_invoice_date>
 <en_description base="Description" en="Description" it="Descrizione"></en_description>
 <en_supplier_invoices base="Supplier invoices" it="Fatture fornitore"></en_supplier_invoices>
-<en_payments base="Payments" it="Pagamenti"></en_payments>
-<en_supplier base="Supplier" it="Fornitore"></en_supplier></th_fatture_forn></fatture_forn>
+<en_payments base="Payments" it="Pagamenti"></en_payments></th_fatture_forn></fatture_forn>
 <fornitore><print><estratto_dett path="resources/tables/fornitore/print/estratto_dett.py" ext="py"><en_only_credits base="Only credits" it="Solo crediti"></en_only_credits>
 <en_year base="Year"></en_year>
 <en_date_from base="Date from"></en_date_from>
@@ -124,7 +131,9 @@
 <en_year base="Year"></en_year>
 <en_date_from base="Date from"></en_date_from>
 <en_date_to base="Date to"></en_date_to></estratto_fornitore></print>
-<th_fornitore path="resources/tables/fornitore/th_fornitore.py" ext="py"><en_supplier base="Supplier" it="Fornitore"></en_supplier>
+<th_fornitore path="resources/tables/fornitore/th_fornitore.py" ext="py"><en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>
+<en_to_be_paid base="To be paid" it="Da Saldare"></en_to_be_paid>
+<en_supplier base="Supplier" it="Fornitore"></en_supplier>
 <en_invoices base="Invoices" it="Fatture"></en_invoices>
 <en_note fr="Note" de="Note" en="Note" it="Note" base="Note"></en_note>
 <en_transfers base="Transfers" it="Bonifici"></en_transfers>

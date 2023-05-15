@@ -6,7 +6,9 @@ class Menu(object):
         if user != 'admin':
             acc = root.branch(u"acc", tags="")
             acc.thpage(u"!![en]Suppliers", table="acc.fornitore", tags="")
+            acc.thpage(u"!![en]Supplier invoices", table="acc.fatture_forn", tags="")
             acc.thpage(u"!![en]Customers", table="acc.cliente", tags="")
+            acc.thpage(u"!![en]Invoices issued", table="acc.fatt_emesse", tags="")
             unlocode = root.branch(u"Unlocode", tags="")
             unlocode.thpage(u"Località", table="unlocode.place", tags="")
             unlocode.thpage(u"Nazione", table="unlocode.nazione", tags="")
