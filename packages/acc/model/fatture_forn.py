@@ -18,7 +18,7 @@ class Table(object):
         tbl.formulaColumn('inv',"$doc_n || ' - ' || to_char($data, :df)",var_df='DD/MM/YYYY')
         tbl.formulaColumn('tot_pag',select=dict(table='acc.pag_fat_forn',columns='coalesce(SUM($importo),0)', where='$fatture_forn_id=#THIS.id'),dtype='N',format='#,###.00',
                           name_long='!![en]Total payments')
-        tbl.formulaColumn('saldo', '$importo-coalesce($tot_pag,0)',dtype='N',name_long='!![en]Balance',format='#,###.00')
+        tbl.formulaColumn('saldo', 'coalesce($importo,0)-coalesce($tot_pag,0)',dtype='N',name_long='!![en]Balance',format='#,###.00')
         tbl.formulaColumn('semaforo',"""CASE WHEN $saldo = 0 THEN true ELSE false END""",dtype='B',name_long=' ')
         tbl.formulaColumn('anno_doc',"date_part('year', $data)", dtype='D')
         tbl.formulaColumn('bonificato',select=dict(table='acc.fatforn_bonifici',

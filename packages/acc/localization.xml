@@ -40,7 +40,10 @@
 <en_city_place base="City place" it="Città"></en_city_place>
 <en_vat_number base="Vat number" it="Partita IVA"></en_vat_number>
 <en_fiscal_code base="Fiscal code" it="Codice Fiscale"></en_fiscal_code>
-<en_unique_code base="Unique code" it="Codice univoco"></en_unique_code></cliente>
+<en_unique_code base="Unique code" it="Codice univoco"></en_unique_code>
+<en_total_invoices base="Total invoices"></en_total_invoices>
+<en_total_payments base="Total payments" it="Totale pagamenti"></en_total_payments>
+<en_balance base="Balance"></en_balance></cliente>
 <fatforn_bonifici path="model/fatforn_bonifici.py" ext="py"><en_transfers_supplier base="Transfers supplier" it="Bonifici fornitore"></en_transfers_supplier>
 <en_supplier_invoice base="Supplier invoice" it="Fattura fornitore"></en_supplier_invoice></fatforn_bonifici>
 <fatt_emesse path="model/fatt_emesse.py" ext="py"><en_invoice_issued base="Invoice issued" it="Fattura emessa"></en_invoice_issued>
@@ -50,6 +53,8 @@
 <en_ammount base="Ammount" it="Importo"></en_ammount>
 <en_description base="Description" en="Description" it="Descrizione"></en_description>
 <en_due_date base="Due Date" it="Scadenza"></en_due_date>
+<en_payed base="PAYED" it="PAGATO"></en_payed>
+<en_expire_days base="Expire days" it="Scadenza giorni"></en_expire_days>
 <en_total_payments base="Total payments" it="Totale pagamenti"></en_total_payments>
 <en_balance base="Balance"></en_balance></fatt_emesse>
 <fatture_forn path="model/fatture_forn.py" ext="py"><en_supplier_invoice base="Supplier invoice" it="Fattura fornitore"></en_supplier_invoice>
@@ -70,7 +75,10 @@
 <en_cap base="CAP"></en_cap>
 <en_city_place base="City place" it="Città"></en_city_place>
 <en_tel_ base="Tel."></en_tel_>
-<en_email fr="Email" de="E-Mail-" en="Email" it="Email" base="Email"></en_email></fornitore>
+<en_email fr="Email" de="E-Mail-" en="Email" it="Email" base="Email"></en_email>
+<en_total_invoices base="Total invoices"></en_total_invoices>
+<en_total_payments base="Total payments" it="Totale pagamenti"></en_total_payments>
+<en_balance base="Balance"></en_balance></fornitore>
 <pag_fat_emesse path="model/pag_fat_emesse.py" ext="py"><en_payment_invoice_issued base="Payment invoice issued" it="Pagamento fattura emessa"></en_payment_invoice_issued>
 <en_payment_invoices_issued base="Payment invoices issued" it="Pagamento fatture emesse"></en_payment_invoices_issued>
 <en_date base="Date" de="Datum" en="Date" fr="Date" it="Data"></en_date>
@@ -96,12 +104,21 @@
 <en_date_to base="Date to"></en_date_to></estratto_cliente_dett></print>
 <th_cliente path="resources/tables/cliente/th_cliente.py" ext="py"><en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>
 <en_to_be_paid base="To be paid" it="Da Saldare"></en_to_be_paid>
+<en_over_payment base="Over payment" it="Pagamento maggiorato"></en_over_payment>
 <en_customer base="Customer" it="Cliente"></en_customer>
 <en_invoices base="Invoices" it="Fatture"></en_invoices>
 <en_transfers base="Transfers" it="Bonifici"></en_transfers>
 <en_bank_details base="Bank details" it="Dettagli Bancari"></en_bank_details></th_cliente></cliente>
 <fatt_emesse><action><pagfat_emesse path="resources/tables/fatt_emesse/action/pagfat_emesse.py" ext="py"><en_payment_date base="Payment date"></en_payment_date>
 <en_note fr="Note" de="Note" en="Note" it="Note" base="Note"></en_note></pagfat_emesse></action>
+<print><estratto_cliente path="resources/tables/fatt_emesse/print/estratto_cliente.py" ext="py"><en_only_credits base="Only credits" it="Solo crediti"></en_only_credits>
+<en_year base="Year"></en_year>
+<en_date_from base="Date from"></en_date_from>
+<en_date_to base="Date to"></en_date_to></estratto_cliente>
+<estratto_cliente_dett path="resources/tables/fatt_emesse/print/estratto_cliente_dett.py" ext="py"><en_only_credits base="Only credits" it="Solo crediti"></en_only_credits>
+<en_year base="Year"></en_year>
+<en_date_from base="Date from"></en_date_from>
+<en_date_to base="Date to"></en_date_to></estratto_cliente_dett></print>
 <th_fatt_emesse path="resources/tables/fatt_emesse/th_fatt_emesse.py" ext="py"><en_customer base="Customer" it="Cliente"></en_customer>
 <en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>
 <en_to_be_paid base="To be paid" it="Da Saldare"></en_to_be_paid>
@@ -110,10 +127,17 @@
 <en_invoice_date base="Invoice date" it="Data fattura"></en_invoice_date>
 <en_description base="Description" en="Description" it="Descrizione"></en_description>
 <en_invoices_issued base="Invoices issued" it="Fatture emesse"></en_invoices_issued>
-<en_payments base="Payments" it="Pagamenti"></en_payments>
-<en_supplier base="Supplier" it="Fornitore"></en_supplier></th_fatt_emesse></fatt_emesse>
+<en_payments base="Payments" it="Pagamenti"></en_payments></th_fatt_emesse></fatt_emesse>
 <fatture_forn><action><pagforn path="resources/tables/fatture_forn/action/pagforn.py" ext="py"><en_payment_date base="Payment date"></en_payment_date>
 <en_note fr="Note" de="Note" en="Note" it="Note" base="Note"></en_note></pagforn></action>
+<print><estratto_dett path="resources/tables/fatture_forn/print/estratto_dett.py" ext="py"><en_only_credits base="Only credits" it="Solo crediti"></en_only_credits>
+<en_year base="Year"></en_year>
+<en_date_from base="Date from"></en_date_from>
+<en_date_to base="Date to"></en_date_to></estratto_dett>
+<estratto_fornitore path="resources/tables/fatture_forn/print/estratto_fornitore.py" ext="py"><en_only_credits base="Only credits" it="Solo crediti"></en_only_credits>
+<en_year base="Year"></en_year>
+<en_date_from base="Date from"></en_date_from>
+<en_date_to base="Date to"></en_date_to></estratto_fornitore></print>
 <th_fatture_forn path="resources/tables/fatture_forn/th_fatture_forn.py" ext="py"><en_supplier base="Supplier" it="Fornitore"></en_supplier>
 <en_bank_transfer_order base="Bank transfer order" it="Ordine di bonifico"></en_bank_transfer_order>
 <en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>

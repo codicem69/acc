@@ -22,7 +22,7 @@ class View(BaseComponent):
         r.fieldcell('bonificato',name='!![en]Bank transfer order', width='5em')
         
     def th_order(self):
-        return 'data:d'
+        return 'data:d, doc_n:d'
 
     #def th_query(self):
     #    return dict(column='id', op='contains', val='')

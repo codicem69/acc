@@ -12,13 +12,21 @@ class View(BaseComponent):
         r.fieldcell('address', width='30em')
         r.fieldcell('cap')
         r.fieldcell('city', width='20em')
+        #r.fieldcell('tot_impfat',hidden=True)
+        #r.fieldcell('totpag',hidden=True)
         r.fieldcell('balance', width='20em',totalize=True,
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='font-weight:bold;color:black;')
+        #r.cell('balance_2',formula='tot_impfat-tot_pag', width='20em',totalize=True,
+        #                  range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='font-weight:bold;color:black;')
 
     def th_sections_fatemesse(self):
         return [dict(code='tutti',caption='!![en]All'),
+                dict(code='div_zero',caption='!![en]Not null',
+                        condition='$balance!=0'),
                 dict(code='da_saldare',caption='!![en]To be paid',
-                        condition='$balance>0')]
+                        condition='$balance>0'),
+                dict(code='over_paym',caption='!![en]Over payment',
+                        condition='$balance<0')]
 
     def th_top_toolbarsuperiore(self,top):
         bar=top.slotToolbar('5,sections@fatemesse,15',

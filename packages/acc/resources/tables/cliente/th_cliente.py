@@ -21,8 +21,12 @@ class View(BaseComponent):
 
     def th_sections_fatemesse(self):
         return [dict(code='tutti',caption='!![en]All'),
+                dict(code='div_zero',caption='!![en]Not null',
+                        condition='$balance!=0'),
                 dict(code='da_saldare',caption='!![en]To be paid',
-                        condition='$balance>0')]
+                        condition='$balance>0'),
+                dict(code='over_paym',caption='!![en]Over payment',
+                        condition='$balance<0')]
 
     def th_top_toolbarsuperiore(self,top):
         bar=top.slotToolbar('5,sections@fatemesse,15',

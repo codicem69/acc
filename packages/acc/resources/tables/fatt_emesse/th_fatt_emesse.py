@@ -22,7 +22,7 @@ class View(BaseComponent):
         r.fieldcell('semaforo',semaphore=True)
 
     def th_order(self):
-        return 'data:d'
+        return 'data:d, doc_n:d'
 
     def th_options(self):
         return dict(partitioned=True)
@@ -123,7 +123,7 @@ class Form(BaseComponent):
 
     def fatEmesse(self,pane):
         fb = pane.formbuilder(cols=3, border_spacing='4px')
-        fb.field('cliente_id', lbl='!![en]Supplier', hasDownArrow=True, colspan=3, width='100%' )
+        fb.field('cliente_id', lbl='!![en]Customer', hasDownArrow=True, colspan=3, width='100%' )
         fb.field('data' )
         fb.field('doc_n' )
         fb.field('importo',font_weight='bold')
