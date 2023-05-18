@@ -23,3 +23,5 @@ class Table(object):
                           name_long='!![en]Total payments')
         tbl.formulaColumn('balance', '$tot_impfat-$tot_pag',dtype='N',name_long='!![en]Balance',format='#,###.00')
        
+    def defaultValues(self):
+        return dict(agency_id=self.db.currentEnv.get('current_agency_id'))   
