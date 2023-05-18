@@ -103,6 +103,7 @@
 <en_date_from base="Date from"></en_date_from>
 <en_date_to base="Date to"></en_date_to></estratto_cliente_dett></print>
 <th_cliente path="resources/tables/cliente/th_cliente.py" ext="py"><en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>
+<en_not_null base="Not null"></en_not_null>
 <en_to_be_paid base="To be paid" it="Da Saldare"></en_to_be_paid>
 <en_over_payment base="Over payment" it="Pagamento maggiorato"></en_over_payment>
 <en_customer base="Customer" it="Cliente"></en_customer>
@@ -124,6 +125,9 @@
 <en_to_be_paid base="To be paid" it="Da Saldare"></en_to_be_paid>
 <en_paid base="Paid" it="Pagato"></en_paid>
 <en_insda base="InsDA"></en_insda>
+<en_expired base="Expired" it="Scaduto"></en_expired>
+<en_not_expired base="Not Expired" it="Non scaduto"></en_not_expired>
+<en_without_expire base="Without Expire" it="Senza scadenza"></en_without_expire>
 <en_invoice_date base="Invoice date" it="Data fattura"></en_invoice_date>
 <en_description base="Description" en="Description" it="Descrizione"></en_description>
 <en_invoices_issued base="Invoices issued" it="Fatture emesse"></en_invoices_issued>
@@ -143,6 +147,9 @@
 <en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>
 <en_to_be_paid base="To be paid" it="Da Saldare"></en_to_be_paid>
 <en_paid base="Paid" it="Pagato"></en_paid>
+<en_expired base="Expired" it="Scaduto"></en_expired>
+<en_not_expired base="Not Expired" it="Non scaduto"></en_not_expired>
+<en_without_expire base="Without Expire" it="Senza scadenza"></en_without_expire>
 <en_invoice_date base="Invoice date" it="Data fattura"></en_invoice_date>
 <en_description base="Description" en="Description" it="Descrizione"></en_description>
 <en_supplier_invoices base="Supplier invoices" it="Fatture fornitore"></en_supplier_invoices>
@@ -156,7 +163,9 @@
 <en_date_from base="Date from"></en_date_from>
 <en_date_to base="Date to"></en_date_to></estratto_fornitore></print>
 <th_fornitore path="resources/tables/fornitore/th_fornitore.py" ext="py"><en_all fr="Tous" de="Alle" en="All" it="Tutto" base="All"></en_all>
+<en_not_null base="Not null"></en_not_null>
 <en_to_be_paid base="To be paid" it="Da Saldare"></en_to_be_paid>
+<en_over_payment base="Over payment" it="Pagamento maggiorato"></en_over_payment>
 <en_supplier base="Supplier" it="Fornitore"></en_supplier>
 <en_invoices base="Invoices" it="Fatture"></en_invoices>
 <en_note fr="Note" de="Note" en="Note" it="Note" base="Note"></en_note>
