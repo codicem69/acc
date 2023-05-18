@@ -53,17 +53,20 @@ class Form(BaseComponent):
         #self.bank_forn(tc.contentPane(title='!![en]Bank details'))
     
     def cliente(self, pane):
-        fb = pane.div(margin_left='50px',margin_right='80px').formbuilder(cols=2, border_spacing='4px',colswidth='auto',fld_width='100%')
+        fb = pane.div(margin_left='50px',margin_right='80px').formbuilder(cols=3, border_spacing='4px',colswidth='auto',fld_width='100%')
         #fb = pane.formbuilder(cols=2, border_spacing='4px', fld_width='30em')
         fb.field('rag_sociale' )
-        fb.field('address' )
+        fb.field('address', colspan=2 )
+        fb.br()
         fb.field('cap' )
         fb.field('city' )
         fb.field('vat' )
         fb.field('cf' )
         fb.field('cod_univoco' )
         fb.field('pec' )
-        fb.field('note', tag='simpleTextArea', height='70px', colspan=2)
+        fb.field('tel',colspan=3)
+        fb.field('note', tag='simpleTextArea', height='70px', colspan=3)
+        
 
     def fat_emesse(self,pane):
         pane.dialogTableHandler(relation='@fatt_cliente',
