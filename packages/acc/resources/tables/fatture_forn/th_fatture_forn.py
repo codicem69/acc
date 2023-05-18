@@ -35,7 +35,9 @@ class View(BaseComponent):
         return [dict(code='tutti',caption='!![en]All'),
                 dict(code='da_saldare',caption='!![en]To be paid',
                         condition='$saldo>0'),
-                dict(code='saldati',caption='!![en]Paid',condition='$saldo=0')]
+                dict(code='saldati',caption='!![en]Paid',condition='$saldo=0'),
+                dict(code='scaduti',caption='!![en]Expired',condition='$scadenza<now() and $saldo>0'),
+                dict(code='non_scadute',caption='!![en]Not Expired',condition='$scadenza>now() and $saldo>0')]
     
     def th_top_toolbarsuperiore(self,top):
         bar=top.slotToolbar('5,sections@fatforn,sections@fornitore_id,10,test,resourceActions,15',
@@ -83,7 +85,9 @@ class ViewFromFatForn(BaseComponent):
         return [dict(code='tutti',caption='!![en]All'),
                 dict(code='da_saldare',caption='!![en]To be paid',
                         condition='$saldo>0'),
-                dict(code='saldati',caption='!![en]Paid',condition='$saldo=0')]
+                dict(code='saldati',caption='!![en]Paid',condition='$saldo=0'),
+                dict(code='scaduti',caption='!![en]Expired',condition='$scadenza<now() and $saldo>0'),
+                dict(code='non_scadute',caption='!![en]Not Expired',condition='$scadenza>now() and $saldo>0')]
     
     def th_top_toolbarsuperiore(self,top):
         bar=top.slotToolbar('5,sections@fatforn,10,test,resourceActions,15',

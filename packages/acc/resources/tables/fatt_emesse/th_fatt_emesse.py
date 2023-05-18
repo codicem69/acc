@@ -35,7 +35,9 @@ class View(BaseComponent):
                 dict(code='da_saldare',caption='!![en]To be paid',
                         condition='$saldo>0'),
                 dict(code='saldati',caption='!![en]Paid',condition='$saldo=0'),
-                dict(code='insda',caption='!![en]InsDA',condition='$insda=true')]
+                dict(code='insda',caption='!![en]InsDA',condition='$insda=true'),
+                dict(code='scaduti',caption='!![en]Expired',condition='$scadenza<now() and $saldo>0'),
+                dict(code='non_scadute',caption='!![en]Not Expired',condition='$scadenza>now() and $saldo>0')]
     
     #def th_sections_cliente_id(self):
     #    return [dict(code='cliente',caption='!![en]Customer',condition="$cliente_id!=''")]
@@ -90,7 +92,9 @@ class ViewFromFatture(BaseComponent):
                 dict(code='da_saldare',caption='!![en]To be paid',
                         condition='$saldo>0'),
                 dict(code='saldati',caption='!![en]Paid',condition='$saldo=0'),
-                dict(code='insda',caption='!![en]InsDA',condition='$insda=true')]
+                dict(code='insda',caption='!![en]InsDA',condition='$insda=true'),
+                dict(code='scaduti',caption='!![en]Expired',condition='$scadenza<now() and $saldo>0'),
+                dict(code='non_scadute',caption='!![en]Not Expired',condition='$scadenza>now() and $saldo>0')]
     
     #def th_sections_cliente_id(self):
     #    return [dict(code='cliente',caption='!![en]Customer',condition="$cliente_id!=''")]
