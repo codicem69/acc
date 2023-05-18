@@ -64,6 +64,7 @@ class Form(BaseComponent):
         fb.field('cf' )
         fb.field('cod_univoco' )
         fb.field('pec' )
+        fb.field('email')
         fb.field('tel',colspan=3)
         fb.field('note', tag='simpleTextArea', height='70px', colspan=3)
         

@@ -11,6 +11,7 @@ class Table(object):
         tbl.column('cf', name_short='!![en]Fiscal code')
         tbl.column('cod_univoco',size='7', name_short='!![en]Unique code')
         tbl.column('pec', name_short='Email pec')
+        tbl.column('email', name_short='Email')
         tbl.column('tel', name_short='Tel.')
         tbl.column('note', name_short='Note')
 
