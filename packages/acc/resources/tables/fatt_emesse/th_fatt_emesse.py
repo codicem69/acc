@@ -15,7 +15,7 @@ class View(BaseComponent):
         r.fieldcell('insda')
         r.fieldcell('importo', totalize=True)
         r.fieldcell('scadenza')
-        r.fieldcell('giorni_scadenza')
+        r.fieldcell('giorni_scadenza', width='11em')
         r.fieldcell('tot_pag', totalize=True)
         r.fieldcell('saldo', totalize=True,
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
@@ -70,7 +70,7 @@ class ViewFromFatture(BaseComponent):
         r.fieldcell('insda')
         r.fieldcell('importo', totalize=True)
         r.fieldcell('scadenza')
-        r.fieldcell('giorni_scadenza')
+        r.fieldcell('giorni_scadenza', width='11em')
         r.fieldcell('tot_pag', totalize=True)
         r.fieldcell('saldo', totalize=True,
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')

@@ -18,7 +18,7 @@ class View(BaseComponent):
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
         r.fieldcell('semaforo',semaphore=True)
         r.fieldcell('scadenza')
-        r.fieldcell('giorni_scadenza')
+        r.fieldcell('giorni_scadenza', width='11em')
         r.fieldcell('bonificato',name='!![en]Bank transfer order', width='5em')
         
     def th_order(self):
@@ -66,7 +66,7 @@ class ViewFromFatForn(BaseComponent):
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
         r.fieldcell('semaforo',semaphore=True)
         r.fieldcell('scadenza')
-        r.fieldcell('giorni_scadenza')
+        r.fieldcell('giorni_scadenza', width='11em')
         r.fieldcell('bonificato',name='!![en]Bank transfer order', width='5em')
         
     def th_order(self):
