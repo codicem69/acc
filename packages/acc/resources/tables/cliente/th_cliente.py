@@ -27,10 +27,25 @@ class View(BaseComponent):
                         condition='$balance>0'),
                 dict(code='over_paym',caption='!![en]Over payment',
                         condition='$balance<0')]
-
+    
+    def th_sections_cliente(self):
+        #prendiamo agency_id nel currentEnv
+        ag_id=self.db.currentEnv.get('current_agency_id')
+        #effettuaiamo la ricerca di tutti i clienti filtrando quelli relativi all'agency_id
+        f = self.db.table('acc.cliente').query(where='agency_id=:ag_id',ag_id=ag_id,order_by='$rag_sociale').selection().output('records')#$agency_id=:ag_id',ag_id=self.db.currentEnv.get('current_agency_id')).fetch()
+        #creaiamo una lista vuota dove andremo ad appendere i dizionari con il valore tutti e con i clienti
+        result=[]
+        result.append(dict(code='tutti',caption='!![en]All'))
+        for r in f:
+            result.append(dict(code=r['id'], caption=r['rag_sociale'],
+                     condition='$id=:cliente',condition_cliente=r['id']))
+        return result
+    
     def th_top_toolbarsuperiore(self,top):
-        bar=top.slotToolbar('5,sections@fatemesse,15',
-                        childname='superiore',_position='<bar')
+        bar=top.slotToolbar('5,sections@fatemesse,sections@cliente,15',
+                        childname='superiore',_position='<bar',sections_cliente_multiButton=False,
+                        sections_cliente_lbl='!![en]Customer',
+                        sections_cliente_width='60em')
             
     def th_order(self):
         return 'rag_sociale'
