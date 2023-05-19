@@ -77,7 +77,7 @@ class Main(TableScriptToHtml):
          
         return dict(condition=' AND '.join(condition), condition_anno=self.parameter('anno'), 
                     condition_dal=self.parameter('dal'),condition_al=self.parameter('al'),
-                    condition_balance=balance,relation='@forn_fatt')
+                    condition_balance=balance,relation='@forn_fatt',order_by='$data, $doc_n')
     
 
     def docFooter(self, footer, lastPage=None):

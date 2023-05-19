@@ -2,7 +2,7 @@ from gnr.web.gnrbaseclasses import TableScriptToHtml
 from datetime import datetime
 
 class Main(TableScriptToHtml):
-
+    maintable = 'acc.fatt_emesse'
     row_table = 'acc.fatt_emesse'
     page_width = 297
     page_height = 210
@@ -52,7 +52,7 @@ class Main(TableScriptToHtml):
     def gridStruct(self,struct):
         #Questo metodo definisce la struttura della griglia di stampa definendone colonne e layout
         r = struct.view().rows()
-        r.fieldcell('@cliente_id.rag_sociale', mm_width=62, subtotal='Totale documento {breaker_value}',subtotal_order_by='@cliente_id.rag_sociale')
+        r.fieldcell('@cliente_id.rag_sociale', mm_width=62, subtotal='Totale documento {breaker_value}',subtotal_order_by='@cliente_id.rag_sociale,$data,$doc_n')
         r.fieldcell('data', mm_width=15)
         #r.fieldcell('mese_fattura', hidden=True, subtotal='Totale {breaker_value}', subtotal_order_by="$data")
         #Questa formulaColumn verrà utilizzata per creare i subtotali per mese
@@ -63,7 +63,7 @@ class Main(TableScriptToHtml):
         r.fieldcell('insda_x',mm_width=10, name='ins_d/a')
         r.fieldcell('tot_pag', mm_width=20, totalize=True)
         r.fieldcell('saldo', mm_width=20, totalize=True)
-
+        
     def gridQueryParameters(self):
         
         condition=[]
@@ -76,11 +76,12 @@ class Main(TableScriptToHtml):
             condition.append('$anno_doc=:anno')
         if self.parameter('dal') and self.parameter('al'):
             condition.append('$data BETWEEN :dal AND :al')
-         
-        return dict(condition=' AND '.join(condition), condition_anno=self.parameter('anno'), 
+
+        result = dict(table='acc.fatt_emesse',condition=' AND '.join(condition), condition_anno=self.parameter('anno'), 
                     condition_dal=self.parameter('dal'),condition_al=self.parameter('al'),
-                    condition_balance=balance,order_by='@cliente_id.rag_sociale ASC')#,relation='@fatt_cliente')
-    
+                    condition_balance=balance)#,order_by='@cliente_id.rag_sociale DESC')#,relation='@fatt_cliente')
+        #print(x)
+        return result
 
     def docFooter(self, footer, lastPage=None):
         #Questo metodo definisce il layout e il contenuto dell'header della stampa

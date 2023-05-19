@@ -31,6 +31,7 @@ class View(BaseComponent):
     def th_top_toolbarsuperiore(self,top):
         bar=top.slotToolbar('5,sections@fatemesse,sections@fornitore,15',
                         childname='superiore',_position='<bar',sections_fornitore_multiButton=False,
+                        sections_fornitore_multivalue=True,
                         sections_fornitore_lbl='!![en]Supplier',
                         sections_fornitore_width='60em')
 
