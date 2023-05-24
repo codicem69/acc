@@ -2,7 +2,7 @@ from gnr.web.gnrbaseclasses import TableScriptToHtml
 from datetime import datetime
 
 class Main(TableScriptToHtml):
-
+    #maintable= 'acc.fatture_forn'
     row_table = 'acc.fatture_forn'
     page_width = 297
     page_height = 210
@@ -16,7 +16,7 @@ class Main(TableScriptToHtml):
     empty_row=dict()
     #Grazie a questo parametro in caso di mancanza di dati verrà stampata una griglia vuota invece di una pagina bianca
     virtual_columns = '$tot_pag,$saldo' #aggiungiamo le colonne calcolate
-
+    
     def docHeader(self, header):
         #Questo metodo definisce il layout e il contenuto dell'header della stampa
         head = header.layout(name='doc_header', margin='5mm', border_width=0)
@@ -61,9 +61,9 @@ class Main(TableScriptToHtml):
         r.fieldcell('importo', mm_width=20, totalize=True)
         r.fieldcell('tot_pag', mm_width=20, totalize=True)
         r.fieldcell('saldo', mm_width=20, totalize=True)
+        #print(x)
 
     def gridQueryParameters(self):
-        
         condition=[]
         balance=0
         if self.parameter('balance') == True:
@@ -74,11 +74,12 @@ class Main(TableScriptToHtml):
             condition.append('$anno_doc=:anno')
         if self.parameter('dal') and self.parameter('al'):
             condition.append('$data BETWEEN :dal AND :al')
-         
-        return dict(condition=' AND '.join(condition), condition_anno=self.parameter('anno'), 
+
+        cond = dict(condition=' AND '.join(condition), condition_anno=self.parameter('anno'), 
                     condition_dal=self.parameter('dal'),condition_al=self.parameter('al'),
                     condition_balance=balance,relation='@forn_fatt',order_by='$data, $doc_n')
-    
+        
+        return cond    
 
     def docFooter(self, footer, lastPage=None):
         #Questo metodo definisce il layout e il contenuto dell'header della stampa

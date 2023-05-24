@@ -9,10 +9,13 @@
 		<agz pkgcode="agz:agz"/>
 		<acc pkgcode="acc:acc"/>
 	</packages>
+	<!--<menu package="adm,sys,email,acc"/> -->
 	<!-- <menu package="*"/> -->
 	<authentication pkg="gnrcore:sys">
 		<py_auth defaultTags="user" pkg="adm" method="authenticate"/>
 	</authentication>
-
+	<site>
+        <wsgi mainpackage="acc"/>
+	</site>
 
 </GenRoBag>
