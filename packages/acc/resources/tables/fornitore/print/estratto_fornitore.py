@@ -28,6 +28,9 @@ class Main(BaseResourcePrint):
         fb.filteringSelect(value='^.anno', values=years, lbl='!![en]Year')
         fb.dateTextBox(value='^.dal',lbl='!![en]Date from',period_to='.al')
         fb.dateTextBox(value='^.al',lbl='!![en]Date to')
+        #fb.filteringSelect(value='^.tip', values='cargo,cruise,ponton')
+        #fb.div('Cargo',hidden="^.tip?=#v!='cargo'")
+        #^.form_gdfdep?=#v==true?true:false
         #se volgliamo utilizzare una checkbox per selezionare un'altra risorsa
         #fb.checkbox(value='^.estratto_dett',label='!![en]Statement with payment details')
         #fb.div('!![en]Select the Supplier for single statement',hidden='^.estratto_dett?=!#v') #con hidden che punta al valore della checkbox visualizziamo il div

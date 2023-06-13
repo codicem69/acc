@@ -111,8 +111,8 @@ class Main(TableScriptToHtml):
         balance=0
         if self.parameter('balance') == True:
             condition.append('$saldo>:balance')
-        else:
-            condition.append('$saldo>=:balance')    
+        #else:
+        #    condition.append('$saldo>=:balance')    
         if self.parameter('anno'):
             condition.append('$anno_doc=:anno')
             condition_pag.append('$anno_doc=:anno')

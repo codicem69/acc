@@ -12,8 +12,8 @@ class Table(object):
         tbl.column('descrizione', name_short='!![en]Description')
         tbl.column('scadenza', dtype='D', name_short='!![en]Due Date')
         tbl.formulaColumn('giorni_scadenza',"""CASE WHEN ($scadenza - CURRENT_DATE)>0 AND $saldo>0 THEN 'Scadenza tra giorni ' || cast(($scadenza - CURRENT_DATE) as varchar)
-                                        WHEN ($scadenza - CURRENT_DATE)>0 AND $saldo=0 THEN '!![en]PAYED' 
-                                        WHEN ($scadenza - CURRENT_DATE)<0 AND $saldo=0 THEN '!![en]PAYED' ELSE 'Scaduta da giorni ' || cast((CURRENT_DATE-$scadenza) as varchar) END """,
+                                        WHEN ($scadenza - CURRENT_DATE)>0 AND $saldo<=0 THEN '!![en]PAYED' 
+                                        WHEN ($scadenza - CURRENT_DATE)<0 AND $saldo<=0 THEN '!![en]PAYED' ELSE 'Scaduta da giorni ' || cast((CURRENT_DATE-$scadenza) as varchar) END """,
                                         name_long='!![en]Expire days')
         tbl.formulaColumn('inv',"$doc_n || ' - ' || to_char($data, :df)",var_df='DD/MM/YYYY')
         tbl.formulaColumn('tot_pag',select=dict(table='acc.pag_fat_forn',columns='coalesce(SUM($importo),0)', where='$fatture_forn_id=#THIS.id'),dtype='N',format='#,###.00',
