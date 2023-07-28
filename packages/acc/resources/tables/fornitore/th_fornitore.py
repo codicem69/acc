@@ -72,6 +72,7 @@ class Form(BaseComponent):
     def fornitore(self, pane):
         fb = pane.div(margin_left='50px',margin_right='80px').formbuilder(cols=2, border_spacing='4px',colswidth='auto',fld_width='100%')
         #fb = pane.formbuilder(cols=2, border_spacing='4px', fld_width='30em')
+        
         fb.field('rag_sociale')
         fb.field('address')
         fb.field('cap' )

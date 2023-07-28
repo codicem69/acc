@@ -28,7 +28,7 @@ class ViewFromPayments(BaseComponent):
         r.fieldcell('importo',edit=True,totalize=True)
         r.fieldcell('impfatemessa',hidden=True)
         r.cell('progressivo',formula='+=importo',format='#,###.00',dtype='N')
-        r.cell('rimanenza fattura',formula='impfatemessa-progressivo',format='#,###.00',dtype='N',
+        r.cell('rimanenza fattura',formula='fatemessa-progressivo',formula_fatemessa='=#FORM.record.importo',format='#,###.00',dtype='N',
                range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
         r.fieldcell('note',edit=True, width='100%',values='Bonifico,Contanti,Storno fat.',hasArrowDown=True)
 

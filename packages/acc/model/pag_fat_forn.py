@@ -17,4 +17,3 @@ class Table(object):
         tbl.formulaColumn('anno_doc',"date_part('year', $data)", dtype='D')
       
 
-    

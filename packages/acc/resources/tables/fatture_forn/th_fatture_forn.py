@@ -136,7 +136,7 @@ class Form(BaseComponent):
 
     def paym_fatforn(self,pane):
         pane.inlineTableHandler(relation='@paym_fat_forn',
-                                viewResource='ViewFromPayments')
+                                viewResource='ViewFromPayments',liveUpdate=True)
 
     def th_options(self):
         return dict(dialog_windowRatio = 1, annotations= True )
