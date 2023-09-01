@@ -7,7 +7,7 @@ class Menu(object):
         
         if 'admin' in tag_user or 'superadmin' in tag_user or '_DEV_' in tag_user:
             acc = root.branch(u"acc", tags="")
-            acc.packageBranch('Amministrazione sistema',pkg='adm', branchMethod='userSubmenu')
+            acc.packageBranch('Amministrazione sistema',pkg='adm')#, branchMethod='userSubmenu')
             acc.packageBranch('System',pkg='sys')
             acc.packageBranch('Email',pkg='email')
             acc.packageBranch('Unlocode',pkg='unlocode')
