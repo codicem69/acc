@@ -35,7 +35,7 @@ class Table(object):
     def ricalcolaBalanceCliente(self,cliente_id=None):
         with self.recordToUpdate(cliente_id) as record:
             totale_fatture = self.db.table('acc.fatt_emesse').readColumns(columns="""SUM($importo) AS totale_fatture""",
-                                                                     where='$cliente_id=:c_id',c_id=cliente_id)
+                                                                     where='$cliente_id=:c_id and $insda is not true',c_id=cliente_id)
             fatture_cliente_id = self.db.table('acc.fatt_emesse').query(columns='$id',where='$cliente_id=:c_id', c_id=cliente_id).fetchAsDict('id')
             totale_pagato = 0
             for r in fatture_cliente_id:
