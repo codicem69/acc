@@ -11,6 +11,7 @@ class Table(object):
         tbl.column('importo', dtype='money', name_short='!![en]Ammount')
         tbl.column('descrizione', name_short='!![en]Description')
         tbl.column('scadenza', dtype='D', name_short='!![en]Due Date')
+        
         tbl.formulaColumn('giorni_scadenza',"""CASE WHEN ($scadenza - CURRENT_DATE)>0 AND $saldo>0 THEN 'Scadenza tra giorni ' || cast(($scadenza - CURRENT_DATE) as varchar)
                                         WHEN ($scadenza - CURRENT_DATE)>0 AND $saldo<=0 THEN '!![en]PAYED' 
                                         WHEN ($scadenza - CURRENT_DATE)<0 AND $saldo<=0 THEN '!![en]PAYED' ELSE 'Scaduta da giorni ' || cast((CURRENT_DATE-$scadenza) as varchar) END """,
@@ -29,3 +30,22 @@ class Table(object):
         
     def defaultValues(self):
         return dict(agency_id=self.db.currentEnv.get('current_agency_id'))
+
+    def aggiornaFornitore(self,record):
+        fornitore_id = record['fornitore_id']
+        self.db.deferToCommit(self.db.table('acc.fornitore').ricalcolaBalance,
+                                    fornitore_id=fornitore_id,
+                                    _deferredId=fornitore_id)
+
+    def trigger_onInserted(self,record=None):
+        self.aggiornaFornitore(record)
+
+    def trigger_onUpdated(self,record=None,old_record=None):
+        self.aggiornaFornitore(record)
+
+    def trigger_onDeleted(self,record=None):
+        if self.currentTrigger.parent:
+            return
+        self.aggiornaFornitore(record)
+
+    

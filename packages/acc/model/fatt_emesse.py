@@ -25,3 +25,20 @@ class Table(object):
         
     def defaultValues(self):
         return dict(agency_id=self.db.currentEnv.get('current_agency_id'))
+
+    def aggiornaCliente(self,record):
+        cliente_id = record['cliente_id']
+        self.db.deferToCommit(self.db.table('acc.cliente').ricalcolaBalanceCliente,
+                                    cliente_id=cliente_id,
+                                    _deferredId=cliente_id)
+
+    def trigger_onInserted(self,record=None):
+        self.aggiornaCliente(record)
+
+    def trigger_onUpdated(self,record=None,old_record=None):
+        self.aggiornaCliente(record)
+
+    def trigger_onDeleted(self,record=None):
+        if self.currentTrigger.parent:
+            return
+        self.aggiornaCliente(record)

@@ -10,13 +10,15 @@ class View(BaseComponent):
         r = struct.view().rows()
         r.fieldcell('rag_sociale', width='30em')
         r.fieldcell('address', width='30em')
-        r.fieldcell('cap')
+        r.fieldcell('cap', width='6em')
         r.fieldcell('city', width='20em')
         r.fieldcell('vat')
         r.fieldcell('cf')
         r.fieldcell('cod_univoco')
         r.fieldcell('pec')
-        r.fieldcell('balance', width='20em',totalize=True,
+        r.fieldcell('balance', width='10em',totalize=True,
+                          range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='font-weight:bold;color:black;')
+        r.fieldcell('balance2', width='10em',totalize=True,
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='font-weight:bold;color:black;')
 
     def th_sections_fatemesse(self):

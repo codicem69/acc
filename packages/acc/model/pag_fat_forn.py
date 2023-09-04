@@ -16,4 +16,3 @@ class Table(object):
         tbl.formulaColumn('paymdet',"to_char($data, :df) || ': € ' || $importo || ' ' || $note", dtype='T',var_df='DD/MM/YYYY')
         tbl.formulaColumn('anno_doc',"date_part('year', $data)", dtype='D')
       
-
