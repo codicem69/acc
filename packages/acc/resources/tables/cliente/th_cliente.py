@@ -18,8 +18,8 @@ class View(BaseComponent):
         r.fieldcell('pec')
         r.fieldcell('balance', width='10em',totalize=True,
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='font-weight:bold;color:black;')
-        r.fieldcell('balance2', width='10em',totalize=True,
-                          range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='font-weight:bold;color:black;')
+        #r.fieldcell('balance2', width='10em',totalize=True,
+        #                  range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='font-weight:bold;color:black;')
 
     def th_sections_fatemesse(self):
         return [dict(code='tutti',caption='!![en]All'),

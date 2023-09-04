@@ -27,7 +27,7 @@ class Table(object):
                           name_long='!![en]Total invoices')
         tbl.formulaColumn('tot_pag',select=dict(table='acc.pag_fat_emesse',columns='coalesce(sum($importo),0)', where='@fatt_emesse_id.cliente_id=#THIS.id'),dtype='N',format='#,###.00',
                           name_long='!![en]Total payments')
-        tbl.formulaColumn('balance2', '$tot_impfat-$tot_pag',dtype='N',name_long='!![en]Balance',format='#,###.00')
+        tbl.formulaColumn('balance2', '$tot_impfat-$tot_pag',dtype='N',name_long='!![en]Balance_FC',format='#,###.00')
 
     def defaultValues(self):
         return dict(agency_id=self.db.currentEnv.get('current_agency_id'))
