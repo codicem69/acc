@@ -81,7 +81,7 @@ class Form(BaseComponent):
         fb.field('email')
         fb.field('note', tag='simpleTextArea', height='100px', colspan=2)
         #fb.field('balance',font_weight='bold',color ="^#FORM.record.balance?=#v>0?'red':'black'")
-
+        
     def fat_forn(self,pane):
         pane.dialogTableHandler(relation='@forn_fatt',
                                 viewResource='ViewFromFatForn',extendedQuery=True,pbl_classes=True)

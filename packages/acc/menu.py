@@ -33,7 +33,7 @@ class Menu(object):
             unlocode = root.branch(u"Unlocode", tags="")
             unlocode.thpage(u"Località", table="unlocode.place", tags="")
             unlocode.thpage(u"Nazione", table="unlocode.nazione", tags="")
-            agz = root.branch(u"agencies", tags="")
+            agz = root.branch(u"Agencies", tags="")
             agz.thpage(u"Agencies", table="agz.agency", tags="")
             agz.thpage(u"Staff", table="agz.staff", tags="")
             email = root.branch(u"!![en]Email", tags="")
