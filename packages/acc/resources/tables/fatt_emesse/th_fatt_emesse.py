@@ -22,7 +22,7 @@ class View(BaseComponent):
         r.fieldcell('semaforo',semaphore=True)
 
     def th_order(self):
-        return 'data:d, doc_n:d'
+        return 'data:d'
 
     def th_options(self):
         return dict(partitioned=True)
