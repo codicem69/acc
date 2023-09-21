@@ -42,7 +42,7 @@ class Table(object):
                 pagamenti = self.db.table('acc.pag_fat_emesse').query(columns='$importo',
                                                                      where='$fatt_emesse_id=:fe_id', fe_id=r).fetch()
                 for a in range(len(pagamenti)):
-                    totale_pagato += pagamenti[0][a]
+                    totale_pagato += pagamenti[a][0]
            
             if totale_fatture is None:
                 record['balance'] = None
