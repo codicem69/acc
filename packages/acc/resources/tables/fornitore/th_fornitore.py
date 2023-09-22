@@ -84,7 +84,7 @@ class Form(BaseComponent):
         
     def fat_forn(self,pane):
         pane.dialogTableHandler(relation='@forn_fatt',
-                                viewResource='ViewFromFatForn',extendedQuery=True,pbl_classes=True)
+                                viewResource='ViewFromFatForn',extendedQuery=True,pbl_classes=True, liveUpdated=True)
     #def note_forn(self,frame):
     #    frame.simpleTextArea(title='Note',value='^.note',editor=True)
 

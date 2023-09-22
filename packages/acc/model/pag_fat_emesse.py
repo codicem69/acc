@@ -12,3 +12,7 @@ class Table(object):
         tbl.column('note', name_short='!![en]Note')
         tbl.formulaColumn('anno_doc',"date_part('year', $data)", dtype='D')
         tbl.aliasColumn('impfatemessa','@fatt_emesse_id.importo')
+
+    def trigger_onInserted(self, record):
+        if record['fatt_emesse_id'] :
+            self.db.table('acc.fatt_emesse').notifyDbUpdate(record['fatt_emesse_id'])

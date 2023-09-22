@@ -79,7 +79,7 @@ class ViewFromFatForn(BaseComponent):
     #    return dict(column='id', op='contains', val='')
 
     def th_options(self):
-        return dict(partitioned=True)
+        return dict(partitioned=True, liveUpdate=True)
 
     #@metadata(variable_struct=True)
     def th_sections_fatforn(self):
