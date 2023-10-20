@@ -18,5 +18,4 @@ class Table(object):
       
     def trigger_onInserted(self, record):
         if record['fatture_forn_id'] :
-           # print(x)
             self.db.table('acc.fatture_forn').notifyDbUpdate(record['fatture_forn_id'])
