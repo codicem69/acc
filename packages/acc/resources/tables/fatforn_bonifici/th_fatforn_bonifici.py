@@ -24,6 +24,7 @@ class ViewFromFatFornBonifici(BaseComponent):
         r.fieldcell('bonifici_forn_id',edit=True)
         r.fieldcell('fatture_forn_id',edit=True,width='20em')
         r.fieldcell('importo',totalize=True)
+        r.fieldcell('saldo',totalize=True)
 
     def th_order(self):
         return '@fatture_forn_id.data'

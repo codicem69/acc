@@ -9,4 +9,5 @@ class Table(object):
         tbl.column('fatture_forn_id',size='22', group='_', name_long='!![en]Supplier invoice'
                     ).relation('fatture_forn.id', relation_name='inv_supplier', mode='foreignkey', onDelete='cascade')
         tbl.aliasColumn('importo','@fatture_forn_id.importo')
+        tbl.aliasColumn('saldo','@fatture_forn_id.saldo')
         

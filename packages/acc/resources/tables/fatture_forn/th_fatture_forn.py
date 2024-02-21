@@ -59,6 +59,7 @@ class ViewFromFatForn(BaseComponent):
 
     def th_struct(self,struct):
         r = struct.view().rows()
+        #r.fieldcell('_row_count', counter=True, name='N.',width='3em')
         r.fieldcell('fornitore_id', width='30em', name='!![en]Supplier')
         r.fieldcell('data')
         r.fieldcell('doc_n')
@@ -73,7 +74,7 @@ class ViewFromFatForn(BaseComponent):
         r.fieldcell('bonificato',name='!![en]Bank transfer order', width='5em')
         
     def th_order(self):
-        return 'data:d'
+        return 'data:d,doc_n:d'
 
     #def th_query(self):
     #    return dict(column='id', op='contains', val='')
@@ -112,6 +113,7 @@ class ViewFormFatFornBonifici_picker(BaseComponent):
         r.fieldcell('doc_n',width='5em')
         r.fieldcell('descrizione',width='10em')
         r.fieldcell('importo', totalize=True)
+        r.fieldcell('saldo', totalize=True)
         
     def th_order(self):
         return 'data'
