@@ -8,7 +8,7 @@ class View(BaseComponent):
 
     def th_struct(self,struct):
         r = struct.view().rows()
-        r.fieldcell('_row_count', counter=True, name='N.',width='3em')
+        #r.fieldcell('_row_count', counter=True, name='N.',width='3em')
         r.fieldcell('cliente_id', width='30em', name='!![en]Customer')
         r.fieldcell('data')
         r.fieldcell('doc_n')
@@ -23,7 +23,7 @@ class View(BaseComponent):
         r.fieldcell('semaforo',semaphore=True)
 
     def th_order(self):
-        return '_row_count:d'
+        return 'data:d,doc_n:d'
 
     def th_options(self):
         return dict(partitioned=True)

@@ -4,6 +4,7 @@ class Table(object):
     def config_db(self,pkg):
         tbl=pkg.table('fatt_emesse', pkey='id', name_long='!![en]Invoice issued', name_plural='!![en]Invoices issued',caption_field='id')
         self.sysFields(tbl)
+        
         tbl.column('cliente_id',size='22', group='_', name_long='cliente_id',batch_assign=True
                     ).relation('cliente.id', relation_name='fatt_cliente', mode='foreignkey', onDelete='cascade')
         tbl.column('data', dtype='D', name_short='!![en]Date')
