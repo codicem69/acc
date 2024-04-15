@@ -131,7 +131,7 @@ class Main(TableScriptToHtml):
         #    condition.append('$data >= :data_inizio')
         #where = ' AND '.join(condition
         #self.cliente_id=self.record('selectionPkeys')
-        clienti_pkeys = self.db.table('acc.cliente').query(columns="$id", where='$balance >=0').selection().output('pkeylist')
+        clienti_pkeys = self.db.table('acc.cliente').query(columns="$id", where='$balance <>0').selection().output('pkeylist')
         self.cliente_id=clienti_pkeys
         if self.parameter('cliente_id'):
             len_cliente=1
@@ -146,12 +146,12 @@ class Main(TableScriptToHtml):
             #altrimenti saranno selezionati tutti i fornitori e sarà passata la query per tutti
             if self.parameter('cliente_id'):
                 cliente_id=self.parameter('cliente_id')
-                clienti = self.db.table('acc.cliente').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id=:pkeys and $balance >=0',
+                clienti = self.db.table('acc.cliente').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id=:pkeys ',
                                                              order_by='$rag_sociale',
                                                              group_by='$id',
                                                   pkeys=cliente_id).fetch()
             else:
-                clienti = self.db.table('acc.cliente').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id IN :pkeys and $balance >=0',
+                clienti = self.db.table('acc.cliente').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id IN :pkeys ',
                                                              order_by='$rag_sociale',
                                                              group_by='$id',
                                                   pkeys=clienti_pkeys).fetch()
