@@ -9,4 +9,8 @@ class Table(object):
                     ).relation('fornitore.id', relation_name='bonifico_forn', mode='foreignkey', onDelete='cascade')            
         tbl.column('causale', name_short='!![en]Reason')
         tbl.column('importo', dtype='money', name_short='!![en]Amount')
-        
+        tbl.formulaColumn('tot_fat_bonifico',select=dict(table='acc.fatforn_bonifici',
+                                                columns='SUM($importo)',
+                                                where='$bonifici_forn_id=#THIS.id'),
+                                    dtype='N',name_long='Tot.Fatture')
+ 
