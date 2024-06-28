@@ -12,5 +12,5 @@ class Table(object):
         tbl.formulaColumn('tot_fat_bonifico',select=dict(table='acc.fatforn_bonifici',
                                                 columns='SUM($importo)',
                                                 where='$bonifici_forn_id=#THIS.id'),
-                                    dtype='N',name_long='Tot.Fatture')
+                                    dtype='N',name_long='Tot.Fatture',format='#,###.00')
  
