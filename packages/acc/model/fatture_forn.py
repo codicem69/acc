@@ -11,7 +11,7 @@ class Table(object):
         tbl.column('importo', dtype='money', name_short='!![en]Ammount')
         tbl.column('descrizione', name_short='!![en]Description')
         tbl.column('scadenza', dtype='D', name_short='!![en]Due Date')
-        
+        tbl.column('note', name_short='!![en]Note')
         tbl.formulaColumn('giorni_scadenza',"""CASE WHEN ($scadenza - CURRENT_DATE)>0 AND $saldo>0 THEN 'Scadenza tra giorni ' || cast(($scadenza - CURRENT_DATE) as varchar)
                                         WHEN ($scadenza - CURRENT_DATE)>0 AND $saldo<=0 THEN '!![en]PAYED' 
                                         WHEN ($scadenza - CURRENT_DATE)<0 AND $saldo<=0 THEN '!![en]PAYED' ELSE 'Scaduta da giorni ' || cast((CURRENT_DATE-$scadenza) as varchar) END """,

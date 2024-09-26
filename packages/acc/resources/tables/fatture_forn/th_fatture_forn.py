@@ -135,7 +135,8 @@ class Form(BaseComponent):
         fb.field('importo',font_weight='bold')
         fb.field('descrizione',width='100%', colspan=3, tag='textarea')
         fb.field('scadenza' )
-
+        fb.field('note',width='100%', colspan=3, tag='textarea')
+        
     def paym_fatforn(self,pane):
         pane.inlineTableHandler(relation='@paym_fat_forn',
                                 viewResource='ViewFromPayments',liveUpdate=True)

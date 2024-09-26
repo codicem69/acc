@@ -137,6 +137,8 @@ class Form(BaseComponent):
         fb.field('descrizione',width='100%', colspan=3, tag='textarea')
         fb.field('insda')
         fb.field('scadenza')
+        fb.br()
+        fb.field('note',width='100%', colspan=3, tag='textarea')
 
     def paym_fatEmesse(self,pane):
         pane.inlineTableHandler(relation='@paym_fat_emesse',
