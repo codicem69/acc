@@ -24,13 +24,14 @@ class View(BaseComponent):
 
 
 class Form(BaseComponent):
-
+    py_requires="""gnrcomponents/attachmanager/attachmanager:AttachManager"""
     def th_form(self, form):
         #pane = form.record
         bc = form.center.borderContainer()
         self.bonifici_forn(bc.roundedGroup(title='!![en]Transfers supplier',region='top',datapath='.record',height='200px'))
-        self.fatture_fornitore(bc.contentPane(title='!![en]Invoices supplier',region='center',margin='2px'))
-    
+        self.fatture_fornitore(bc.contentPane(title='!![en]Invoices supplier',margin='2px', region='left', width='30%', splitter=True))
+        self.allegatiBonForn(bc.contentPane(title='!![en]Attachments',region='center',width='70%',splitter=True))
+
     def bonifici_forn(self,pane): 
         fb = pane.formbuilder(cols=1, border_spacing='4px')
         fb.field('data')
@@ -48,6 +49,9 @@ class Form(BaseComponent):
                            #picker_condition='$saldo>0',
                            #picker_viewResource=True)
     
+    def allegatiBonForn(self,pane):
+        pane.attachmentGrid(uploaderButton=True) 
+
     def th_bottom_custom(self, bottom):
         bar = bottom.slotBar('10,stampa_bonifico,*,10')
         btn_bonifico_print=bar.stampa_bonifico.button('!![en]Print transfer')

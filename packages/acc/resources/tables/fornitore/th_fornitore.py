@@ -58,6 +58,7 @@ class View(BaseComponent):
         return dict(partitioned=True)
 
 class Form(BaseComponent):
+    
 
     def th_form(self, form):
         #pane = form.record
@@ -68,7 +69,9 @@ class Form(BaseComponent):
         #self.note_forn(tc.contentPane(title='!!Note',datapath='.record'))
         self.bonifici(tc.contentPane(title='!![en]Transfers'))
         self.bank_forn(tc.contentPane(title='!![en]Bank details'))
-
+        
+        
+        
     def fornitore(self, pane):
         fb = pane.div(margin_left='50px',margin_right='80px').formbuilder(cols=2, border_spacing='4px',colswidth='auto',fld_width='100%')
         #fb = pane.formbuilder(cols=2, border_spacing='4px', fld_width='30em')
@@ -94,6 +97,6 @@ class Form(BaseComponent):
     def bank_forn(self,pane):
         pane.dialogTableHandler(relation='@forn_bank',
                                 viewResource='View')
-
+        
     def th_options(self):
         return dict(dialog_height='400px', dialog_width='600px' )

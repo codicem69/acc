@@ -24,10 +24,11 @@ class View(BaseComponent):
 
 
 class Form(BaseComponent):
-
+    py_requires="""gnrcomponents/attachmanager/attachmanager:AttachManager"""
     def th_form(self, form):
         bc = form.center.borderContainer()
         self.bonifici_clienti(bc.roundedGroup(title='!![en]Transfers customer',region='top',datapath='.record',height='200px'))
+        self.allegatiBonCliente(bc.contentPane(title='!![en]Attachments',region='center',width='100%',splitter=True))
 
     def bonifici_clienti(self,pane):    
         fb = pane.formbuilder(cols=1, border_spacing='4px')
@@ -36,6 +37,8 @@ class Form(BaseComponent):
         fb.field('causale',tag='simpleTextArea', width='50em' )
         fb.field('importo' )
 
+    def allegatiBonCliente(self,pane):
+        pane.attachmentGrid(uploaderButton=True) 
 
     def th_options(self):
         return dict(dialog_windowRatio = 1, annotations= True )
