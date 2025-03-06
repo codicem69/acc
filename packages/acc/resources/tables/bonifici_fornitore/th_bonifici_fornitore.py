@@ -42,7 +42,7 @@ class Form(BaseComponent):
     def fatture_fornitore(self,pane):
         pane.inlineTableHandler(relation='@bonifici_forn',viewResource='ViewFromFatFornBonifici',
                                 picker='fatture_forn_id',
-                                picker_condition='fornitore_id=:fid and $saldo>0',# or $bonificato IS NULL',
+                                picker_condition='fornitore_id=:fid and $saldo>0 and $bonificato IS NULL',
                                 picker_condition_fid='^#FORM.record.fornitore_id',
                                 picker_viewResource='ViewFormFatFornBonifici_picker')#'ViewFromCargoLU_picker')
                            #,pbl_classes=True,margin='2px',addrow=True,picker='doc_n',
