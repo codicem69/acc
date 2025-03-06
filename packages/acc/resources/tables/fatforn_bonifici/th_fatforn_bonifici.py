@@ -22,7 +22,7 @@ class ViewFromFatFornBonifici(BaseComponent):
     def th_struct(self,struct):
         r = struct.view().rows()
         r.fieldcell('bonifici_forn_id',edit=True)
-        r.fieldcell('fatture_forn_id',edit=True,width='20em')
+        r.fieldcell('fatture_forn_id',edit=True,width='15em')
         r.fieldcell('importo',totalize=True)
         r.fieldcell('saldo',totalize=True)
 

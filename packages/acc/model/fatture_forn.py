@@ -26,7 +26,7 @@ class Table(object):
                                                 columns="CASE WHEN $fatture_forn_id <> '' THEN true END",
                                                 where='$fatture_forn_id=#THIS.id'),
                                                 limit=1,dtype='B')
-        tbl.aliasColumn('paym_details','@paym_fat_forn.paymdet', dtype='B')
+        tbl.aliasColumn('paym_details','@paym_fat_forn.paymdet', dtype='T')
         
     def defaultValues(self):
         return dict(agency_id=self.db.currentEnv.get('current_agency_id'))
