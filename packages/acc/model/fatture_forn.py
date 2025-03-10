@@ -24,7 +24,7 @@ class Table(object):
         tbl.formulaColumn('anno_doc',"date_part('year', $data)", dtype='D')
         tbl.formulaColumn('bonificato',select=dict(table='acc.fatforn_bonifici',
                                                 columns="CASE WHEN $fatture_forn_id <> '' THEN true END",
-                                                where='$fatture_forn_id=#THIS.id'),
+                                                where='$fatture_forn_id=#THIS.id',group_by='$fatture_forn_id'),
                                                 limit=1,dtype='B')
         tbl.aliasColumn('paym_details','@paym_fat_forn.paymdet', dtype='T')
         
