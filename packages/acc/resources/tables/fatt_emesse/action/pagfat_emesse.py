@@ -51,7 +51,7 @@ class Main(BaseResourceAction):
             pagamenti = self.db.table('acc.pag_fat_emesse').query(columns='$importo',
                                                                 where='$fatt_emesse_id=:fe_id', fe_id=r).fetch()
             for a in range(len(pagamenti)):
-                totale_pagato += pagamenti[0][a]
+                totale_pagato += pagamenti[a][0]
         #prendiamo il record della tabella cliente e con for_update=True successivamente faremo l'aggiornamento con il nuovo saldo 
         tbl_cliente = self.db.table('acc.cliente')
         record_cliente = tbl_cliente.record(where='$id=:id_cliente', 
