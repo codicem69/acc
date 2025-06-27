@@ -24,7 +24,7 @@ class Table(object):
         tbl.formulaColumn('semaforo',"""CASE WHEN $saldo = 0 THEN true ELSE false END""",dtype='B',name_long=' ')
         tbl.formulaColumn('anno_doc',"date_part('year', $data)", dtype='D')
         tbl.formulaColumn('insda_x',"CASE WHEN $insda = True THEN 'x' ELSE '' END", dtype='T')
-        
+        tbl.formulaColumn('inv_emesse',"$doc_n || '-' || @cliente_id.rag_sociale")
     def defaultValues(self):
         return dict(agency_id=self.db.currentEnv.get('current_agency_id'))
 

@@ -17,6 +17,7 @@ class Table(object):
                                         WHEN ($scadenza - CURRENT_DATE)<0 AND $saldo<=0 THEN '!![en]PAYED' ELSE 'Scaduta da giorni ' || cast((CURRENT_DATE-$scadenza) as varchar) END """,
                                         name_long='!![en]Expire days')
         tbl.formulaColumn('inv',"$doc_n || ' - ' || to_char($data, :df)",var_df='DD/MM/YYYY')
+        tbl.formulaColumn('inv_fornitore',"$doc_n || '-' || @fornitore_id.rag_sociale")
         tbl.formulaColumn('tot_pag',select=dict(table='acc.pag_fat_forn',columns='coalesce(SUM($importo),0)', where='$fatture_forn_id=#THIS.id'),dtype='N',format='#,###.00',
                           name_long='!![en]Total payments')
         tbl.formulaColumn('saldo', 'coalesce($importo,0)-coalesce($tot_pag,0)',dtype='N',name_long='!![en]Balance',format='#,###.00')

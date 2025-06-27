@@ -13,4 +13,7 @@ class Table(object):
                                                 columns='SUM($importo)',
                                                 where='$bonifici_forn_id=#THIS.id'),
                                     dtype='N',name_long='Tot.Fatture',format='#,###.00')
- 
+        tbl.formulaColumn('tot_balance_bonifico',select=dict(table='acc.fatforn_bonifici',
+                                                columns='SUM($saldo)',
+                                                where='$bonifici_forn_id=#THIS.id'),
+                                    dtype='N',name_long='Tot.Balance',format='#,###.00')
