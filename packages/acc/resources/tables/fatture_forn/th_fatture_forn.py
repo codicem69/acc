@@ -116,7 +116,7 @@ class ViewFormFatFornBonifici_picker(BaseComponent):
         r.fieldcell('saldo', totalize=True)
         
     def th_order(self):
-        return 'data'
+        return 'data,doc_n'
     
 class Form(BaseComponent):
 

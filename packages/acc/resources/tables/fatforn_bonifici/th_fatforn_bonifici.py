@@ -27,11 +27,12 @@ class ViewFromFatFornBonifici(BaseComponent):
         r.fieldcell('saldo',totalize=True)
 
     def th_order(self):
-        return '@fatture_forn_id.data'
+        return '@fatture_forn_id.doc_n,@fatture_forn_id.data'
     
 class Form(BaseComponent):
 
     def th_form(self, form):
+        form.store.handler('load',virtual_columns='@fatture_forn_id.saldo,@fatture_forn_id.importo')
         pane = form.record
         fb = pane.formbuilder(cols=2, border_spacing='4px')
         fb.field('bonifici_forn_id' )

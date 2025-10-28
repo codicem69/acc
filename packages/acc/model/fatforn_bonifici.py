@@ -10,4 +10,4 @@ class Table(object):
                     ).relation('fatture_forn.id', relation_name='inv_supplier', mode='foreignkey', onDelete='cascade')
         tbl.aliasColumn('importo','@fatture_forn_id.importo')
         tbl.aliasColumn('saldo','@fatture_forn_id.saldo')
-        
+

@@ -55,7 +55,7 @@ class Form(BaseComponent):
     def th_bottom_custom(self, bottom):
         bar = bottom.slotBar('10,stampa_bonifico,*,10')
         btn_bonifico_print=bar.stampa_bonifico.button('!![en]Print transfer')
-        btn_bonifico_print.dataRpc('nome_temp', self.print_bonifico,record='=#FORM.record',nome_template = 'acc.bonifici_fornitore:bonifico_forn',format_page='A4')
+        btn_bonifico_print.dataRpc('nome_temp', self.print_bonifico,record='=#FORM.record',nome_template = 'acc.bonifici_fornitore:bonifico_forn_new',format_page='A4')
     
     def th_options(self):
         return dict(dialog_windowRatio = 1, annotations= True )
