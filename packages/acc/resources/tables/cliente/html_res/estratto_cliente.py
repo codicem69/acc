@@ -18,22 +18,28 @@ class Main(TableScriptToHtml):
     virtual_columns = '$tot_pag,$saldo' #aggiungiamo le colonne calcolate
 
     def docHeader(self, header):
+        agency_id=self.db.currentEnv.get('current_agency_id')
+        tbl_agency = self.db.table('agz.agency')
+        agency_name = tbl_agency.readColumns(columns='$agency_name', where = '$id =:ag_id', ag_id=agency_id)
+        
         #Questo metodo definisce il layout e il contenuto dell'header della stampa
         head = header.layout(name='doc_header', margin='5mm', border_width=0)
         row = head.row()
+        row.cell("""<center><div style='font-size:20pt;'><strong>{agency_name}</strong></div></center>::HTML""".format(
+                                agency_name=agency_name))
         if self.parameter('anno'):
             row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
                     <div style='font-size:10pt;'>{anno}</div></center>::HTML""".format(cliente=self.field('rag_sociale'),anno=self.parameter('anno')))
         elif self.parameter('dal'):
             row.cell("""<center><div style='font-size:12pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
                     <div style='font-size:10pt;'>from {dal} to {al}</div></center>::HTML""".format(cliente=self.field('rag_sociale'),
-                    dal=self.parameter('dal'),al=self.parameter('al')))            
+                    dal=self.parameter('dal').strftime("%d-%m-%Y"),al=self.parameter('al').strftime("%d-%m-%Y")))            
         else:
             #row = head.row()
             row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement</strong></div>
                     <div style='font-size:12pt;'><strong>{cliente}</strong></div></center>::HTML""".format(
                                 cliente=self.field('rag_sociale')))
-
+        
     def defineCustomStyles(self):
         #Questo metodo definisce gli stili del body dell'html
         self.body.style(""".cell_label{
@@ -93,15 +99,16 @@ class Main(TableScriptToHtml):
         
     def outputDocName(self, ext=''):
         #Questo metodo definisce il nome del file di output
+        fornitore=self.field('rag_sociale').replace(":", " ")
         if ext and not ext[0] == '.':
             ext = '.%s' % ext
         if self.parameter('anno'):
             doc_name = 'Statement_{anno}_{fornitore}{ext}'.format(anno=self.parameter('anno'), 
-                        fornitore=self.field('rag_sociale'), ext=ext)
+                        fornitore=fornitore, ext=ext)
         elif self.parameter('dal') and self.parameter('al'):
             doc_name = 'Statement_from_{dal}_to_{al}_{fornitore}{ext}'.format(dal=self.parameter('dal'),
                         al=self.parameter('al'),
-                        fornitore=self.field('rag_sociale'), ext=ext)    
+                        fornitore=fornitore, ext=ext)    
         else: 
-            doc_name = 'Statement_{fornitore}{ext}'.format(fornitore=self.field('rag_sociale'), ext=ext)
+            doc_name = 'Statement_{fornitore}{ext}'.format(fornitore=fornitore, ext=ext)
         return doc_name

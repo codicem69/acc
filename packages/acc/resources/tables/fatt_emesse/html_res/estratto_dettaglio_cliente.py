@@ -11,7 +11,7 @@ class Main(TableScriptToHtml):
     page_margin_right = 5
     
     doc_footer_height = 15
-    doc_header_height = 16
+    doc_header_height = 18
     grid_row_height = 5
     grid_header_height = 5
     totalize_footer='Totale'
@@ -23,20 +23,25 @@ class Main(TableScriptToHtml):
 
     def docHeader(self, header):
         #Questo metodo definisce il layout e il contenuto dell'header della stampa
-        
+        agency_id=self.db.currentEnv.get('current_agency_id')
+        tbl_agency = self.db.table('agz.agency')
+        agency_name = tbl_agency.readColumns(columns='$agency_name', where = '$id =:ag_id', ag_id=agency_id)
+
         if self.parameter('cliente_id'):
             cliente=self.rowField('cliente')
         else:
             cliente= ''  
         head = header.layout(name='doc_header', margin='5mm', border_width=0)
         row = head.row()
+        row.cell("""<center><div style='font-size:20pt;'><strong>{agency_name}</strong></div></center>::HTML""".format(
+                                agency_name=agency_name))
         if self.parameter('anno'):
             row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
                     <div style='font-size:10pt;'>{anno}</div></center>::HTML""".format(cliente=cliente,anno=self.parameter('anno')))
         elif self.parameter('dal'):
             row.cell("""<center><div style='font-size:12pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
                     <div style='font-size:10pt;'>from {dal} to {al}</div></center>::HTML""".format(cliente=cliente,
-                    dal=self.parameter('dal'),al=self.parameter('al')))            
+                    dal=self.parameter('dal').strftime("%d-%m-%Y"),al=self.parameter('al').strftime("%d-%m-%Y")))            
         else:
             #row = head.row()
             row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement</strong></div>
