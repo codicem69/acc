@@ -25,16 +25,16 @@ class Main(TableScriptToHtml):
         #Questo metodo definisce il layout e il contenuto dell'header della stampa
         agency_id=self.db.currentEnv.get('current_agency_id')
         tbl_agency = self.db.table('agz.agency')
-        agency_name = tbl_agency.readColumns(columns='$agency_name', where = '$id =:ag_id', ag_id=agency_id)
-
+        self.agency_name,self.bank,self.iban,self.bic = tbl_agency.readColumns(columns='$agency_name,$bank,$iban,$bic', where = '$id =:ag_id', ag_id=agency_id)
+        
         if self.parameter('cliente_id'):
             cliente=self.rowField('cliente')
         else:
             cliente= ''  
         head = header.layout(name='doc_header', margin='5mm', border_width=0)
         row = head.row()
-        row.cell("""<center><div style='font-size:20pt;'><strong>{agency_name}</strong></div></center>::HTML""".format(
-                                agency_name=agency_name))
+        row.cell("""<center><div style='font-size:20pt;'><strong>{agency_name}</strong><br></div></center>::HTML""".format(
+                                agency_name=self.agency_name))
         if self.parameter('anno'):
             row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
                     <div style='font-size:10pt;'>{anno}</div></center>::HTML""".format(cliente=cliente,anno=self.parameter('anno')))
@@ -242,6 +242,7 @@ class Main(TableScriptToHtml):
                            content_class = 'footer_content',border_color='white')
         r = foo.row()
         today = self.db.workdate.strftime("%d/%m/%Y")
+        r.cell('Bank details: {bank} - IBAN: {iban} - BIC: {bic}'.format(bank=self.bank,iban=self.iban,bic=self.bic),content_class='left',font_size='8pt')
         r.cell('Document printed on {oggi}'.format(oggi=today))
         
     def outputDocName(self, ext=''):

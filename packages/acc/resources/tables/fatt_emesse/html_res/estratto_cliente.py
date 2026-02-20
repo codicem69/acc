@@ -21,19 +21,19 @@ class Main(TableScriptToHtml):
         #Questo metodo definisce il layout e il contenuto dell'header della stampa
         agency_id=self.db.currentEnv.get('current_agency_id')
         tbl_agency = self.db.table('agz.agency')
-        agency_name = tbl_agency.readColumns(columns='$agency_name', where = '$id =:ag_id', ag_id=agency_id)
+        self.agency_name,self.bank,self.iban,self.bic = tbl_agency.readColumns(columns='$agency_name,$bank,$iban,$bic', where = '$id =:ag_id', ag_id=agency_id)
 
         head = header.layout(name='doc_header', margin='5mm', border_width=0)
         row = head.row()
         row.cell("""<center><div style='font-size:20pt;'><strong>{agency_name}</strong></div></center>::HTML""".format(
-                                agency_name=agency_name))
+                                agency_name=self.agency_name))
         if self.parameter('anno'):
             row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
                     <div style='font-size:10pt;'>{anno}</div></center>::HTML""".format(cliente=self.field('@cliente_id.rag_sociale'),anno=self.parameter('anno')))
         elif self.parameter('dal'):
             row.cell("""<center><div style='font-size:12pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
                     <div style='font-size:10pt;'>from {dal} to {al}</div></center>::HTML""".format(cliente=self.field('@cliente_id.rag_sociale'),
-                    dal=self.parameter('dal'),al=self.parameter('al')))            
+                    dal=self.parameter('dal').strftime("%d-%m-%Y"),al=self.parameter('al').strftime("%d-%m-%Y")))            
         else:
             #row = head.row()
             row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement</strong></div>
@@ -84,7 +84,7 @@ class Main(TableScriptToHtml):
             condition.append('$data BETWEEN :dal AND :al')
 
         result = dict(table='acc.fatt_emesse',condition=' AND '.join(condition), condition_anno=self.parameter('anno'), 
-                    condition_dal=self.parameter('dal').strftime("%d-%m-%Y"),condition_al=self.parameter('al').strftime("%d-%m-%Y"),
+                    condition_dal=self.parameter('dal'),condition_al=self.parameter('al'),
                     condition_balance=balance)#,order_by='@cliente_id.rag_sociale DESC')#,relation='@fatt_cliente')
         #print(x)
         return result
@@ -96,6 +96,7 @@ class Main(TableScriptToHtml):
                            content_class = 'footer_content',border_color='white')
         r = foo.row()
         today = self.db.workdate.strftime("%d/%m/%Y")
+        r.cell('Bank details: {bank} - IBAN: {iban} - BIC: {bic}'.format(bank=self.bank,iban=self.iban,bic=self.bic),content_class='left',font_size='8pt')
         r.cell('Document printed on {oggi}'.format(oggi=today))
         
     def outputDocName(self, ext=''):
@@ -107,8 +108,8 @@ class Main(TableScriptToHtml):
             doc_name = 'Statement_{anno}_{fornitore}{ext}'.format(anno=self.parameter('anno'), 
                         fornitore=fornitore, ext=ext)
         elif self.parameter('dal') and self.parameter('al'):
-            doc_name = 'Statement_from_{dal}_to_{al}_{fornitore}{ext}'.format(dal=self.parameter('dal'),
-                        al=self.parameter('al'),
+            doc_name = 'Statement_from_{dal}_to_{al}_{fornitore}{ext}'.format(dal=self.parameter('dal').strftime("%d-%m-%Y"),
+                        al=self.parameter('al').strftime("%d-%m-%Y"),
                         fornitore=fornitore, ext=ext)    
         else: 
             doc_name = 'Statement_{fornitore}{ext}'.format(fornitore=fornitore, ext=ext)

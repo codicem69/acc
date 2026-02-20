@@ -54,9 +54,13 @@ class Form(BaseComponent):
 
         fb.simpleTextArea(lbl='!![en]Bank details',value='^.bank_details',editor=True, height='150px', width='150px' )
         fb.simpleTextArea(lbl='Virtual stamp',value='^.virtual_stamp',editor=True, height='150px', width='150px' )
+        fb.field('bank')
         fb.field('emailpec_account_id', hasDownArrow=True )
+        fb.field('iban')
         fb.field('htmltemplate_id', hasDownArrow=True)
+        fb.field('bic')
         fb.field('port' ,colspan=2)
+
         fb.br()
         right = bc.roundedGroup(region='right',title='!![en]Agency stamp',width='200px')
 
