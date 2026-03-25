@@ -155,11 +155,11 @@ class ViewFromFatture(BaseComponent):
         btn_bar.button('Annulla',
                 action="genro.wdgById('fat').hide();",
                 margin_left='8px')
-        fb.textBox(value='^vessel', lbl='Vessel name')
+        fb.textBox(value='^extra_ogg', lbl='Descrizione extra oggetto email')
         top.dataRpc('.emaildialog.result_message',self.send_emails,
                     _fired='^.emaildialog.sendemail',                          # senza underscore
                     pkeys='=.emaildialog.pkeys',                  # passa i pkeys salvati dal primo RPC
-                    cliente_id='=#FORM.record.id',eng='=eng',fda='=fda',vessel='=vessel',
+                    cliente_id='=#FORM.record.id',eng='=eng',fda='=fda',extra_ogg='=extra_ogg',
                     _onResult="""if(result.getItem('messaggio')) {genro.publish("floating_message",{message:result.getItem('messaggio'), messageType:"message"})};
                     if(result.getItem('invio_email')) {genro.wdgById('fat').hide();}
                     """)
@@ -263,7 +263,7 @@ class ViewFromFatture(BaseComponent):
         return preview
 
     @public_method
-    def send_emails(self, pkeys=None,eng=None,fda=None,vessel=None, **kwargs):
+    def send_emails(self, pkeys=None,eng=None,fda=None,extra_ogg=None, **kwargs):
         if not pkeys:
             return
         
@@ -525,12 +525,16 @@ class ViewFromFatture(BaseComponent):
                     </div>
                     </div>      
                 """
+        if extra_ogg:
+            extra_ogg = '- ' + extra_ogg
+        else:
+            extra_ogg = ''
         
         self.db.table('email.message').newMessage(account_id=account_email,
                     from_address=email_mittente,
                     to_address=email_dest,
                     cc_address=email_dest_cc,
-                    subject=f'{int_email} - {vessel}',
+                    subject=f'{int_email} {extra_ogg}',
                     body=body_html, html=True)
         self.db.commit()
 
