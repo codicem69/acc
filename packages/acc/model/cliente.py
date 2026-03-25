@@ -14,6 +14,7 @@ class Table(object):
         tbl.column('cod_univoco',size='7', name_short='!![en]Unique code')
         tbl.column('pec', name_short='Email pec')
         tbl.column('email', name_short='Email')
+        tbl.column('email_cc', name_short='Email cc')
         tbl.column('tel', name_short='Tel.')
         tbl.column('note', name_short='Note')
         tbl.column('balance', dtype='N', name_short='!![en]Balance',format='#,###.00')
