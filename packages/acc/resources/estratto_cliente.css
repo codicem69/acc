@@ -1,0 +1,192 @@
+/* ── Font ─────────────────────────────────────────────────────────── */
+/* Century Gothic è un font di sistema sul server                     */
+/* Roboto Mono via Google Fonts per WeasyPrint                        */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap');
+
+/* ── Reset base ───────────────────────────────────────────────────── */
+body {
+    font-family: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+    font-size: 9pt;
+    color: #1a2744;
+    background: #ffffff;
+}
+
+/* ── Intestazioni colonne ─────────────────────────────────────────── */
+.head_base {
+    background: #1a2744;
+    color: #f9f7f2;
+    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-size: 6.5pt;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 1px 1px;
+    text-align: left;
+}
+
+.head_right {
+    background: #1a2744;
+    color: #f9f7f2;
+    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-size: 6.5pt;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 1px 1px;
+    text-align: right;
+}
+
+.head_gold {
+    background: #1a2744;
+    color: #c8a84b;
+    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-size: 6.5pt;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 1px 1px;
+    text-align: right;
+}
+
+/* ── Celle dati ───────────────────────────────────────────────────── */
+.cell_base {
+    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-size: 8.5pt;
+    color: #0f2652/*#2c3e60*/;
+    padding: 0px 1px;
+    /*border-bottom: 0.5pt solid #e8e2d5;*/
+    text-align: left;
+    word-wrap: break-word !important; white-space: normal !important;
+}
+
+.cell_num {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 8pt;
+    /*color: #2c3e60;*/
+    padding: 0px 1px;
+    /*border-bottom: 0.5pt solid #e8e2d5;*/
+    text-align: right;
+}
+
+.cell_pagato {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 8pt;
+    color: #27ae60;
+    padding: 0px 1px;
+    /*border-bottom: 0.5pt solid #e8e2d5;*/
+    text-align: right;
+}
+
+.cell_saldo {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 8pt;
+    font-weight: bold;
+    color: #c0392b;
+    padding: 0px 1px;
+    /*border-bottom: 0.5pt solid #e8e2d5;*/
+    text-align: right;
+}
+
+/* ── Righe alternate ──────────────────────────────────────────────── */
+.row_even {
+    background: #faf8f3;
+}
+
+.row_odd {
+    background: #ffffff;
+}
+
+/* ── Riga totali ──────────────────────────────────────────────────── */
+
+/* classi semantiche usate direttamente nelle template */
+.cell_totale_label {
+    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-size: 7pt;
+    font-weight: bold;
+    color: #f9f7f2;
+    background: #1a2744;
+    padding: 1px 1px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-top: 1.5pt solid #c8a84b;
+    text-align: left;
+}
+
+.cell_totale {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 8.5pt;
+    font-weight: bold;
+    color: white;
+    background: #1a2744;
+    padding: 1px 1px;
+    text-align: right;
+    border-top: 1.5pt solid #c8a84b;
+}
+
+/* classi generate dal framework GNR per la riga totalizer */
+.totalizer_row {
+    color: #f9f7f2 !important;
+    background: #1a2744 !important;
+    font-weight: bold !important;
+    border-top: 1.5pt solid #c8a84b !important;
+}
+
+/* label "Totale" nella prima cella della riga totali */
+.totalizer_row .totalize_caption,
+.totalize_caption {
+    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-size: 7pt;
+    font-weight: bold;
+    color: #f9f7f2 !important;
+    background: #1a2744 !important;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-align: right;
+    padding-right: 2mm;
+    padding: 2px 2px;
+    font-style: italic;
+}
+
+/* celle numeriche nella riga totali — ereditano da totalizer_row
+ *  ma i valori numerici devono essere gold (head_gold) */
+.totalizer_row .cell_num,
+.totalizer_row .cell_pagato,
+.totalizer_row .cell_saldo {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 8.5pt;
+    font-weight: bold;
+    color: white !important;
+    background: #1a2744 !important;
+    text-align: right;
+    border-top: 1.5pt solid #c8a84b !important;
+    border-bottom: none !important;
+}
+
+/* head_gold usata come total_class nel fieldcell 'saldo' */
+.head_gold {
+    background: #1a2744;
+    color: #c8a84b;
+    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-size: 6.5pt;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 1px 1px;
+    text-align: right;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────── */
+.cell_label {
+    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-size: 6.5pt;
+    text-align: left;
+    color: #aaa;
+    text-indent: 1mm;
+}
+
+.footer_content {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    text-align: right;
+    margin: 1mm 2mm;
+    font-size: 7pt;
+    color: #888;
+    letter-spacing: 0.3px;
+}

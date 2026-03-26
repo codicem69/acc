@@ -522,7 +522,7 @@ class ViewFromFatture(BaseComponent):
                     #allegati_da_inviare.append(d['filepath'])
                     fileSn = self.site.storageNode(d['filepath'])
                     allegati_da_inviare.append(fileSn.internal_path)
-
+        
         self.db.table('email.message').newMessage(account_id=account_email,
                     from_address=email_mittente,
                     to_address=email_dest,

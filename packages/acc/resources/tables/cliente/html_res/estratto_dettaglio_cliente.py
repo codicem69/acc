@@ -4,12 +4,11 @@ from datetime import datetime
 class Main(TableScriptToHtml):
     maintable = 'acc.cliente'
     row_table = 'acc.cliente'
-    css_requires='grid'
+    css_requires='estratto_cliente'
     page_width = 297
     page_height = 210
     page_margin_left = 5
     page_margin_right = 5
-    
     doc_footer_height = 15
     doc_header_height = 18
     grid_row_height = 5
@@ -34,37 +33,177 @@ class Main(TableScriptToHtml):
             cliente=self.rowField('cliente')
         else:
             cliente= ''
-        head = header.layout(name='doc_header', margin='5mm', border_width=0)
+        head = header.layout(name='doc_header', margin='5mm',right=5, border_width=0)
         row = head.row()
-        row.cell("""<center><div style='font-size:20pt;'><strong>{agency_name}</strong></div></center>::HTML""".format(
-                                agency_name=self.agency_name))
+        # ── Colonna sinistra: nome azienda ──────────────────────────────
+        row.cell("""
+            <table style='border-collapse:collapse;width:100%;'>
+              <tr>
+                <td style='width:4px;background:#c8a84b;border-radius:2px;'>&nbsp;</td>
+                <td style='padding-left:8px;'>
+                    <div style='
+                        font-family:"Century Gothic","Futura","Trebuchet MS",sans-serif;
+                        font-size:18pt;
+                        font-weight:bold;
+                        color:#1a2744;
+                        letter-spacing:0.5px;
+                        line-height:1.15;
+                    '>{agency_name}</div>
+                    <div style='
+                        font-family:"Century Gothic","Futura",sans-serif;
+                        font-size:6pt;
+                        color:#5a5a5a;
+                        letter-spacing:3px;
+                        text-transform:uppercase;
+                        margin-top:3px;
+                    '>Account Statement</div>
+                </td>
+              </tr>
+            </table>
+        ::HTML""".format(agency_name=self.agency_name))
+        #row.cell("""<center><div style='font-size:20pt;'><strong>{agency_name}</strong></div></center>::HTML""".format(
+        #                        agency_name=self.agency_name))
+
+        # ── Colonna destra: cliente + periodo ───────────────────────────
         if self.parameter('anno'):
-            row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
-                    <div style='font-size:10pt;'>{anno}</div></center>::HTML""".format(cliente=cliente,anno=self.parameter('anno')))
+            periodo = """
+                <div style='
+                    font-family:"Century Gothic","Futura",sans-serif;
+                    font-size:8pt;
+                    color:#c8a84b;
+                    letter-spacing:2px;
+                    text-transform:uppercase;
+                    margin-top:5px;
+                '>Anno {anno}</div>
+            """.format(anno=self.parameter('anno'))
+
         elif self.parameter('dal'):
-            row.cell("""<center><div style='font-size:12pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
-                    <div style='font-size:10pt;'>from {dal} to {al}</div></center>::HTML""".format(cliente=cliente,
-                    dal=self.parameter('dal').strftime("%d-%m-%Y"),al=self.parameter('al').strftime("%d-%m-%Y")))            
+            periodo = """
+                <div style='
+                    font-family:"Roboto Mono","Courier New",monospace;
+                    font-size:8pt;
+                    color:#c8a84b;
+                    letter-spacing:0.5px;
+                    margin-top:5px;
+                '>dal {dal} &nbsp;&rsaquo;&nbsp; {al}</div>
+            """.format(
+                dal=self.parameter('dal').strftime("%d %b %Y"),
+                al=self.parameter('al').strftime("%d %b %Y"))
         else:
-            #row = head.row()
-            row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement</strong></div>
-                    <div style='font-size:12pt;'><strong>{cliente}</strong></div></center>::HTML""".format(
-                                cliente=cliente))
+            periodo = ""
+
+        row.cell("""
+            <div style='text-align:right;'>
+                <div style='
+                    font-family:"Century Gothic","Futura",sans-serif;
+                    font-size:6pt;
+                    color:#5a5a5a;
+                    letter-spacing:3px;
+                    text-transform:uppercase;
+                    margin-bottom:5px;
+                '>Estratto Contabile</div>
+                <div style='
+                    font-family:"Century Gothic","Futura",sans-serif;
+                    font-size:13pt;
+                    font-weight:bold;
+                    color:#1a2744;
+                    border-bottom:1.5pt solid #c8a84b;
+                    padding-bottom:3px;
+                '>{cliente}</div>
+                {periodo}
+            </div>
+        ::HTML""".format(
+            cliente=cliente,
+            periodo=periodo
+        ))
+
+        #if self.parameter('anno'):
+        #    row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
+        #            <div style='font-size:10pt;'>{anno}</div></center>::HTML""".format(cliente=cliente,anno=self.parameter('anno')))
+        #elif self.parameter('dal'):
+        #    row.cell("""<center><div style='font-size:12pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
+        #            <div style='font-size:10pt;'>from {dal} to {al}</div></center>::HTML""".format(cliente=cliente,
+        #            dal=self.parameter('dal').strftime("%d-%m-%Y"),al=self.parameter('al').strftime("%d-%m-%Y")))
+        #else:
+        #    #row = head.row()
+        #    row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement</strong></div>
+        #            <div style='font-size:12pt;'><strong>{cliente}</strong></div></center>::HTML""".format(
+        #                        cliente=cliente))
 
     def defineCustomStyles(self):
-        #Questo metodo definisce gli stili del body dell'html
-        self.body.style(""".cell_label{
-                            font-size:8pt;
-                            text-align:left;
-                            color:grey;
-                            text-indent:1mm;}
+        # Stili layout generati dal framework (caption, smallCaption).
+        # I totalizer (totalizer_row, totalize_caption, head_gold) sono ora
+        # definiti in estratto_cliente.css — qui li ripetiamo solo come
+        # fallback nel caso il CSS esterno non venga caricato (html_res locale).
+        self.body.style("""
+            .caption {
+                text-align: center;
+                color: white;
+                background: #1a2744;
+                font-weight: bold;
+                font-size: 8pt;
+                height: 4mm;
+                line-height: 4mm;
+            }
+            .smallCaption {
+                font-size: 7pt;
+                text-align: left;
+                color: gray;
+                text-indent: 1mm;
+                width: auto;
+                font-weight: normal;
+                line-height: 3mm;
+                height: 3mm;
+            }
+            /* fallback totalizer — sovrascritti dal CSS esterno se caricato */
+            .totalizer_row {
+                color: #f9f7f2 !important;
+                background: #1a2744 !important;
+                font-weight: bold !important;
+                border-top: 0.5pt solid #c8a84b !important;
+            }
+            .totalize_caption {
+                text-align: right;
+                padding-right: 2mm;
+                font-weight: bold;
+                font-style: italic;
+                color: #f9f7f2 !important;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+            }
+            .totalizer_row .cell_num,
+            .totalizer_row .cell_pagato,
+            .totalizer_row .cell_saldo {
+                color: white !important;
+                background: #1a2744 !important;
+                font-weight: bold !important;
+                border-top: 0.5pt solid #c8a84b !important;
+                border-bottom: none !important;
+            }
+            /* Colore per le righe PARI */
+        .layout_row:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
-                            .footer_content{
-                            text-align:right;
-                            margin:2mm;
-                            font-size:8pt;
-                            }
-                            """)
+        /* Colore per le righe DISPARI */
+        .layout_row:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        /* Escludi la barra dei totali che hai già personalizzato */
+        /* Usiamo !important per assicurarci che il colore dei totali vinca sulle righe alternate */
+        .totalizer_row {
+            color: #c8a84b !important;
+            background: #1a2744 !important;
+            font-weight: bold !important;
+        }
+
+        /* Se vuoi evitare che le righe dell'header (titoli) vengano colorate */
+        .grid_header_row {
+            background-color: #dddddd !important;
+            color: black;
+        }
+            """)
 
     def gridStruct(self,struct):
         #Questo metodo definisce la struttura della griglia di stampa definendone colonne e layout
@@ -72,7 +211,7 @@ class Main(TableScriptToHtml):
         #if len(self.cliente_id) > 1:
         #    r.cell('cliente',mm_width=30)
         if not self.parameter('cliente_id'):
-            r.cell('cliente',mm_width=30, content_class="breakword")
+            r.cell('cliente',mm_width=50, content_class="cell_base")
             r.cell('cliente', hidden=True, subtotal='Totali {breaker_value}',subtotal_order_by='$cliente',subtotal_content_class='cell_pers')    
         r.cell('data', mm_width=15, name='Data')
          #r.fieldcell('mese_fattura', hidden=True, subtotal='Totale {breaker_value}', subtotal_order_by="$data")
@@ -81,7 +220,7 @@ class Main(TableScriptToHtml):
         #r.cell('doc_n', hidden=True, subtotal='Totale documento {breaker_value}',subtotal_order_by='$cliente')
         #r.fieldcell('cliente_id', mm_width=0)
         
-        r.cell('descrizione',mm_width=0,name='Descrizione')
+        r.cell('descrizione',mm_width=0,name='Descrizione', content_class="cell_base")
         r.cell('importo', mm_width=20, name='Importo', totalize=True,format='#,###.00')
         r.cell('insda',mm_width=5, dtype='B')
         r.cell('tot_pag', mm_width=20, name='Totale versamenti', totalize=True,format='#,###.00')
@@ -97,9 +236,9 @@ class Main(TableScriptToHtml):
         #Attenzione che in questo caso ho una dimensione in num. di caratteri, mentre la larghezza della colonna è definita
         #in mm, e non avendo utti i caratteri la stessa dimensione si tratterà quindi di individuare la migliore approssimazione
         if not self.parameter('cliente_id'):
-            n_rows_cliente = len(self.rowField('cliente'))//cliente_offset + 1.2
+            n_rows_cliente = len(self.rowField('cliente'))//cliente_offset
         else:
-            n_rows_cliente = len(self.rowField('cliente'))//cliente_offset     
+            n_rows_cliente = len(self.rowField('cliente'))//cliente_offset
         n_rows_descr = len(self.rowField('descrizione'))//descrizione_offset + 1.2
 
       
