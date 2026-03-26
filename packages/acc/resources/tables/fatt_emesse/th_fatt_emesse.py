@@ -109,7 +109,7 @@ class ViewFromFatture(BaseComponent):
         py_requires = "gnrcomponents/framegrid:FrameGrid"
         bar=top.slotToolbar('5,sections@fatemesse,10,emailfat,10,actions,resourceActions,15',
                         childname='superiore',_position='<bar')
-                        #,gradient_from='#999',gradient_to='#888')
+                    
         bar.actions.div('Actions')
         btn_emailfat=bar.emailfat.button('Invia Email Fatture',disabled='^#FORM.controller.locked')
         btn_emailfat.dataRpc('.emaildialog',           # dove scrive il risultato
@@ -133,9 +133,7 @@ class ViewFromFatture(BaseComponent):
                          }, 100);
                      }
                  """)
-                      #,      # <-- id per aprirlo/chiuderlo
-                      #datapath='.emailDialog')
-        # Contenitore principale verticale
+
         bc = dlg.borderContainer(height='100%')
 
         # ── ZONA TOP: form con i bottoni ──────────────────────────────
@@ -159,29 +157,16 @@ class ViewFromFatture(BaseComponent):
         top.dataRpc('.emaildialog.result_message',self.send_emails,
                     _fired='^.emaildialog.sendemail',                          # senza underscore
                     pkeys='=.emaildialog.pkeys',                  # passa i pkeys salvati dal primo RPC
-                    cliente_id='=#FORM.record.id',eng='=eng',fda='=fda',extra_ogg='=extra_ogg',
+                    cliente_id='=#FORM.record.id',eng='=eng',fda='=fda',extra_ogg='=extra_ogg',allegati='=.emaildialog.allegati_preview',
                     _onResult="""if(result.getItem('messaggio')) {genro.publish("floating_message",{message:result.getItem('messaggio'), messageType:"message"})};
                     if(result.getItem('invio_email')) {genro.wdgById('fat').hide();}
                     """)
-        #top.dataController("console.log('sendemail fired!');", 
-        #            subscribe_sendemail=True)
-        #btn_bar.button('Annulla', 
-        #               action='PUBLISH dlg_fat_close',
-        #               style='margin-right:8px;')
-        #btn_bar.button('Invia Email',
-        #               iconClass='iconbox mail',
-        #               action="""
-        #                   var pkeys = GET currentWidget.selectedRows.pkeys;
-        #                   FIRE acc.send_emails(pkeys=pkeys, 
-        #                                        eng=GET eng,
-        #                                        allega_pdf=GET allega_pdf);
-        #               """,
-        #               style='font-weight:bold;')
 
-        # ── ZONA CENTER: quickgrid ────────────────────────────────────
         center_pane = bc.contentPane(region='center', style='padding:4px;')
-
-        grid = center_pane.quickGrid(value='^.emaildialog.fatture_preview', totalize=True,
+        inner_bc = center_pane.borderContainer(height='100%')
+        # -- Griglia fatture --
+        main_pane = inner_bc.contentPane(region='center', style='padding:4px;')
+        grid = main_pane.quickGrid(value='^.emaildialog.fatture_preview',
             height='100%',
             selectionMode='multirow',
             nodeId='grid_fatture'
@@ -189,42 +174,23 @@ class ViewFromFatture(BaseComponent):
         grid.column('numero',name='Fattura N.', width='80px')
         grid.column('data_fattura',name='Data',width='90px')
         grid.column('descrizione',name='Descrizione', width='200px')
-        grid.column('totale',name='Importo', width='100px', format='€ #,##0.00', style='text-align:right;')
+        grid.column('totale',name='Importo', width='100px', format='€ #,##0.00', style='text-align:right;', totalize=True)
         grid.column('saldo',name='Saldo', width='100px', format='€ #,##0.00', style='text-align:right;')
-        
-        #bc_top =dlg.borderContainer(width='100%',height='10%',region='top', splitter=True, background = 'red')
-        #bc_center =dlg.borderContainer(width='100%',height='100%',region='bottom', splitter=True)
-        #fb = bc_top.formbuilder(cols=2, border_spacing='4px', font_weight='bold')
-        #content = dlg.div(padding='12px')
-        #fb.div('^.emaildialog.count_label')
-        ##content.div('^.count_label',
-        ##            color='#555', font_size='0.95em', margin_bottom='8px')
-        #btns = content.div(margin_top='14px')
-        ##btns.button('Conferma e Invia',  fire='.emaildialog.sendemail'
-        ##    action="console.log('fire path:', genro.getData('sendemail')); FIRE sendemail;")
-        #fb.button('Conferma e Invia', fire='.emaildialog.sendemail')
-        #fb.button('Annulla',
-        #        action="genro.wdgById('fat').hide();",
-        #        margin_left='8px')
-        #fb.checkbox(value='^eng', lbl='Language: ', label='English', edit=True)
-        #fb.checkbox(value='^fda', lbl='', label='FDA', edit=True)
-        ## Griglia anteprima fatture
-        #grid=bc_center.quickGrid(value='^.emaildialog.fatture_preview', totalize=True),
-        #                  #height='220px')#,
-        #                  #columns='numero,data_fattura,cliente,totale')
-        #top.dataRpc('.emaildialog.result_message',self.send_emails,
-        #            _fired='^.emaildialog.sendemail',                          # senza underscore
-        #            pkeys='=.emaildialog.pkeys',                  # passa i pkeys salvati dal primo RPC
-        #            cliente_id='=#FORM.record.id',eng='=eng',
-        #            _onResult="""if(result.getItem('messaggio')) {genro.publish("floating_message",{message:result.getItem('messaggio'), messageType:"message"})};
-        #            if(result.getItem('invio_email')) {genro.wdgById('fat').hide();}
-        #            """)
-        #top.dataController("console.log('sendemail fired!');", 
-        #            subscribe_sendemail=True)
-            
-    #def th_bottom_toolbarinferiore(self,bottom):
-    #    bar=bottom.slotToolbar('5,sections@cliente_id,15',
-    #                    childname='inferiore',_position='<bar',sections_cliente_id_multivalue=False,sections_cliente_id_multiButton=False)
+        # -- Pannello allegati --
+        att_pane = inner_bc.contentPane(region='bottom', height='180px',
+                                         splitter=True,
+                                         style='padding:4px;border-top:1px solid #ddd;')
+        att_pane.div('Allegati', font_weight='bold', style='margin-bottom:6px;')
+
+        att_grid = att_pane.quickGrid(
+            value='^.emaildialog.allegati_preview',
+            height='150px',
+            selectionMode='multirow',
+            nodeId='grid_allegati'
+        )
+        att_grid.column('includi', name='Includi', width='50px', 
+                        dtype='B', edit=True)
+        att_grid.column('description', name='Descrizione', width='auto')
         
     def th_queryBySample(self):
         return dict(fields=[dict(field='data', lbl='Date <=',width='10em', op='lesseq', val=''),
@@ -260,10 +226,28 @@ class ViewFromFatture(BaseComponent):
             row['saldo'] = r['saldo']
             preview['fatture_preview.'f'r_{i}'] = row
         preview['count_label']=f'{len(fatture)} fatture pronte per l\'invio'
+
+        # Carica allegati dalla tabella fatt_emesse_atc
+        tbl_atc = self.db.table('acc.fatt_emesse_atc')
+        pkeys_list = pkeys.split(',') if isinstance(pkeys, str) else list(pkeys)
+
+        allegati = tbl_atc.query(
+            columns='$maintable_id, $filepath, $mimetype, $description, $text_content',
+            where='$maintable_id IN :pkeys',
+            pkeys=pkeys_list
+        ).fetch()
+
+        for i, r in enumerate(allegati):
+            row = Bag()
+            row['includi'] =True
+            row['description'] = r['description']
+            row['filepath'] = r['filepath']
+            preview['allegati_preview.'f'r_{i}'] = row
+        
         return preview
 
     @public_method
-    def send_emails(self, pkeys=None,eng=None,fda=None,extra_ogg=None, **kwargs):
+    def send_emails(self, pkeys=None,eng=None,fda=None,extra_ogg=None,allegati=None, **kwargs):
         if not pkeys:
             return
         
@@ -529,13 +513,22 @@ class ViewFromFatture(BaseComponent):
             extra_ogg = '- ' + extra_ogg
         else:
             extra_ogg = ''
-        
+        # Filtra solo gli allegati con includi=True
+        allegati_da_inviare = []
+        if allegati:
+            for row in allegati.values():
+                d = row.asDict() if hasattr(row, 'asDict') else dict(row)
+                if d.get('includi'):
+                    #allegati_da_inviare.append(d['filepath'])
+                    fileSn = self.site.storageNode(d['filepath'])
+                    allegati_da_inviare.append(fileSn.internal_path)
+
         self.db.table('email.message').newMessage(account_id=account_email,
                     from_address=email_mittente,
                     to_address=email_dest,
                     cc_address=email_dest_cc,
                     subject=f'{int_email} {extra_ogg}',
-                    body=body_html, html=True)
+                    body=body_html, html=True,attachments=allegati_da_inviare)
         self.db.commit()
 
         dati_invio['invio_email']='ok'
@@ -543,12 +536,13 @@ class ViewFromFatture(BaseComponent):
         return dati_invio
    
 class Form(BaseComponent):
-
+    py_requires='gnrcomponents/pagededitor/pagededitor:PagedEditor,gnrcomponents/attachmanager/attachmanager:AttachManager'
     def th_form(self, form):
         bc = form.center.borderContainer()
         self.fatEmesse(bc.roundedGroupFrame(title='!![en]Invoices issued',region='top',datapath='.record',height='300px', splitter=True))
         tc = bc.tabContainer(margin='2px',region='center')
         self.paym_fatEmesse(tc.contentPane(title='!![en]Payments'))
+        self.att_fatEmesse(tc.contentPane(title='!![en]Attachments'))
         
 
     def fatEmesse(self,pane):
@@ -567,6 +561,8 @@ class Form(BaseComponent):
     def paym_fatEmesse(self,pane):
         pane.inlineTableHandler(relation='@paym_fat_emesse',
                                 viewResource='ViewFromPayments')
+    def att_fatEmesse(self,pane):
+        pane.attachmentGrid(uploaderButton=True)
 
     def th_options(self):
         return dict(dialog_windowRatio = 1, annotations= True )
