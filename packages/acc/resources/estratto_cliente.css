@@ -48,13 +48,14 @@ body {
 
 /* ── Celle dati ───────────────────────────────────────────────────── */
 .cell_base {
-    /*font-family: 'Century Gothic', 'Futura', sans-serif;*/
-    font-size: 10pt;
-    font-weight: 300;
+    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-size: 8pt;
+    font-weight: 700;
     /*color: #0f2652/*#2c3e60*/
     /*padding: 0px 1px;*/
     /*border-bottom: 0.5pt solid #e8e2d5;*/
     text-align: left;
+    vertical-align: middle;
     word-wrap: break-word !important; white-space: normal !important;
     background: #e0e3e7;
 }
@@ -62,6 +63,7 @@ body {
 .cell_num {
     font-family: 'Roboto Mono', 'Courier New', monospace;
     font-size: 8pt;
+    font-weight: 700;
     /*color: #2c3e60;*/
     /*padding: 0px 1px;*/
     /*border-bottom: 0.5pt solid #e8e2d5;*/
