@@ -1,41 +1,167 @@
 from gnr.web.gnrbaseclasses import TableScriptToHtml
-from datetime import datetime
+from gnr.core.gnrbag import Bag
+from decimal import Decimal
 
 class Main(TableScriptToHtml):
-    maintable = 'acc.cliente'
-    row_table = 'acc.cliente'
-    css_requires='estratto_cliente'
+
+    row_table = 'acc.fatt_emesse'
     page_width = 297
     page_height = 210
-    page_margin_left = 5
+    page_margin_top = 5
+    page_margin_left = 3
     page_margin_right = 5
-    doc_footer_height = 15
-    doc_header_height = 18
-    grid_row_height = 5
+    page_margin_bottom = 5
+    doc_header_height = 28
+    doc_footer_height = 10
     grid_header_height = 5
-    totalize_footer='Totale'
-    cliente_height = 10
-    #Fornendo a totalize_footer una stringa testuale, questa verrà usata come etichetta della riga di totalizzazione
-    empty_row=dict()
-    #Grazie a questo parametro in caso di mancanza di dati verrà stampata una griglia vuota invece di una pagina bianca
-    virtual_columns = '@fatt_emesse_id.tot_pag,@fatt_emmese_id.saldo' #aggiungiamo le colonne calcolate
+    grid_row_height = 4.5
+    totalize_footer = 'Totale'
+    totalize_class = 'head_gold'
+    empty_row = dict()
+    virtual_columns = '$tot_pag,$saldo'
+    css_requires = 'estratto_cliente'
+
+    # altezza in mm di ogni subriga pagamento
+    pag_subrow_height = 3.5
+
+    def mainLayoutParameters(self):
+        # Azzeriamo i margini interni: la classe base usa top=1,left=1,right=1,bottom=1
+        # che sottraggono spazio dal calcolo della larghezza utile in structAnalyze,
+        # facendo scattare erroneamente la divisione in sheet multipli.
+        return dict(font_family='Arial Narrow', font_size='9pt',
+                    name='mainLayout', top=0, left=0, right=0, bottom=0, border_width=0)
+
+    def gridLayoutParameters(self):
+        # FIX CHIAVE: top=0, bottom=0 per non ridurre la larghezza utile calcolata
+        # in structAnalyze (copyWidth - layout margins). Con i valori default 0.1
+        # la somma colonne (287mm) supera la larghezza utile percepita dal framework
+        # e scatta il multi-sheet che spezza le righe.
+        # Aggiungiamo anche overflow:hidden sul contenitore griglia così le righe
+        # in eccesso non sfondano sul footer.
+        return dict(name='gridLayout', um='mm', border_color='#e0e0e0',
+                    top=0, bottom=0, left=0, right=0,
+                    font_size='9pt',
+                    border_width=0.3, lbl_class='caption',
+                    text_align='left',
+                    overflow='hidden')
+
+    def defineCustomStyles(self):
+        self.body.style("""
+            .caption {
+                text-align: center;
+                color: white;
+                background: #1a2744;
+                font-weight: bold;
+                font-size: 8pt;
+                height: 4mm;
+                line-height: 4mm;
+            }
+            .smallCaption {
+                font-size: 7pt;
+                text-align: left;
+                color: gray;
+                text-indent: 1mm;
+                width: auto;
+                font-weight: normal;
+                line-height: 3mm;
+                height: 3mm;
+            }
+            .totalizer_row {
+                color: #f9f7f2 !important;
+                background: #1a2744 !important;
+                font-weight: bold !important;
+                border-top: 0.5pt solid #c8a84b !important;
+            }
+            .totalize_caption {
+                text-align: right;
+                padding-right: 2mm;
+                font-weight: bold;
+                font-style: italic;
+                color: #f9f7f2 !important;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+            }
+            .totalizer_row .cell_num,
+            .totalizer_row .cell_pagato,
+            .totalizer_row .cell_saldo {
+                color: white !important;
+                background: #1a2744 !important;
+                font-weight: bold !important;
+                border-top: 0.5pt solid #c8a84b !important;
+                border-bottom: none !important;
+            }
+            .layout_row:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+            .layout_row:nth-child(odd) {
+                background-color: #ffffff;
+            }
+            .totalizer_row {
+                color: #c8a84b !important;
+                background: #1a2744 !important;
+                font-weight: bold !important;
+            }
+            .grid_header_row {
+                background-color: #dddddd !important;
+                color: black;
+            }
+            /* ── Riga totali: sovrascrive le classi colonna ── */
+            .totalizer_row .cell_num,
+            .totalizer_row .cell_pagato,
+            .totalizer_row .cell_saldo,
+            .totalizer_row .cell_base {
+                color: #c8a84b !important;
+                background: #1a2744 !important;
+                font-weight: bold !important;
+                font-size: 9pt !important;
+                font-style: normal !important;
+                font-family: Arial Narrow, sans-serif !important;
+                border-top: 0.5pt solid #c8a84b !important;
+                border-bottom: none !important;
+            }
+            .totalizer_row td,
+            .totalizer_row div {
+                color: #c8a84b !important;
+                background: #1a2744 !important;
+            }
+            /* ── Sottorighe pagamenti ── */
+            .pag_subrow td {
+                background-color: #f7f5ef !important;
+                border-top: 0.3pt dashed #c8a84b !important;
+                font-size: 7pt !important;
+                height: 3.5mm !important;
+                line-height: 3.5mm !important;
+            }
+            .cell_pag_label {
+                color: #5a5a5a !important;
+                font-style: italic !important;
+                text-indent: 4mm;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+            .cell_pag_importo {
+                color: #1a6b3c !important;
+                font-weight: bold !important;
+                text-align: right !important;
+                padding-right: 1mm;
+            }
+            .cell_pag_empty {
+                color: transparent !important;
+            }
+        """)
 
     def docHeader(self, header):
-        #Questo metodo definisce il layout e il contenuto dell'header della stampa
-        agency_id=self.db.currentEnv.get('current_agency_id')
+        agency_id = self.db.currentEnv.get('current_agency_id')
         tbl_agency = self.db.table('agz.agency')
-        self.agency_name,self.bank,self.iban,self.bic = tbl_agency.readColumns(columns='$agency_name,$bank,$iban,$bic', where = '$id =:ag_id', ag_id=agency_id)
-        #if len(self.cliente_id) > 1:
-        #    cliente=''
-        #else:
-        #    cliente= self.rowField('cliente')   
-        if self.parameter('cliente_id'):
-            cliente=self.rowField('cliente')
-        else:
-            cliente= ''
-        head = header.layout(name='doc_header', margin='5mm',right=5, border_width=0)
+        self.agency_name, self.bank, self.iban, self.bic = tbl_agency.readColumns(
+            columns='$agency_name,$bank,$iban,$bic',
+            where='$id =:ag_id',
+            ag_id=agency_id
+        )
+
+        head = header.layout(name='doc_header', border_width=0)
         row = head.row()
-        # ── Colonna sinistra: nome azienda ──────────────────────────────
+
         row.cell("""
             <table style='border-collapse:collapse;width:100%;'>
               <tr>
@@ -61,10 +187,7 @@ class Main(TableScriptToHtml):
               </tr>
             </table>
         ::HTML""".format(agency_name=self.agency_name))
-        #row.cell("""<center><div style='font-size:20pt;'><strong>{agency_name}</strong></div></center>::HTML""".format(
-        #                        agency_name=self.agency_name))
 
-        # ── Colonna destra: cliente + periodo ───────────────────────────
         if self.parameter('anno'):
             periodo = """
                 <div style='
@@ -76,7 +199,6 @@ class Main(TableScriptToHtml):
                     margin-top:5px;
                 '>Anno {anno}</div>
             """.format(anno=self.parameter('anno'))
-
         elif self.parameter('dal'):
             periodo = """
                 <div style='
@@ -85,7 +207,7 @@ class Main(TableScriptToHtml):
                     color:#c8a84b;
                     letter-spacing:0.5px;
                     margin-top:5px;
-                '>dal {dal} &nbsp;&rsaquo;&nbsp; {al}</div>
+                '>from {dal} &nbsp;&rsaquo;&nbsp; {al}</div>
             """.format(
                 dal=self.parameter('dal').strftime("%d %b %Y"),
                 al=self.parameter('al').strftime("%d %b %Y"))
@@ -113,306 +235,298 @@ class Main(TableScriptToHtml):
                 {periodo}
             </div>
         ::HTML""".format(
-            cliente=cliente,
+            cliente=self.field('rag_sociale'),
             periodo=periodo
         ))
 
-        #if self.parameter('anno'):
-        #    row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
-        #            <div style='font-size:10pt;'>{anno}</div></center>::HTML""".format(cliente=cliente,anno=self.parameter('anno')))
-        #elif self.parameter('dal'):
-        #    row.cell("""<center><div style='font-size:12pt;'><strong>Estratto/Statement <br>{cliente}</strong></div>
-        #            <div style='font-size:10pt;'>from {dal} to {al}</div></center>::HTML""".format(cliente=cliente,
-        #            dal=self.parameter('dal').strftime("%d-%m-%Y"),al=self.parameter('al').strftime("%d-%m-%Y")))
-        #else:
-        #    #row = head.row()
-        #    row.cell("""<center><div style='font-size:14pt;'><strong>Estratto/Statement</strong></div>
-        #            <div style='font-size:12pt;'><strong>{cliente}</strong></div></center>::HTML""".format(
-        #                        cliente=cliente))
-
-    def defineCustomStyles(self):
-        # Stili layout generati dal framework (caption, smallCaption).
-        # I totalizer (totalizer_row, totalize_caption, head_gold) sono ora
-        # definiti in estratto_cliente.css — qui li ripetiamo solo come
-        # fallback nel caso il CSS esterno non venga caricato (html_res locale).
-        self.body.style("""
-            .caption {
-                text-align: center;
-                color: white;
-                background: #1a2744;
-                font-weight: bold;
-                font-size: 8pt;
-                height: 4mm;
-                line-height: 4mm;
-            }
-            .smallCaption {
-                font-size: 7pt;
-                text-align: left;
-                color: gray;
-                text-indent: 1mm;
-                width: auto;
-                font-weight: normal;
-                line-height: 3mm;
-                height: 3mm;
-            }
-            /* fallback totalizer — sovrascritti dal CSS esterno se caricato */
-            .totalizer_row {
-                color: #f9f7f2 !important;
-                background: #1a2744 !important;
-                font-weight: bold !important;
-                border-top: 0.5pt solid #c8a84b !important;
-            }
-            .totalize_caption {
-                text-align: right;
-                padding-right: 2mm;
-                font-weight: bold;
-                font-style: italic;
-                color: #f9f7f2 !important;
-                letter-spacing: 0.5px;
-                text-transform: uppercase;
-            }
-            .totalizer_row .cell_num,
-            .totalizer_row .cell_pagato,
-            .totalizer_row .cell_saldo {
-                color: white !important;
-                background: #1a2744 !important;
-                font-weight: bold !important;
-                border-top: 0.5pt solid #c8a84b !important;
-                border-bottom: none !important;
-            }
-            /* Colore per le righe PARI */
-        .layout_row:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        /* Colore per le righe DISPARI */
-        .layout_row:nth-child(odd) {
-            background-color: #ffffff;
-        }
-
-        /* Escludi la barra dei totali che hai già personalizzato */
-        /* Usiamo !important per assicurarci che il colore dei totali vinca sulle righe alternate */
-        .totalizer_row {
-            color: #c8a84b !important;
-            background: #1a2744 !important;
-            font-weight: bold !important;
-        }
-
-        /* Se vuoi evitare che le righe dell'header (titoli) vengano colorate */
-        .grid_header_row {
-            background-color: #dddddd !important;
-            color: black;
-        }
-            """)
-
-    def gridStruct(self,struct):
-        #Questo metodo definisce la struttura della griglia di stampa definendone colonne e layout
+    def gridStruct(self, struct):
         r = struct.view().rows()
-        #if len(self.cliente_id) > 1:
-        #    r.cell('cliente',mm_width=30)
-        if not self.parameter('cliente_id'):
-            r.cell('cliente',mm_width=50, content_class="cell_base")
-            r.cell('cliente', hidden=True, subtotal='Totali {breaker_value}',subtotal_order_by='$cliente',subtotal_content_class='cell_pers')    
-        r.cell('data', mm_width=15, name='Data')
-         #r.fieldcell('mese_fattura', hidden=True, subtotal='Totale {breaker_value}', subtotal_order_by="$data")
-         #Questa formulaColumn verrà utilizzata per creare i subtotali per mese
-        r.cell('doc_n', mm_width=15, name='Documento')
-        #r.cell('doc_n', hidden=True, subtotal='Totale documento {breaker_value}',subtotal_order_by='$cliente')
-        #r.fieldcell('cliente_id', mm_width=0)
-        
-        r.cell('descrizione',mm_width=0,name='Descrizione', content_class="cell_base")
-        r.cell('importo', mm_width=20, name='Importo', totalize=True,format='#,###.00')
-        r.cell('insda',mm_width=5, dtype='B')
-        r.cell('tot_pag', mm_width=20, name='Totale versamenti', totalize=True,format='#,###.00')
-        
-        r.cell('saldo',name='Balance doc.', mm_width=20, totalize=True,format='#,###.00')
-        #r.cell('balance_cliente',name='Balance totale',mm_width=20,format='#,###.00', totalize=True)
 
-    def calcRowHeight(self):
-        #Determina l'altezza di ogni singola riga con approssimazione partendo dal valore di riferimento grid_row_height
-        cliente_offset = 20
-        descrizione_offset = 150
-        #Stabilisco un offset in termini di numero di caratteri oltre il quale stabilirò di andare a capo.
-        #Attenzione che in questo caso ho una dimensione in num. di caratteri, mentre la larghezza della colonna è definita
-        #in mm, e non avendo utti i caratteri la stessa dimensione si tratterà quindi di individuare la migliore approssimazione
-        if not self.parameter('cliente_id'):
-            n_rows_cliente = len(self.rowField('cliente'))//cliente_offset
-        else:
-            n_rows_cliente = len(self.rowField('cliente'))//cliente_offset
-        n_rows_descr = len(self.rowField('descrizione'))//descrizione_offset + 1.2
+        # Larghezza utile = 297 - 5(sx) - 5(dx) = 287mm
+        # 18 + 20 + 173 + 22 + 10 + 22 + 22 = 287mm esatti
+        # IMPORTANTE: con gridLayoutParameters top=bottom=left=right=0
+        # la larghezza utile è esattamente 287mm, nessuno sheet multiplo.
 
-      
-  #      n_rows_nome_provincia = len(self.rowField('_sigla_provincia_nome'))//nome_offset + 1
-        #In caso di valori in relazione, è necessario utilizzare "_" nel metodo rowField per recuperare correttamente i valori
-        #A tal proposito si consiglia comunque sempre di utilizzare le aliasColumns
-        n_rows = max(n_rows_cliente,n_rows_descr)#, n_rows_nome_provincia)
-        height = (self.grid_row_height * n_rows)
-        return height
-    
-    def gridData(self): 
-        condition = ['$cliente_id=:cliente_id']
-        condition_pag = []
-        balance=0
-        if self.parameter('balance') == True:
-            condition.append('$saldo>:balance')
-        #else:
-        #    condition.append('$saldo>=:balance')    
+        r.fieldcell('data',
+                    mm_width=18,
+                    name='Data',
+                    lbl_class='head_base',
+                    content_class='cell_base')
+
+        r.fieldcell('doc_n',
+                    mm_width=20,
+                    name='Documento',
+                    lbl_class='head_base',
+                    content_class='cell_base')
+
+        r.fieldcell('descrizione',
+                    mm_width=173,
+                    name='Descrizione',
+                    lbl_class='head_base',
+                    content_class='cell_base')
+
+        r.fieldcell('importo',
+                    mm_width=22,
+                    name='Importo',
+                    totalize=True,
+                    lbl_class='head_right',
+                    content_class='cell_num')
+
+        r.fieldcell('insda_x',
+                    mm_width=10,
+                    name='Ins.D/A',
+                    lbl_class='head_base',
+                    content_class='cell_base')
+
+        r.fieldcell('tot_pag',
+                    mm_width=22,
+                    name='Pagato',
+                    totalize=True,
+                    lbl_class='head_right',
+                    content_class='cell_pagato')
+
+        r.fieldcell('saldo',
+                    mm_width=22,
+                    name='Saldo',
+                    totalize=True,
+                    lbl_class='head_base',
+                    content_class='cell_saldo')
+
+    def gridData(self):
+        """Override: filtra le righe con balance dopo aver calcolato il saldo reale."""
+        data = super(Main, self).gridData()
+        if not self.parameter('balance'):
+            return data
+        # Filtriamo tenendo solo le fatture con saldo != 0 (positivo o negativo)
+        filtered = Bag()
+        for node in data:
+            row = node.attr
+            fatt_id = row.get('_pkey')
+            if not fatt_id:
+                continue
+            pagamenti = self._getPagamentiPerFattura(fatt_id)
+            importo_raw = row.get('importo') or '0'
+            if isinstance(importo_raw, str):
+                importo = round(Decimal(float(importo_raw.replace('.', '').replace(',', '.') or '0')), 2)
+            else:
+                importo = round(Decimal(str(importo_raw)), 2)
+            tot_pag = round(sum(Decimal(str(p.get('importo') or 0)) for p in pagamenti), 2)
+            saldo = round(importo - tot_pag, 2)
+            if saldo != 0:
+                filtered.setItem(node.label, node.value, **node.attr)
+        return filtered
+
+    def gridQueryParameters(self):
+        condition = []
+
         if self.parameter('anno'):
             condition.append('$anno_doc=:anno')
-            condition_pag.append('$anno_doc=:anno')
         if self.parameter('dal') and self.parameter('al'):
             condition.append('$data BETWEEN :dal AND :al')
-            condition_pag.append('$data BETWEEN :dal AND :al')
-         
-        where = ' AND '.join(condition)
-        where_pag = ' AND '.join(condition_pag)
-                   # , condition_anno=self.parameter('anno'), 
-                   #condition_dal=self.parameter('dal'),condition_al=self.parameter('al'),
-                   #condition_balance=balance)
-        #condition = ['$fornitore_id IN :pkeys AND $data <= :data_fine']
-        #if self.parameter('dal'):
-        #    condition.append('$data >= :data_inizio')
-        #where = ' AND '.join(condition
-        #self.cliente_id=self.record('selectionPkeys')
-        clienti_pkeys = self.db.table('acc.cliente').query(columns="$id", where='$balance <>0').selection().output('pkeylist')
-        self.cliente_id=clienti_pkeys
-        if self.parameter('cliente_id'):
-            len_cliente=1
+
+        return dict(
+            condition=' AND '.join(condition) if condition else None,
+            condition_anno=self.parameter('anno'),
+            condition_dal=self.parameter('dal'),
+            condition_al=self.parameter('al'),
+            relation='@fatt_cliente',
+            order_by='$data, $doc_n'
+        )
+
+    # ── Pagamenti: cache per riga corrente ───────────────────────────────────
+    #
+    # Il flow di gnrbaghtml per ogni riga è:
+    #   lineIterator():
+    #     1. onNewRow()        ← qui precarichiamo i pagamenti e salviamo in cache
+    #     2. calcRowHeight()   ← qui restituiamo altezza riga + subrows
+    #     3. (calcola doNewPage e grid_body_used)
+    #     4. prepareRow(row)   ← qui disegniamo riga + subrows usando la cache
+    #
+    # Così la query viene fatta una sola volta per riga e il salto pagina
+    # avviene nel punto giusto, tenendo conto dell'altezza totale.
+
+    def _getPagamentiPerFattura(self, fatt_id):
+        """
+        ⚠️  Adatta al tuo modello:
+              tabella  → 'acc.pag_fat_emesse'
+              FK       → 'fatt_emesse_id'
+              colonne  → data_pagamento, importo, modalita, note
+        """
+        if not fatt_id:
+            return []
+        try:
+            pag_tbl = self.db.table('acc.pag_fat_emesse')
+            sel = pag_tbl.query(
+                columns='$data,$importo,$note',
+                where='$fatt_emesse_id=:_fid',
+                _fid=fatt_id,
+                order_by='$data'
+            ).selection()
+            return sel.output('dictlist')
+        except Exception:
+            return []
+
+    def onRecordLoaded(self):
+        """Inizializza il totale saldo per il totalizzatore."""
+        self._totale_saldo = Decimal('0')
+
+    def onNewRow(self):
+        """
+        Precarica i pagamenti e calcola il saldo della singola fattura.
+        Ogni fattura è indipendente: nessun riporto dalle righe precedenti.
+          - _importo_fattura   : importo lordo della fattura
+          - _saldo_riga_fattura: importo - somma pagamenti (residuo della fattura)
+        Le subrows partiranno da _importo_fattura e scaleranno verso _saldo_riga_fattura.
+        """
+        fatt_id = self.rowField('_pkey')
+        self._current_pagamenti = self._getPagamentiPerFattura(fatt_id)
+
+        # Importo lordo fattura
+        self._importo_fattura = round(
+            Decimal(float(self.rowField('importo').replace('.', '').replace(',', '.') or '0')), 2)
+
+        # Totale pagamenti di questa fattura
+        tot_pag = round(sum(Decimal(str(p.get('importo') or 0)) for p in self._current_pagamenti), 2)
+
+        # Saldo residuo della fattura
+        self._saldo_riga_fattura = round(self._importo_fattura - tot_pag, 2)
+        # Accumula per il totalizzatore manuale
+        self._totale_saldo += self._saldo_riga_fattura
+        # *** FIX TOTALIZZATORE ***
+        # updateRunningTotals() viene chiamato subito DOPO onNewRow() e legge
+        # self.rowData['saldo'] per sommarlo. Scriviamo qui il valore corretto
+        # così il framework totalizza il saldo reale e non il valore grezzo del DB.
+        self.rowData['saldo'] = float(self._saldo_riga_fattura)
+
+    def renderGridCell_saldo(self, col=None, rowData=None, parentRow=None, **cell_kwargs):
+        """Override: mostra il saldo netto sulla riga fattura.
+        Quando renderMode è 'footer' o 'carry' mostra il totale accumulato."""
+        if self.renderMode in ('footer', 'carry', 'subtotal'):
+            saldo = rowData.get('saldo', Decimal('0')) if rowData else self._totale_saldo
         else:
-            len_cliente=len(clienti_pkeys)
-        #print(x)
-        righe_fat=[]
-        righe=[]
-        for r in range(len_cliente):
-            #cliente_id=self.record('selectionPkeys')[r]
-            #verifichiamo se alla stampa abbiamo scelto il singolo fornitore così passiamo la query giusta per la ricerca del singolo
-            #altrimenti saranno selezionati tutti i fornitori e sarà passata la query per tutti
-            if self.parameter('cliente_id'):
-                cliente_id=self.parameter('cliente_id')
-                clienti = self.db.table('acc.cliente').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id=:pkeys ',
-                                                             order_by='$rag_sociale',
-                                                             group_by='$id',
-                                                  pkeys=cliente_id).fetch()
-            else:
-                clienti = self.db.table('acc.cliente').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id IN :pkeys ',
-                                                             order_by='$rag_sociale',
-                                                             group_by='$id',
-                                                  pkeys=clienti_pkeys).fetch()
+            saldo = getattr(self, '_saldo_riga_fattura', Decimal('0'))
+        if not isinstance(saldo, Decimal):
+            saldo = Decimal(str(saldo))
+        val = self.toText(saldo,
+                          format=col.get('format') or '#,###.00',
+                          locale=self.locale)
+        css = ('cell_saldo_zero aligned_right' if saldo == 0
+               else ('cell_saldo_negativo' if saldo < 0
+                     else 'cell_saldo aligned_right'))
+        cell_kwargs['width'] = cell_kwargs.pop('mm_width', None)
+        cell_kwargs['content_class'] = css
+        cell_kwargs.pop('align_class', None)
+        blacklist = ['field', 'field_getter', 'sqlcolumn', 'totalize', 'dtype',
+                     'subtotal', 'subtotal_order_by', 'formula', 'background',
+                     'color', 'hidden', 'columnset', 'sheet', 'style',
+                     'white_space', 'format', 'mask', 'currency', 'locale']
+        clean_kw = {k: v for k, v in cell_kwargs.items() if v and k not in blacklist}
+        return parentRow.cell(val, overflow='hidden', white_space='nowrap', **clean_kw)
 
-                #cliente_id=clienti_pkeys[r]
-                cliente_id=clienti[r][0]
-            fat_emesse = self.db.table('acc.fatt_emesse').query(columns="""$cliente_id,
-                                            $data,$doc_n,$descrizione,$importo,$tot_pag,$saldo,$insda""",
-                                            where=where,
-                                            balance=balance,
-                                            anno=self.parameter('anno'),
-                                            dal=self.parameter('dal'),
-                                            al=self.parameter('al'),
-                                            cliente_id=cliente_id, 
-                                            order_by='$data'
-                                            ).fetch()
-            pagfatEmesse = self.db.table('acc.pag_fat_emesse').query(columns="""$fatt_emesse_id,
-                                            $data,$importo,$note""",
-                                            where=where_pag,
-                                            anno=self.parameter('anno'),
-                                            dal=self.parameter('dal'),
-                                            al=self.parameter('al')).fetch()
-        
-            
-            #print(x)
-            cliente=clienti[r][1]
-            #print(x)
-            balance_cliente = clienti[r][2]
-            bal_cliente=0
-            righe_pag=[]
-            for r in range(len(fat_emesse)):
-                if fat_emesse[r][0] == cliente_id:
-                    fat_id=fat_emesse[r][8]
-                    data_fat=fat_emesse[r][1]
-                    doc_n=fat_emesse[r][2]
-                    descrizione_fat=fat_emesse[r][3]
-                    importo_fat=fat_emesse[r][4]
-                    tot_pag=fat_emesse[r][5]
-                    saldo=fat_emesse[r][6]
-                    insda=fat_emesse[r][7]
-                    if insda == True:
-                        insda = 'x'
-                        saldo_fat = 0
-                    else:
-                        insda = ''
-                        saldo_fat=importo_fat
+    def calcRowHeight(self):
+        """Restituisce l'altezza TOTALE (fattura + subrighe pagamento)
+        usata dal framework per calcolare lo spazio di paginazione."""
+        n_pag = len(self._current_pagamenti) if hasattr(self, '_current_pagamenti') else 0
+        return self.grid_row_height + n_pag * self.pag_subrow_height
 
-                    pag_progressivo=0
+    def prepareRow(self, row):
+        """
+        Disegna la riga normale della fattura con altezza FISSA (grid_row_height),
+        poi aggiunge una subrow per ogni pagamento usando la cache di onNewRow().
 
-                for p in range(len(pagfatEmesse)):
+        Le subrows mostrano il saldo che scala progressivamente da (saldo_riga + tot_pag)
+        fino a saldo_riga_fattura, mostrando il dettaglio dei pagamenti intermedi.
+        _saldo_progressivo è già stato aggiornato correttamente in onNewRow().
+        """
+        row.height = self.grid_row_height
 
-                    if pagfatEmesse[p][0] == fat_id:
-                        data=pagfatEmesse[p][1]
-                        tot_pag=pagfatEmesse[p][2]
-                        descrizione=pagfatEmesse[p][3]
-                        if descrizione is not None:
-                            descrizione='Versamento - ' + str(descrizione)
-                        else:
-                            descrizione='Versamento'   
-                        
-                        pag_progressivo += tot_pag
-                        saldo_fat = 0
-                        saldo_fat = importo_fat-pag_progressivo
-                        
+        # 1) Riga normale (chiama renderGridCell_saldo che usa _saldo_riga_fattura)
+        self.fillGridRow()
 
-                        righe_pag.append(dict(data=data,doc_n=doc_n, descrizione=descrizione, importo='',
-                                  tot_pag=tot_pag,saldo='',cliente=cliente))
-                bal_cliente+=saldo_fat
+        # 2) Subrows pagamenti dalla cache (nessuna query aggiuntiva)
+        pagamenti = getattr(self, '_current_pagamenti', [])
+        if not pagamenti:
+            return
 
-                #if r == len(fat_emesse)-1:
-                #    righe_pag.append(dict(data='',doc_n='Balance', descrizione='Totale ' + str(cliente), importo='',
-                #                  tot_pag='',saldo='',cliente='',balance_cliente=bal_cliente))    
+        COL_WIDTHS = [
+            ('data',        18,  'cell_pag_label'),
+            ('doc_n',       20,  'cell_pag_empty'),
+            ('descrizione', 173, 'cell_pag_label'),
+            ('importo',     22,  'cell_pag_empty'),
+            ('insda_x',     10,  'cell_pag_empty'),
+            ('tot_pag',     22,  'cell_pag_importo'),
+            ('saldo',       22,  'cell_pag_saldo'),
+        ]
 
-                righe_fat.append(dict(data=data_fat,doc_n=doc_n, descrizione=descrizione_fat, importo=importo_fat,
-                                  tot_pag='',saldo=saldo_fat,cliente=cliente,insda=insda))
-                
-                righe = []
-                righe_fat.extend(righe_pag)
-                for myDict in righe_fat:
-                    if myDict not in righe:
-                        righe.append(myDict)
-                
-        return righe    
-    
+        body_grid = row.parent
+
+        # Le subrows partono dall'importo lordo della fattura e scalano
+        # con ogni pagamento fino al saldo residuo.
+        saldo_corrente = self._importo_fattura
+
+        for pag in pagamenti:
+            importo_pag = round(Decimal(str(pag.get('importo') or 0)), 2)
+            saldo_corrente -= importo_pag
+            subrow = body_grid.row(height=self.pag_subrow_height, _class='pag_subrow')
+
+            for col_name, mm_w, css_class in COL_WIDTHS:
+                if col_name == 'data':
+                    data_pag = pag.get('data')
+                    val = self.toText(data_pag) if data_pag else ''
+                elif col_name == 'descrizione':
+                    note = pag.get('note') or ''
+                    val = '\u21b3 ' + note if note else '\u21b3 Pagamento'
+                elif col_name == 'tot_pag':
+                    val = self.toText(importo_pag, format='#,###.00') if importo_pag else ''
+                elif col_name == 'saldo':
+                    val = self.toText(saldo_corrente, format='#,###.00')
+                    css_class = ('cell_pag_saldo_zero aligned_right' if saldo_corrente == 0
+                                 else ('cell_pag_saldo_negativo' if saldo_corrente < 0
+                                       else 'cell_pag_saldo aligned_right'))
+                else:
+                    val = ''
+
+                subrow.cell(val,
+                            width=mm_w,
+                            overflow='hidden',
+                            white_space='nowrap',
+                            content_class=css_class)
+
+        # _saldo_progressivo è già al valore corretto (aggiornato in onNewRow),
+        # non serve aggiornarlo qui.
+
+    # ── Footer ───────────────────────────────────────────────────────────────
 
     def docFooter(self, footer, lastPage=None):
-        #Questo metodo definisce il layout e il contenuto dell'header della stampa
-        foo = footer.layout('totali_fattura',top=1,
-                           lbl_class='cell_label', 
-                           content_class = 'footer_content',border_color='white')
+        foo = footer.layout(
+            'footer_estratto',
+            top=1, left=1,
+            lbl_class='cell_label',
+            content_class='footer_content',
+            border_color='#c8a84b'
+        )
         r = foo.row()
-        today = self.db.workdate.strftime("%d/%m/%Y")
-        r.cell('Bank details: {bank} - IBAN: {iban} - BIC: {bic}'.format(bank=self.bank,iban=self.iban,bic=self.bic),content_class='left',font_size='8pt')
-        r.cell('Document printed on {oggi}'.format(oggi=today))
-        
+        today = self.db.workdate.strftime("%d %b %Y")
+        r.cell(
+            'Bank: {bank}  \u00b7  IBAN: {iban}  \u00b7  BIC/SWIFT: {bic}'.format(
+                bank=self.bank, iban=self.iban, bic=self.bic),
+            content_class='left',
+            font_size='8pt'
+        )
+        r.cell('Printed on {oggi}'.format(oggi=today))
+
     def outputDocName(self, ext=''):
-        #Questo metodo definisce il nome del file di output
-        #print(x)
-        if len(self.gridData())>0:
-            cliente=self.gridData()[0]['cliente'].replace('.','').replace(' ','_').replace(':',' ')
-        else:
-            cliente=''    
+        cliente = self.field('rag_sociale').replace(":", " ").strip()
         if ext and not ext[0] == '.':
             ext = '.%s' % ext
-        if self.parameter('anno') and self.parameter('cliente_id'):
-            doc_name = 'Statement_{anno}_{cliente}{ext}'.format(anno=self.parameter('anno'), 
-                        cliente=cliente, ext=ext)
-        elif self.parameter('anno'):
-            doc_name = 'Statement_{anno}{ext}'.format(anno=self.parameter('anno'),ext=ext)    
-        elif self.parameter('dal') and self.parameter('al') and self.parameter('cliente_id'):
-            doc_name = 'Statement_from_{dal}_to_{al}_{cliente}{ext}'.format(dal=self.parameter('dal').strftime("%d-%m-%Y"),
-                        al=self.parameter('al').strftime("%d-%m-%Y"),
-                        cliente=cliente, ext=ext)   
+
+        if self.parameter('anno'):
+            return 'Statement_{anno}_{cliente}{ext}'.format(
+                anno=self.parameter('anno'), cliente=cliente, ext=ext)
         elif self.parameter('dal') and self.parameter('al'):
-            doc_name = 'Statement_from_{dal}_to_{al}'.format(dal=self.parameter('dal').strftime("%d-%m-%Y"),
-                        al=self.parameter('al').strftime("%d-%m-%Y"), ext=ext)
-        elif self.parameter('cliente_id'):
-            doc_name = 'Statement_{cliente}{ext}'.format(cliente=cliente, ext=ext)         
-        else: 
-            doc_name = 'Statement'.format(ext=ext)
-        return doc_name
+            return 'Statement_{dal}_{al}_{cliente}{ext}'.format(
+                dal=self.parameter('dal').strftime("%d%m%Y"),
+                al=self.parameter('al').strftime("%d%m%Y"),
+                cliente=cliente, ext=ext)
+        else:
+            return 'Statement_{cliente}{ext}'.format(cliente=cliente, ext=ext)

@@ -25,4 +25,4 @@ class Main(BaseResourcePrint):
        fb.filteringSelect(value='^.anno', values=years, lbl='!![en]Year')
        fb.dateTextBox(value='^.dal',lbl='!![en]Date from',period_to='.al')
        fb.dateTextBox(value='^.al',lbl='!![en]Date to')
-       fb.dbselect(value='^.cliente_id', table='acc.cliente', lbl='Cliente', selected_rag_sociale='.rag_sociale',hasDownArrow=True)
+       #fb.dbselect(value='^.cliente_id', table='acc.cliente', lbl='Cliente', selected_rag_sociale='.rag_sociale',hasDownArrow=True)

@@ -3,7 +3,7 @@ from datetime import datetime
 
 class Main(TableScriptToHtml):
 
-    row_table = 'acc.fatture_emesse'
+    row_table = 'acc.fatt_emesse'
     page_width = 297
     page_height = 210
     page_margin_left = 5
@@ -92,6 +92,7 @@ class Main(TableScriptToHtml):
             color: black;
         }
             """)
+
     def docHeader(self, header):
         agency_id = self.db.currentEnv.get('current_agency_id')
         tbl_agency = self.db.table('agz.agency')

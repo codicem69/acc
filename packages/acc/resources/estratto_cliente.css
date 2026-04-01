@@ -48,31 +48,35 @@ body {
 
 /* ── Celle dati ───────────────────────────────────────────────────── */
 .cell_base {
-    font-family: 'Century Gothic', 'Futura', sans-serif;
-    font-size: 8.5pt;
-    color: #0f2652/*#2c3e60*/;
-    padding: 0px 1px;
+    /*font-family: 'Century Gothic', 'Futura', sans-serif;*/
+    font-size: 10pt;
+    font-weight: 300;
+    /*color: #0f2652/*#2c3e60*/
+    /*padding: 0px 1px;*/
     /*border-bottom: 0.5pt solid #e8e2d5;*/
     text-align: left;
     word-wrap: break-word !important; white-space: normal !important;
+    background: #e0e3e7;
 }
 
 .cell_num {
     font-family: 'Roboto Mono', 'Courier New', monospace;
     font-size: 8pt;
     /*color: #2c3e60;*/
-    padding: 0px 1px;
+    /*padding: 0px 1px;*/
     /*border-bottom: 0.5pt solid #e8e2d5;*/
     text-align: right;
+    background: #e0e5eb;
 }
 
 .cell_pagato {
     font-family: 'Roboto Mono', 'Courier New', monospace;
     font-size: 8pt;
     color: #27ae60;
-    padding: 0px 1px;
+    /*padding: 0px 1px;*/
     /*border-bottom: 0.5pt solid #e8e2d5;*/
     text-align: right;
+    background: #e0e3e7;/*#eff1f4;*/
 }
 
 .cell_saldo {
@@ -80,9 +84,32 @@ body {
     font-size: 8pt;
     font-weight: bold;
     color: #c0392b;
-    padding: 0px 1px;
+    /*padding: 0px 1px;*/
     /*border-bottom: 0.5pt solid #e8e2d5;*/
     text-align: right;
+    background: #e0e3e7;/*#eff1f4;/*inherit;*/
+}
+
+/* saldo zero o avere — verde */
+.cell_saldo_zero {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 8pt;
+    font-weight: bold;
+    color: #27ae60 !important;
+    text-align: right;
+    background-color: #e0e3e7;
+    text-decoration: underline;
+}
+
+/* saldo negativo — nero */
+.cell_saldo_negativo {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 8pt;
+    font-weight: bold;
+    color: #000000 !important;
+    text-align: right;
+    background-color: #e0e3e7;
+    padding-right: 1mm;
 }
 
 /* ── Righe alternate ──────────────────────────────────────────────── */
@@ -150,8 +177,8 @@ body {
 .totalizer_row .cell_num,
 .totalizer_row .cell_pagato,
 .totalizer_row .cell_saldo {
-    font-family: 'Roboto Mono', 'Courier New', monospace;
-    font-size: 8.5pt;
+    /*font-family: 'Roboto Mono', 'Courier New', monospace;*/
+    font-size: 10pt;
     font-weight: bold;
     color: white !important;
     background: #1a2744 !important;
@@ -189,4 +216,73 @@ body {
     font-size: 7pt;
     color: #888;
     letter-spacing: 0.3px;
+}
+/* ── Sottorighe pagamenti ─────────────────────────────────────────── */
+.pag_subrow {
+    background-color: #fafafa !important;
+}
+
+/* ogni cella della subriga pagamento */
+.pag_subrow .gnrlayout {
+    border-top: 0.3pt dashed #c8a84b !important;
+    background-color: #fafafa !important;
+}
+
+/* testo descrizione pagamento (es. "↳ Bonifico · nota") */
+.cell_pag_label {
+    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-size: 7.5pt;
+    color: #5a5a5a;
+    font-style: italic;
+    text-indent: 4mm;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* importo pagamento — verde, monospace, allineato a destra */
+.cell_pag_importo {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 7.5pt;
+    font-weight: bold;
+    color: #27ae60;
+    text-align: right;
+    padding-right: 1mm;
+    white-space: nowrap;
+    overflow: hidden;
+}
+/* saldo zero o avere — verde */
+.cell_pag_saldo_zero {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 8pt;
+    font-weight: bold;
+    /*color: #27ae60 !important;*/
+    text-align: right;
+    background-color: inherit;
+    text-decoration: underline;
+}
+
+/* saldo negativo — nero */
+.cell_pag_saldo_negativo {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 8pt;
+    font-weight: bold;
+    /*color: #000000 !important;*/
+    text-align: right;
+    background-color: inherit;
+    padding-right: 1mm;
+}
+.cell_pag_saldo {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 8pt;
+    font-weight: bold;
+    /*color: #c0392b;*/
+    /*padding: 0px 1px;*/
+    /*border-bottom: 0.5pt solid #e8e2d5;*/
+    text-align: right;
+    background: inherit;
+}
+/* celle vuote nelle subrighe — invisibili */
+.cell_pag_empty {
+    color: transparent !important;
+    background-color: #fafafa !important;
 }
