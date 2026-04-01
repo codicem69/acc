@@ -18,13 +18,20 @@ class Table(object):
                                         WHEN ($scadenza - CURRENT_DATE)>0 AND $saldo<=0  THEN '!![en]PAYED' 
                                         WHEN ($scadenza - CURRENT_DATE)<0 AND $saldo<=0 THEN '!![en]PAYED' ELSE 'Scaduta da giorni ' || cast((CURRENT_DATE-$scadenza) as varchar) END """,
                                         name_long='!![en]Expire days', dtype='T')
-        tbl.formulaColumn('tot_pag',select=dict(table='acc.pag_fat_emesse',columns='coalesce(SUM($importo),0)', where="$fatt_emesse_id=#THIS.id"),dtype='N',format='#,###.00',
-                          name_long='!![en]Total payments')
+        tbl.formulaColumn('tot_pag',select=dict(table='acc.pag_fat_emesse', columns='coalesce(SUM($importo),0)', 
+                                                where='$fatt_emesse_id=#THIS.id AND $data<=coalesce(:env_data_saldo,:env_workdate)'),dtype='N',format='#,###.00')
+        #tbl.formulaColumn('tot_pag',select=dict(table='acc.pag_fat_emesse',columns='coalesce(SUM($importo),0)', where="$fatt_emesse_id=#THIS.id"),dtype='N',format='#,###.00',
+                          #name_long='!![en]Total payments')
+        tbl.formulaColumn('tot_pag_effettivo',select=dict(table='acc.pag_fat_emesse', columns='coalesce(SUM($importo),0)', 
+                                                where='$fatt_emesse_id=#THIS.id'))
         tbl.formulaColumn('saldo', "CASE WHEN ($insda is not null) AND ($insda=true) THEN 0 ELSE $importo-coalesce($tot_pag,0) END",dtype='N',name_long='!![en]Balance',format='#,###.00')
-        tbl.formulaColumn('semaforo',"""CASE WHEN $saldo = 0 THEN true ELSE false END""",dtype='B',name_long=' ')
+        tbl.formulaColumn('saldo_effettivo', "CASE WHEN ($insda is not null) AND ($insda=true) THEN 0 ELSE $importo-coalesce($tot_pag_effettivo,0) END",dtype='N',name_long='!![it]Saldo Effettivo',format='#,###.00')
+        tbl.formulaColumn('semaforo_eff',"""CASE WHEN $saldo_effettivo = 0 THEN true ELSE false END""",dtype='B',name_long=' ')
+        tbl.formulaColumn('semaforo_al',"""CASE WHEN $saldo = 0 THEN true ELSE false END""",dtype='B',name_long=' ')
         tbl.formulaColumn('anno_doc',"date_part('year', $data)", dtype='D')
         tbl.formulaColumn('insda_x',"CASE WHEN $insda = True THEN 'x' ELSE '' END", dtype='T')
         tbl.formulaColumn('inv_emesse',"$doc_n || '-' || @cliente_id.rag_sociale")
+   
     def defaultValues(self):
         return dict(agency_id=self.db.currentEnv.get('current_agency_id'))
 

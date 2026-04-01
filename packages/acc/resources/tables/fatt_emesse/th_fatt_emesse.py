@@ -13,17 +13,20 @@ class View(BaseComponent):
         r = struct.view().rows()
         #r.fieldcell('_row_count', counter=True, name='N.',width='3em')
         r.fieldcell('cliente_id', width='30em', name='!![en]Customer')
-        r.fieldcell('data')
-        r.fieldcell('doc_n')
-        r.fieldcell('descrizione',width='50em')
+        r.fieldcell('data', width='5em')
+        r.fieldcell('doc_n', width='5em')
+        r.fieldcell('descrizione',width='40em')
         r.fieldcell('insda')
         r.fieldcell('importo', totalize=True)
         r.fieldcell('scadenza')
         r.fieldcell('giorni_scadenza', width='11em')
-        r.fieldcell('tot_pag', totalize=True)
-        r.fieldcell('saldo', totalize=True,
+        r.fieldcell('tot_pag', totalize=True,name='^name_totpag')
+        r.fieldcell('saldo', totalize=True,name='^name_saldo',
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
-        r.fieldcell('semaforo',semaphore=True)
+        r.fieldcell('semaforo_al',semaphore=True)
+        r.fieldcell('saldo_effettivo', totalize=True,name=f'Saldo al {self.db.workdate.strftime("%d/%m/%Y")}',
+                          range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
+        r.fieldcell('semaforo_eff',semaphore=True)
 
     def th_order(self):
         return 'data:d,doc_n:d'
@@ -54,7 +57,11 @@ class View(BaseComponent):
                         sections_cliente_id_width='60em')
                         #,gradient_from='#999',gradient_to='#888')
         bar.actions.div('Actions')
-    
+        #settiamo nella env la data_saldo per i calcoli con la formulaColumn
+        bar.data('^acc_fatt_emesse.view.queryBySample.c_0',serverpath='data_saldo',dbenv=True)
+        bar.dataController("""if(data_saldo) {SET name_saldo='Saldo al '+ data_saldo; SET name_totpag = 'Tot.Pag. al '+data_saldo;} else 
+                           {SET name_saldo='Saldo al '+ data_att; SET name_totpag='Tot.Pag. al '+ data_att;}""",
+                           data_saldo='^acc_fatt_emesse.view.queryBySample.c_0',data_att=self.workdate.strftime("%d/%m/%Y"),_onStart=True)
     #def th_bottom_toolbarinferiore(self,bottom):
     #    bar=bottom.slotToolbar('5,sections@cliente_id,15',
     #                    childname='inferiore',_position='<bar',sections_cliente_id_multivalue=False,sections_cliente_id_multiButton=False)
@@ -71,17 +78,21 @@ class ViewFromFatture(BaseComponent):
     def th_struct(self,struct):
         r = struct.view().rows()
         r.fieldcell('cliente_id', width='30em', name='!![en]Customer')
-        r.fieldcell('data')
-        r.fieldcell('doc_n')
-        r.fieldcell('descrizione',width='50em')
+        r.fieldcell('data', width='5em')
+        r.fieldcell('doc_n', width='5em')
+        r.fieldcell('descrizione',width='40em')
         r.fieldcell('insda')
         r.fieldcell('importo', totalize=True)
         r.fieldcell('scadenza')
         r.fieldcell('giorni_scadenza', width='11em')
-        r.fieldcell('tot_pag', totalize=True)
-        r.fieldcell('saldo', totalize=True,
+        r.fieldcell('tot_pag', totalize=True,name='^name_totpag')
+        r.fieldcell('saldo', totalize=True,name='^name_saldo',
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
-        r.fieldcell('semaforo',semaphore=True)
+        r.fieldcell('semaforo_al',semaphore=True)
+        r.fieldcell('saldo_effettivo', totalize=True,name=f'Saldo al {self.db.workdate.strftime("%d/%m/%Y")}',
+                          range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
+        r.fieldcell('semaforo_eff',semaphore=True)
+
 
     def th_order(self):
         return 'data:d'
@@ -111,6 +122,12 @@ class ViewFromFatture(BaseComponent):
                         childname='superiore',_position='<bar')
                     
         bar.actions.div('Actions')
+        #settiamo nella env la data_saldo per i calcoli con la formulaColumn
+        bar.data('^acc_cliente.form.acc_fatt_emesse.view.queryBySample.c_0',serverpath='data_saldo',dbenv=True)
+        bar.dataController("""if(data_saldo) {SET name_saldo='Saldo al '+ data_saldo; SET name_totpag = 'Tot.Pag. al '+data_saldo;} else 
+                           {SET name_saldo='Saldo al '+ data_att; SET name_totpag='Tot.Pag. al '+ data_att;}""",
+                           data_saldo='^acc_cliente.form.acc_fatt_emesse.view.queryBySample.c_0',data_att=self.workdate.strftime("%d/%m/%Y"),_onStart=True)
+
         btn_emailfat=bar.emailfat.button('Invia Email Fatture',disabled='^#FORM.controller.locked')
         btn_emailfat.dataRpc('.emaildialog',           # dove scrive il risultato
                             self.load_email_preview,cliente_id='=#FORM.record.id',pkeys='=#FORM.acc_fatt_emesse.view.grid.currentSelectedPkeys',

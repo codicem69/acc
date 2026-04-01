@@ -211,6 +211,17 @@ class Main(TableScriptToHtml):
             """.format(
                 dal=self.parameter('dal').strftime("%d %b %Y"),
                 al=self.parameter('al').strftime("%d %b %Y"))
+        elif self.parameter('al'):
+            periodo = """
+                <div style='
+                    font-family:"Roboto Mono","Courier New",monospace;
+                    font-size:8pt;
+                    color:#c8a84b;
+                    letter-spacing:0.5px;
+                    margin-top:5px;
+                '>&rsaquo;&nbsp; {al}</div>
+            """.format(
+                al=self.parameter('al').strftime("%d %b %Y"))
         else:
             periodo = ""
 
@@ -323,6 +334,8 @@ class Main(TableScriptToHtml):
             condition.append('$anno_doc=:anno')
         if self.parameter('dal') and self.parameter('al'):
             condition.append('$data BETWEEN :dal AND :al')
+        if self.parameter('al'):
+            condition.append('$data <= :al')
 
         return dict(
             condition=' AND '.join(condition) if condition else None,
@@ -356,12 +369,22 @@ class Main(TableScriptToHtml):
             return []
         try:
             pag_tbl = self.db.table('acc.pag_fat_emesse')
-            sel = pag_tbl.query(
-                columns='$data,$importo,$note',
-                where='$fatt_emesse_id=:_fid',
-                _fid=fatt_id,
-                order_by='$data'
-            ).selection()
+            if self.parameter('al'):
+
+                sel = pag_tbl.query(
+                    columns='$data,$importo,$note',
+                    where='$fatt_emesse_id=:_fid AND $data<=:al',
+                    _fid=fatt_id,al=self.parameter('al'),
+                    order_by='$data'
+                ).selection()
+            else:
+                sel = pag_tbl.query(
+                    columns='$data,$importo,$note',
+                    where='$fatt_emesse_id=:_fid',
+                    _fid=fatt_id,
+                    order_by='$data'
+                ).selection()
+
             return sel.output('dictlist')
         except Exception:
             return []
@@ -397,6 +420,7 @@ class Main(TableScriptToHtml):
         # self.rowData['saldo'] per sommarlo. Scriviamo qui il valore corretto
         # così il framework totalizza il saldo reale e non il valore grezzo del DB.
         self.rowData['saldo'] = float(self._saldo_riga_fattura)
+
 
     def renderGridCell_saldo(self, col=None, rowData=None, parentRow=None, **cell_kwargs):
         """Override: mostra il saldo netto sulla riga fattura.
