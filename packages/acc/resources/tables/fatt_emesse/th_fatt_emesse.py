@@ -67,9 +67,9 @@ class View(BaseComponent):
     #                    childname='inferiore',_position='<bar',sections_cliente_id_multivalue=False,sections_cliente_id_multiButton=False)
         
     def th_queryBySample(self):
-        return dict(fields=[dict(field='data', lbl='Date <=',width='10em', op='lesseq', val=''),
-                            dict(field='data', lbl='Date >=',width='10em', op='greatereq', val=''),
-                            dict(field='data', lbl='!![en]Invoice date',width='10em'),
+        return dict(fields=[dict(field='data', lbl='Date <=',width='10em', op='lesseq', val='', tag='dateTextBox'),
+                            dict(field='data', lbl='Date >=',width='10em', op='greatereq', val='', tag='dateTextBox'),
+                            dict(field='data', lbl='!![en]Invoice date',width='10em', tag='dateTextBox'),
                             dict(field='descrizione', lbl='!![en]Description',width='20em')],
                             cols=4, isDefault=True) 
 
