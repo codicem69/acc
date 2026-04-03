@@ -39,13 +39,16 @@ class View(BaseComponent):
 
     def th_sections_fatemesse(self):
         return [dict(code='tutti',caption='!![en]All'),
+                dict(code='div_zero',caption='!![en]Not null',
+                        condition='$saldo!=0'),
                 dict(code='da_saldare',caption='!![en]To be paid',
                         condition='$saldo>0'),
                 dict(code='saldati',caption='!![en]Paid',condition='$saldo=0'),
                 dict(code='insda',caption='!![en]InsDA',condition='$insda=true'),
                 dict(code='scaduti',caption='!![en]Expired',condition='$scadenza<now() and $saldo>0'),
                 dict(code='non_scadute',caption='!![en]Not Expired',condition='$scadenza>now() and $saldo>0'),
-                dict(code='senza_scadenza',caption='!![en]Without Expire',condition='$scadenza is null and $saldo!=0')]
+                dict(code='senza_scadenza',caption='!![en]Without Expire',condition='$scadenza is null and $saldo!=0'),
+                dict(code='over_paym',caption='!![en]Over payment',condition='$saldo<0')]
     
     #def th_sections_cliente_id(self):
     #    return [dict(code='cliente',caption='!![en]Customer',condition="$cliente_id!=''")]
