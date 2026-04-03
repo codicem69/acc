@@ -37,7 +37,7 @@ body {
 .head_gold {
     background: #1a2744;
     color: #c8a84b;
-    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-family: 'Roboto Mono', 'Courier New', monospace;/*'Century Gothic', 'Futura', sans-serif;*/
     font-size: 6.5pt;
     font-weight: bold;
     letter-spacing: 1.5px;
@@ -127,7 +127,7 @@ body {
 
 /* classi semantiche usate direttamente nelle template */
 .cell_totale_label {
-    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-family: 'Roboto Mono', 'Courier New', monospace;/*'Century Gothic', 'Futura', sans-serif;*/
     font-size: 7pt;
     font-weight: bold;
     color: #f9f7f2;
@@ -152,6 +152,7 @@ body {
 
 /* classi generate dal framework GNR per la riga totalizer */
 .totalizer_row {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
     color: #f9f7f2 !important;
     background: #1a2744 !important;
     font-weight: bold !important;
@@ -170,7 +171,7 @@ body {
     text-transform: uppercase;
     text-align: right;
     padding-right: 2mm;
-    padding: 2px 2px;
+    padding: 1px 1px;
     font-style: italic;
 }
 
@@ -179,7 +180,7 @@ body {
 .totalizer_row .cell_num,
 .totalizer_row .cell_pagato,
 .totalizer_row .cell_saldo {
-    /*font-family: 'Roboto Mono', 'Courier New', monospace;*/
+    font-family: 'Roboto Mono', 'Courier New', monospace;
     font-size: 10pt;
     font-weight: bold;
     color: white !important;
@@ -193,7 +194,7 @@ body {
 .head_gold {
     background: #1a2744;
     color: #c8a84b;
-    font-family: 'Century Gothic', 'Futura', sans-serif;
+    font-family: 'Roboto Mono', 'Courier New', monospace;/*'Century Gothic', 'Futura', sans-serif;*/
     font-size: 6.5pt;
     font-weight: bold;
     letter-spacing: 1.5px;

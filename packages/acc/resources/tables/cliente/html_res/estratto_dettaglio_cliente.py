@@ -89,6 +89,7 @@ class Main(TableScriptToHtml):
                 font-weight: bold !important;
                 border-top: 0.5pt solid #c8a84b !important;
                 border-bottom: none !important;
+                font-family: 'Roboto Mono', 'Courier New', monospace;
             }
             .layout_row:nth-child(even) {
                 background-color: #f2f2f2;
@@ -97,6 +98,7 @@ class Main(TableScriptToHtml):
                 background-color: #ffffff;
             }
             .totalizer_row {
+                font-family: 'Roboto Mono', 'Courier New', monospace;
                 color: #c8a84b !important;
                 background: #1a2744 !important;
                 font-weight: bold !important;
@@ -114,8 +116,9 @@ class Main(TableScriptToHtml):
                 background: #1a2744 !important;
                 font-weight: bold !important;
                 font-size: 9pt !important;
+                font-family: 'Roboto Mono', 'Courier New', monospace;
                 font-style: normal !important;
-                font-family: Arial Narrow, sans-serif !important;
+                /*font-family: Arial Narrow, sans-serif !important;*/
                 border-top: 0.5pt solid #c8a84b !important;
                 border-bottom: none !important;
             }
@@ -128,6 +131,7 @@ class Main(TableScriptToHtml):
             .pag_subrow td {
                 background-color: #f7f5ef !important;
                 border-top: 0.3pt dashed #c8a84b !important;
+                font-family: 'Roboto Mono', 'Courier New', monospace;
                 font-size: 7pt !important;
                 height: 3.5mm !important;
                 line-height: 3.5mm !important;

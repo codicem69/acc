@@ -197,6 +197,7 @@ class Main(TableScriptToHtml):
             color: #c8a84b !important;
             background: #1a2744 !important;
             font-weight: bold !important;
+            font-family: 'Century Gothic', 'Futura', sans-serif;
         }
 
         /* Se vuoi evitare che le righe dell'header (titoli) vengano colorate */
