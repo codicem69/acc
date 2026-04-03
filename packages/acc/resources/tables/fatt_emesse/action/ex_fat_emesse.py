@@ -22,7 +22,7 @@ class Main(BaseResourceExport):
             anno=' '+ self.batch_parameters['anno']
         else:
             anno=''
-        self.batch_parameters['filename']=self.batch_parameters['filename'] or 'Export fat_emesse%s%s' %(anno,cliente)
+        self.batch_parameters['filename']=self.batch_parameters['filename'] or 'Export fat_emesse%s%s' %(anno,cliente)[:64]
         #self.batch_parameters['filename']=self.batch_parameters['filename'] or 'Export fat_emesse %(anno)s' %self.batch_parameters
         #impostiamo i dati
         self.columns=['cliente','data','doc_n','importo','descrizione','insda','scadenza','tot_pag','saldo']
