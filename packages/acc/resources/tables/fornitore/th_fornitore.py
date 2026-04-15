@@ -81,8 +81,10 @@ class Form(BaseComponent):
         fb.field('cap' )
         fb.field('city')
         fb.field('tel')
+        fb.br()
         fb.field('email')
-        fb.field('note', tag='simpleTextArea', height='100px', colspan=2)
+        fb.field('email_cc')
+        fb.field('note', tag='simpleTextArea', height='90px', colspan=2)
         #fb.field('balance',font_weight='bold',color ="^#FORM.record.balance?=#v>0?'red':'black'")
         
     def fat_forn(self,pane):

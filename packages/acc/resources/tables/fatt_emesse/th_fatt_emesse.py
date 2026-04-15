@@ -287,7 +287,7 @@ class ViewFromFatture(BaseComponent):
             dati_invio['messaggio']='Nessuna fattura trovata.'
             return dati_invio
             return 'Nessuna fattura trovata.'
-
+        
         # Recupera i pagamenti collegati alle fatture trovate
         pagamenti = self.db.table('acc.pag_fat_emesse').query(columns='$fatt_emesse_id,$data,$importo,$note',
                         where='$fatt_emesse_id IN :pkeys_list',
@@ -298,7 +298,7 @@ class ViewFromFatture(BaseComponent):
         pagamenti_per_fattura = defaultdict(list)
         for p in pagamenti:
             pagamenti_per_fattura[p['fatt_emesse_id']].append(p)
-
+        
         # Verifica email cliente
         email_dest = fatture[0]['_cliente_id_email']
         email_dest_cc = fatture[0]['_cliente_id_email_cc']

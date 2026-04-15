@@ -11,6 +11,7 @@ class Table(object):
         tbl.column('city', name_short='!![en]City place')
         tbl.column('tel', name_short='!![en]Tel.')
         tbl.column('email', name_short='!![en]Email')
+        tbl.column('email_cc', name_short='!![en]Email cc')
         tbl.column('note', name_short='Note')
         tbl.column('balance', dtype='N', name_short='!![en]Balance',format='#,###.00')
         tbl.formulaColumn('full_supplier',"""$rag_sociale || coalesce(' - '|| $address, '') || coalesce(' - '|| $cap,'') || coalesce(' - '|| $city,'') """ )
