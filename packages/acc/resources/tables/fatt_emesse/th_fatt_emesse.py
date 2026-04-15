@@ -178,7 +178,7 @@ class ViewFromFatture(BaseComponent):
                     _fired='^.emaildialog.sendemail',                          # senza underscore
                     pkeys='=.emaildialog.pkeys',                  # passa i pkeys salvati dal primo RPC
                     cliente_id='=#FORM.record.id',eng='=eng',fda='=fda',extra_ogg='=extra_ogg',allegati='=.emaildialog.allegati_preview',
-                    _onResult="""if(result.getItem('messaggio')) {genro.publish("floating_message",{message:result.getItem('messaggio'), messageType:"message"})};
+                    _onResult="""if(result.getItem('messaggio')) {genro.publish("floating_message",{message:result.getItem('messaggio'), messageType:result.getItem('msg_type')})};
                     if(result.getItem('invio_email')) {genro.wdgById('fat').hide();}
                     """)
 
@@ -285,8 +285,9 @@ class ViewFromFatture(BaseComponent):
         dati_invio = Bag()
         if not fatture:
             dati_invio['messaggio']='Nessuna fattura trovata.'
+            dati_invio['msg_type']='error'
             return dati_invio
-            return 'Nessuna fattura trovata.'
+            #return 'Nessuna fattura trovata.'
         
         # Recupera i pagamenti collegati alle fatture trovate
         pagamenti = self.db.table('acc.pag_fat_emesse').query(columns='$fatt_emesse_id,$data,$importo,$note',
@@ -306,6 +307,7 @@ class ViewFromFatture(BaseComponent):
         
         if not email_dest:
             dati_invio['messaggio']=f'Invio annullato: il cliente {ragione_sociale} non ha email.'
+            dati_invio['msg_type']='error'
             return dati_invio
         
         # Lettura degli account email predefiniti all'interno di Agency e Staff
@@ -553,6 +555,7 @@ class ViewFromFatture(BaseComponent):
 
         dati_invio['invio_email']='ok'
         dati_invio['messaggio']=f'Email creata per {email_dest} ({len(fatture)} fatture).'  
+        dati_invio['msg_type']='message'
         return dati_invio
    
 class Form(BaseComponent):

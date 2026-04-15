@@ -60,8 +60,7 @@ class Form(BaseComponent):
         btn_bonifico_print.dataRpc('nome_temp', self.print_bonifico,record='=#FORM.record',nome_template = 'acc.bonifici_fornitore:bonifico_forn_new',format_page='A4')
         btn_email_bonifico=bar.email_bonifico.button('!![en]Email transfer')
         btn_email_bonifico.dataRpc('invio_bonifico', self.email_bonifico,record='=#FORM.record',
-                _onResult="""if(result.getItem('messaggio')) {genro.publish("floating_message",{message:result.getItem('messaggio'), messageType:"message"})};
-                if(result.getItem('invio_email')) {genro.wdgById('fat').hide();}
+                _onResult="""if(result.getItem('messaggio')) {genro.publish("floating_message",{message:result.getItem('messaggio'), messageType:result.getItem('msg_type')})};
                 """)
 
     def th_options(self):
@@ -136,6 +135,7 @@ class Form(BaseComponent):
         #print(c)
         if not email_forn:
             invio_bonifico['messaggio']=f'Invio annullato: il cliente {ragione_sociale} non ha email.'
+            invio_bonifico['msg_type']='error'
             return invio_bonifico
         # Lettura degli account email predefiniti all'interno di Agency e Staff
         tbl_staff =  self.db.table('agz.staff')
@@ -287,5 +287,6 @@ class Form(BaseComponent):
         self.db.commit()
 
         invio_bonifico['invio_email']='ok'
-        invio_bonifico['messaggio']=f'Email creata per {email_forn} ({len(fattureBonifico)} fatture).'  
+        invio_bonifico['messaggio']=f'Email creata per {email_forn} ({len(fattureBonifico)} fatture).' 
+        invio_bonifico['msg_type']='message' 
         return invio_bonifico
