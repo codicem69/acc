@@ -223,7 +223,7 @@ class Main(TableScriptToHtml):
         
         r.cell('descrizione',mm_width=0,name='Descrizione', content_class="cell_base")
         r.cell('importo', mm_width=20, name='Importo', totalize=True,format='#,###.00',content_class="cell_num")
-        r.cell('insda',mm_width=5, dtype='B')
+        #r.cell('insda',mm_width=5, dtype='B')
         r.cell('tot_pag', mm_width=20, name='Totale versamenti', totalize=True,format='#,###.00',content_class="cell_num")
         
         r.cell('saldo',name='Balance doc.', mm_width=20, totalize=True,format='#,###.00',content_class="cell_num")
@@ -264,7 +264,9 @@ class Main(TableScriptToHtml):
         if self.parameter('dal') and self.parameter('al'):
             condition.append('$data BETWEEN :dal AND :al')
             condition_pag.append('$data BETWEEN :dal AND :al')
-         
+
+        condition.append('$insda IS NOT True')
+
         where = ' AND '.join(condition)
         where_pag = ' AND '.join(condition_pag)
                    # , condition_anno=self.parameter('anno'), 
