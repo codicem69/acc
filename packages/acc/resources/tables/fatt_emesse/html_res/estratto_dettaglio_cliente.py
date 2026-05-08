@@ -290,12 +290,12 @@ class Main(TableScriptToHtml):
             #altrimenti saranno selezionati tutti i fornitori e sarà passata la query per tutti
             if self.parameter('cliente_id'):
                 cliente_id=self.parameter('cliente_id')
-                clienti = self.db.table('acc.cliente').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id=:pkeys and $balance >=0',
+                clienti = self.db.table('acc.cliente').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id=:pkeys',
                                                              order_by='$rag_sociale',
                                                              group_by='$id',
                                                   pkeys=cliente_id).fetch()
             else:
-                clienti = self.db.table('acc.cliente').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id IN :pkeys and $balance >=0',
+                clienti = self.db.table('acc.cliente').query(columns="$id,$rag_sociale,sum($balance) as differenza", where='$id IN :pkeys',
                                                              order_by='$rag_sociale',
                                                              group_by='$id',
                                                   pkeys=clienti_pkeys).fetch()
@@ -323,7 +323,7 @@ class Main(TableScriptToHtml):
             
             #print(x)
             cliente=clienti[r][1]
-            #print(x)
+
             balance_cliente = clienti[r][2]
             bal_cliente=0
             righe_pag=[]
