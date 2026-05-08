@@ -25,6 +25,7 @@ class Menu(object):
             acc.thpage(u"!![en]Customer bank", table="acc.bank_clienti", tags="")
             acc.thpage(u"!![en]Transfers customer", table="acc.bonifici_cliente", tags="")
             acc.thpage(u"!![en]Fat_forn_bonifici", table="acc.fatforn_bonifici", tags="")
+            acc.webpage('test',filepath='test')
         else:
             acc = root.branch(u"acc", tags="")
             acc.thpage(u"!![en]Suppliers", table="acc.fornitore", tags="")

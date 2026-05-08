@@ -340,6 +340,7 @@ class Main(TableScriptToHtml):
             condition.append('$data BETWEEN :dal AND :al')
         if self.parameter('al'):
             condition.append('$data <= :al')
+        condition.append('$insda IS NOT True')
 
         return dict(
             condition=' AND '.join(condition) if condition else None,
