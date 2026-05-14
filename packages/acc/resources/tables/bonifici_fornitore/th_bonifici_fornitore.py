@@ -229,7 +229,7 @@ class Form(BaseComponent):
 
                     <div style="background:#ffffff;padding:28px 32px;">
                         <p style="font-size:15px;">
-                            to: <strong>{ragione_sociale}</strong>
+                            Spett.: <strong>{ragione_sociale}</strong>
                         </p>
                         <p style="color:#555;line-height:1.6;">
                             {sal}<br>
