@@ -403,10 +403,11 @@ class ViewFromFatture(BaseComponent):
                 <td style="padding:8px; border:1px solid #ddd;">{r['doc_n']}</td>
                 <td style="padding:8px; border:1px solid #ddd;">{r['data'].strftime("%d/%m/%Y")}</td>
                 <td style="padding:8px; border:1px solid #ddd;">{r['descrizione']}</td>
-                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {r['importo']:,.2f}</td>
-                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {r['tot_pag']:,.2f}</td>
-                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {r['saldo']:,.2f}</td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {self.formatta_it(r['importo'])}</td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {self.formatta_it(r['tot_pag'])}</td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {self.formatta_it(r['saldo'])}</td>
             </tr>"""
+            #print(X)
             # Riga con sotto-tabella pagamenti
             pags = pagamenti_per_fattura.get(r['pkey'], [])
             if pags:
@@ -416,7 +417,7 @@ class ViewFromFatture(BaseComponent):
                     righe_pag_html += f"""
                     <tr>
                         <td style="padding:4px 8px;color:#555;">{p['data'].strftime("%d/%m/%Y")}</td>
-                        <td style="padding:4px 8px;color:#555;text-align:right;white-space:nowrap;">€ {p['importo']:,.2f}</td>
+                        <td style="padding:4px 8px;color:#555;text-align:right;white-space:nowrap;">€ {self.formatta_it(p['importo'])}</td>
                         <td style="padding:4px 8px;color:#555;">{note_txt}</td>
                     </tr>"""
             else:
@@ -456,9 +457,9 @@ class ViewFromFatture(BaseComponent):
         elif saldo_complessivo < 0:
             saldo_pos = saldo_complessivo.copy_abs() #trasformo in positivo il valore negativo
             if eng == True:
-                frame_banca=f'Please let us know your bank details in order to remit the balance of € {saldo_pos} in your favor.'
+                frame_banca=f'Please let us know your bank details in order to remit the balance of € {self.formatta_it(saldo_pos)} in your favor.'
             else:
-                frame_banca=f'Gentilmente fateci avere i Vs. dettagli bancari per la rimessa del saldo di € {saldo_pos} in Vs. favore.'
+                frame_banca=f'Gentilmente fateci avere i Vs. dettagli bancari per la rimessa del saldo di € {self.formatta_it(saldo_pos)} in Vs. favore.'
         else:
             frame_banca=f"""<div style="margin:24px 0;padding:16px;background:#f8f8f8;border-left:4px solid #2c3e50;">
                                 <p style="margin:0 0 10px 0;font-weight:bold;color:#2c3e50;">{coordinate}</p>
@@ -516,7 +517,7 @@ class ViewFromFatture(BaseComponent):
 
                         <div style="text-align:right;font-size:15px;font-weight:bold;color:#2c3e50;
                                     padding:10px 0;border-top:2px solid #2c3e50;margin-bottom:28px;">
-                            {tot_compl}: &euro; {saldo_complessivo:,.2f}
+                            {tot_compl}: &euro; {self.formatta_it(saldo_complessivo)}
                         </div>
                         {frame_banca}
                         <p style="color:#555;">{saluti}</p>
@@ -557,7 +558,12 @@ class ViewFromFatture(BaseComponent):
         dati_invio['messaggio']=f'Email creata per {email_dest} ({len(fatture)} fatture).'  
         dati_invio['msg_type']='message'
         return dati_invio
-   
+    
+    #funzione per formattare importi stile italiano
+    def formatta_it(self,numero, decimali=2):
+        s = f"{numero:,.{decimali}f}"
+        return s.replace(",", "X").replace(".", ",").replace("X", ".")
+
 class Form(BaseComponent):
     py_requires='gnrcomponents/pagededitor/pagededitor:PagedEditor,gnrcomponents/attachmanager/attachmanager:AttachManager'
     def th_form(self, form):

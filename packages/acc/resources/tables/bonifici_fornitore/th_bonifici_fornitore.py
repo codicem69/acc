@@ -173,10 +173,11 @@ class Form(BaseComponent):
             <tr style="{bg}">
                 <td style="padding:8px; border:1px solid #ddd;">{r['doc_n']}</td>
                 <td style="padding:8px; border:1px solid #ddd;">{r['data'].strftime("%d/%m/%Y")}</td>
-                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {r['importo']:,.2f}</td>
-                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {r['tot_pag']:,.2f}</td>
-                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {r['saldo']:,.2f}</td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {self.formatta_it(r['importo'])}</td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {self.formatta_it(r['tot_pag'])}</td>
+                <td style="padding:8px; border:1px solid #ddd; text-align:right;white-space:nowrap;">€ {self.formatta_it(r['saldo'])}</td>
             </tr>"""
+            
             # Riga con sotto-tabella pagamenti
             pags = pagamenti_per_fattura.get(r['fatture_forn_id'], [])
             if pags:
@@ -186,7 +187,7 @@ class Form(BaseComponent):
                     righe_pag_html += f"""
                     <tr>
                         <td style="padding:4px 8px;color:#555;">{p['data'].strftime("%d/%m/%Y")}</td>
-                        <td style="padding:4px 8px;color:#555;text-align:right;white-space:nowrap;">€ {p['importo']:,.2f}</td>
+                        <td style="padding:4px 8px;color:#555;text-align:right;white-space:nowrap;">€ {self.formatta_it(p['importo'])}</td>
                         <td style="padding:4px 8px;color:#555;">{note_txt}</td>
                     </tr>"""
             else:
@@ -252,7 +253,7 @@ class Form(BaseComponent):
 
                         <div style="text-align:right;font-size:15px;font-weight:bold;color:#2c3e50;
                                     padding:10px 0;border-top:2px solid #2c3e50;margin-bottom:28px;">
-                            Totale Complessivo: &euro; {totale_complessivo:,.2f}
+                            Totale Complessivo: &euro; {self.formatta_it(totale_complessivo)}
                         </div>
                         <p style="color:#555;">{saluti}</p>
                         <p style="color:#555;font-size:13px;">{user_fullname}</p>
@@ -290,3 +291,8 @@ class Form(BaseComponent):
         invio_bonifico['messaggio']=f'Email creata per {email_forn} ({len(fattureBonifico)} fatture).' 
         invio_bonifico['msg_type']='message' 
         return invio_bonifico
+    
+    #funzione per formattare importi stile italiano
+    def formatta_it(self,numero, decimali=2):
+        s = f"{numero:,.{decimali}f}"
+        return s.replace(",", "X").replace(".", ",").replace("X", ".")
