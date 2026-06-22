@@ -137,6 +137,7 @@ class ViewFromFatture(BaseComponent):
                             _onResult="""if (result.getItem('result_message')) {genro.publish('floating_message',{message:result.getItem('result_message'), messageType:'error'})} 
                             else {genro.wdgById('fat').show();SET .emaildialog.pkeys = GET #FORM.acc_fatt_emesse.view.grid.currentSelectedPkeys;PUBLISH fat_open;}"""#'FIRE dlg.emailDialog.show',  # apre il dialog DOPO aver caricato
                             )
+       
         top.data('.dati',{'id':1234})
         dlg = top.dialog(title='Invio Email Fatture',closable=True,
                       height='620px', 
@@ -169,7 +170,8 @@ class ViewFromFatture(BaseComponent):
 
         # Bottoni nella zona top
         btn_bar = top_pane.div(style='margin-top:10px;text-align:left;')
-        btn_bar.button('Conferma e Invia', fire='.emaildialog.sendemail')
+        btn_bar.button('Conferma e Invia Fatture', fire='.emaildialog.sendemail')
+        btn_bar.button('Conferma e Invia Sollecito', fire='.emaildialog.sendemailpay')
         btn_bar.button('Annulla',
                 action="genro.wdgById('fat').hide();",
                 margin_left='8px')
@@ -181,7 +183,13 @@ class ViewFromFatture(BaseComponent):
                     _onResult="""if(result.getItem('messaggio')) {genro.publish("floating_message",{message:result.getItem('messaggio'), messageType:result.getItem('msg_type')})};
                     if(result.getItem('invio_email')) {genro.wdgById('fat').hide();}
                     """)
-
+        top.dataRpc('.emaildialog.result_message',self.send_emails,
+                    _fired='^.emaildialog.sendemailpay',                          # senza underscore
+                    pkeys='=.emaildialog.pkeys',                  # passa i pkeys salvati dal primo RPC
+                    cliente_id='=#FORM.record.id',eng='=eng',fda='=fda',extra_ogg='=extra_ogg',allegati='=.emaildialog.allegati_preview',pay=True,
+                    _onResult="""if(result.getItem('messaggio')) {genro.publish("floating_message",{message:result.getItem('messaggio'), messageType:result.getItem('msg_type')})};
+                    if(result.getItem('invio_email')) {genro.wdgById('fat').hide();}
+                    """)
         center_pane = bc.contentPane(region='center', style='padding:4px;')
         inner_bc = center_pane.borderContainer(height='100%')
         # -- Griglia fatture --
@@ -267,7 +275,7 @@ class ViewFromFatture(BaseComponent):
         return preview
 
     @public_method
-    def send_emails(self, pkeys=None,eng=None,fda=None,extra_ogg=None,allegati=None, **kwargs):
+    def send_emails(self, pkeys=None,eng=None,fda=None,extra_ogg=None,allegati=None,pay=None, **kwargs):
         if not pkeys:
             return
         
@@ -343,56 +351,98 @@ class ViewFromFatture(BaseComponent):
         righe_html = ''
         totale_complessivo = 0
         saldo_complessivo = 0
-        if eng==True:
-            if fda==True:
-                int_email='Final D/A - ' + agency_name
-                doc='FDA Inv.no.'
-                testo='please find attached copies of our invoices/FDA, as listed'
+        if pay:
+            if eng==True:
+                int_email='Payment reminder - ' + agency_name
+                doc='Inv.no.'
+                testo='Please find below our invoice(s) that remain unpaid. We kindly ask you to verify them and, if necessary, send us your copy for our records' 
+                data='Date'
+                descr='Description'
+                imp='Amount'
+                pag='Tot. payment'
+                saldo='Balance'
+                tot_compl='Grand Total'
+                
+                saluti='Brgds'
+                coordinate='Bank Details'
+                banca_int='Account holder'
+                banca='Bank'
+                pag_label = 'Payments'
+                data_pag = 'Date'
+                importo_pag = 'Amount'
+                note_pag = 'Note'
+                nessun_pag = 'No payments recorded'   
             else:
-                int_email='Invoice - ' + agency_name
-                doc='Invoice no.'
-                testo='please find attached copies of our invoices, as listed'
-            data='Date'
-            descr='Description'
-            imp='Amount'
-            pag='Tot. payment'
-            saldo='Balance'
-            tot_compl='Grand Total'
-            
-            saluti='Brgds'
-            coordinate='Bank Details'
-            banca_int='Account holder'
-            banca='Bank'
-            pag_label = 'Payments'
-            data_pag = 'Date'
-            importo_pag = 'Amount'
-            note_pag = 'Note'
-            nessun_pag = 'No payments recorded'
-        else:
-            if fda==True:
-                int_email = 'Conto esborsi - ' + agency_name
-                doc='C/E Fattura n.'
-                testo='in allegato inviamo copie ns. fatture C/E emesse come da elenco'
-            else:
-                int_email = 'Fatture - ' + agency_name
+                int_email = 'Sollecito saldo Fatture - ' + agency_name
                 doc='Fattura n.'
-                testo='in allegato inviamo copie ns. fatture emesse come da elenco'
-            data='Data'
-            descr='Descrizione'
-            imp='Importo'
-            pag='Totale pagato'
-            saldo='Saldo'
-            tot_compl='Totale Complessivo'
-            
-            saluti='Cordiali saluti'
-            coordinate='Coordinate Bancarie'
-            banca_int='Intestatario'
-            banca='Banca'
-            pag_label = 'Pagamenti'
-            data_pag = 'Data'
-            importo_pag = 'Importo'
-            note_pag = 'Note'
-            nessun_pag = 'Nessun pagamento registrato'
+                testo='qui di seguito ns. fattura/e che risulta/no ancora non saldata/e di cui Vi preghiamo verificare ed eventualmente inviarci Vs. copia contabile'
+                data='Data'
+                descr='Descrizione'
+                imp='Importo'
+                pag='Totale pagato'
+                saldo='Saldo'
+                tot_compl='Totale Complessivo'
+
+                saluti='Cordiali saluti'
+                coordinate='Coordinate Bancarie'
+                banca_int='Intestatario'
+                banca='Banca'
+                pag_label = 'Pagamenti'
+                data_pag = 'Data'
+                importo_pag = 'Importo'
+                note_pag = 'Note'
+                nessun_pag = 'Nessun pagamento registrato'
+        else:
+            if eng==True:
+                if fda==True:
+                    int_email='Final D/A - ' + agency_name
+                    doc='FDA Inv.no.'
+                    testo='please find attached copies of our invoices/FDA, as listed'
+                else:
+                    int_email='Invoice - ' + agency_name
+                    doc='Invoice no.'
+                    testo='please find attached copies of our invoices, as listed'
+                data='Date'
+                descr='Description'
+                imp='Amount'
+                pag='Tot. payment'
+                saldo='Balance'
+                tot_compl='Grand Total'
+
+                saluti='Brgds'
+                coordinate='Bank Details'
+                banca_int='Account holder'
+                banca='Bank'
+                pag_label = 'Payments'
+                data_pag = 'Date'
+                importo_pag = 'Amount'
+                note_pag = 'Note'
+                nessun_pag = 'No payments recorded'
+            else:
+                if fda==True:
+                    int_email = 'Conto esborsi - ' + agency_name
+                    doc='C/E Fattura n.'
+                    testo='in allegato inviamo copie ns. fatture C/E emesse come da elenco'
+                else:
+                    int_email = 'Fatture - ' + agency_name
+                    doc='Fattura n.'
+                    testo='in allegato inviamo copie ns. fatture emesse come da elenco'
+                data='Data'
+                descr='Descrizione'
+                imp='Importo'
+                pag='Totale pagato'
+                saldo='Saldo'
+                tot_compl='Totale Complessivo'
+
+                saluti='Cordiali saluti'
+                coordinate='Coordinate Bancarie'
+                banca_int='Intestatario'
+                banca='Banca'
+                pag_label = 'Pagamenti'
+                data_pag = 'Data'
+                importo_pag = 'Importo'
+                note_pag = 'Note'
+                nessun_pag = 'Nessun pagamento registrato'
 
         
         
