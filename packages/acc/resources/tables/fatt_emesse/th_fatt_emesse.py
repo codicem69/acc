@@ -355,7 +355,10 @@ class ViewFromFatture(BaseComponent):
             if eng==True:
                 int_email='Payment reminder - ' + agency_name
                 doc='Inv.no.'
-                testo='Please find below our invoice(s) that remain unpaid. We kindly ask you to verify them and, if necessary, send us your copy for our records' 
+                if len(pkeys)>1:
+                    testo='Please find below our invoices that remain unpaid. We kindly ask you to verify them and, if necessary, send us your copy for our records' 
+                else:
+                    testo='Please find below our invoice, which remains unpaid. We kindly ask you to verify it and, if necessary, send us your copy for our records' 
                 data='Date'
                 descr='Description'
                 imp='Amount'
@@ -375,7 +378,10 @@ class ViewFromFatture(BaseComponent):
             else:
                 int_email = 'Sollecito saldo Fatture - ' + agency_name
                 doc='Fattura n.'
-                testo='qui di seguito ns. fattura/e che risulta/no ancora non saldata/e di cui Vi preghiamo verificare ed eventualmente inviarci Vs. copia contabile'
+                if len(pkeys)>1:
+                    testo='qui di seguito ns. fatture che risultano ancora non saldate di cui Vi preghiamo verificare ed eventualmente inviarci Vs. copia contabile'
+                else:
+                    testo='qui di seguito ns. fattura che risulta ancora non saldata di cui Vi preghiamo verificare ed eventualmente inviarci Vs. copia contabile'
                 data='Data'
                 descr='Descrizione'
                 imp='Importo'
