@@ -20,7 +20,9 @@ class View(BaseComponent):
         r.fieldcell('scadenza')
         r.fieldcell('giorni_scadenza', width='11em')
         r.fieldcell('bonificato',name='!![en]Bank transfer order', width='5em')
+        r.fieldcell('note', width='auto')
         
+
     def th_order(self):
         return 'data:d, doc_n:d'
 
@@ -72,6 +74,7 @@ class ViewFromFatForn(BaseComponent):
         r.fieldcell('scadenza')
         r.fieldcell('giorni_scadenza', width='11em')
         r.fieldcell('bonificato',name='!![en]Bank transfer order', width='5em')
+        r.fieldcell('note', width='auto')
         
     def th_order(self):
         return 'data:d,doc_n:d'

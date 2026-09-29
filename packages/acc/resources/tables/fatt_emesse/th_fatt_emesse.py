@@ -27,6 +27,7 @@ class View(BaseComponent):
         r.fieldcell('saldo_effettivo', totalize=True,name=f'Saldo al {self.db.workdate.strftime("%d/%m/%Y")}',
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
         r.fieldcell('semaforo_eff',semaphore=True)
+        r.fieldcell('note', width='auto')
 
     def th_order(self):
         return 'data:d,doc_n:d'
@@ -95,7 +96,7 @@ class ViewFromFatture(BaseComponent):
         r.fieldcell('saldo_effettivo', totalize=True,name=f'Saldo al {self.db.workdate.strftime("%d/%m/%Y")}',
                           range_alto='value>0',range_alto_style='color:red;font-weight:bold;',range_basso='value<=0',range_basso_style='color:black;font-weight:bold;')
         r.fieldcell('semaforo_eff',semaphore=True)
-
+        r.fieldcell('note', width='auto')
 
     def th_order(self):
         return 'data:d'
