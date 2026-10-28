@@ -32,10 +32,10 @@ class Form(BaseComponent):
 
     def bonifici_clienti(self,pane):    
         fb = pane.formbuilder(cols=1, border_spacing='4px')
-        fb.field('data')
+        fb.field('data', validate_notnull=True)
         fb.field('cliente_id', hasDownArrow=True, width='30em' )
-        fb.field('causale',tag='simpleTextArea', width='50em' )
-        fb.field('importo' )
+        fb.field('causale',tag='simpleTextArea', width='50em', validate_notnull=True )
+        fb.field('importo', validate_notnull=True )
 
     def allegatiBonCliente(self,pane):
         pane.attachmentGrid(uploaderButton=True) 
